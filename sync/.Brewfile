@@ -22,7 +22,6 @@ cask "iterm2"
 cask "tableplus"
 cask "telegram"
 cask "visual-studio-code"
-cask "zeplin"
 mas "BetterSnapTool", id: 417375580
 mas "Deliveries", id: 290986013
 mas "NepTunes", id: 1006739057
