@@ -12,7 +12,6 @@ set -x PATH $GOBINPATH $PATH
 set -x PATH /usr/local/bin $PATH
 set -x PATH /usr/local/sbin $PATH
 set -x PATH /usr/local/opt/go/libexec/bin $PATH
-set -x PATH /usr/local/opt/node@12/bin $PATH
 set -x PATH "/Applications/Visual Studio Code.app/Contents/Resources/app/bin" $PATH
 
 # Start fnm
