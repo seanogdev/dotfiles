@@ -20,6 +20,7 @@ cask "gitfox"
 cask "google-chrome"
 cask "iterm2"
 cask "tableplus"
+cask "telegram"
 cask "visual-studio-code"
 cask "zeplin"
 mas "BetterSnapTool", id: 417375580
