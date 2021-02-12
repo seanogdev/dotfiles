@@ -1,0 +1,27 @@
+tap "homebrew/bundle"
+tap "homebrew/cask"
+tap "homebrew/core"
+brew "ctop"
+brew "fish"
+brew "fnm"
+brew "gh"
+brew "gist"
+brew "git"
+brew "go"
+brew "mas"
+brew "mkcert"
+brew "nss"
+brew "python@3.7"
+brew "starship"
+brew "youtube-dl"
+cask "docker"
+cask "gitfox"
+cask "google-chrome"
+cask "iterm2"
+cask "tableplus"
+cask "visual-studio-code"
+cask "zeplin"
+mas "BetterSnapTool", id: 417375580
+mas "Deliveries", id: 290986013
+mas "NepTunes", id: 1006739057
+mas "Tweetbot", id: 1384080005

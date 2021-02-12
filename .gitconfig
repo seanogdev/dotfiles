@@ -1,0 +1,16 @@
+[core]
+	excludesfile = ~/dotfiles/.excludesfile
+	editor = code --wait
+[user]
+	email = sean@seanogrady.me
+	name = Sean O'Grady
+[url "git@github.com:"]
+	insteadOf = https://github.com/
+[pager]
+	branch = false
+[pull]
+	rebase = false
+[fetch]
+    prune = true
+[init]
+	defaultBranch = main
