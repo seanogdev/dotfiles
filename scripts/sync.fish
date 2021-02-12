@@ -3,6 +3,7 @@ cd $DIR
 
 ln -sf $HOME/dotfiles/fish $HOME/.config
 ln -sf $HOME/dotfiles/.gitconfig $HOME/
+ln -sf $HOME/dotfiles/.editorconfig $HOME/
 ln -sf $HOME/dotfiles/sync/.Brewfile $HOME/
 ln -sf $HOME/dotfiles/sync/.Npmfile $HOME/
 
