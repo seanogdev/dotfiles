@@ -1,6 +1,6 @@
 # Dotfiles
 
-My macOS configuration files and utilities.
+My macOS configuration files and utilities. Current shell of choice is `fish`.
 
 **Current Machine**: 2016 MBP with Touch Bar 15", - 2.9Ghz i7 - 16GB RAM - AMD 460M
 
