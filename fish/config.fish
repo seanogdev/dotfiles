@@ -15,11 +15,11 @@ set -x PATH /usr/local/opt/go/libexec/bin $PATH
 set -x PATH "/Applications/Visual Studio Code.app/Contents/Resources/app/bin" $PATH
 
 # Start fnm
-fnm env | source
+fnm env --use-on-cd | source
 
 # Start Starship
 starship init fish | source
 
 # tabtab source for packages
 # uninstall by removing these lines
-[ -f ~/.config/tabtab/fish/__tabtab.fish ]; and . ~/.config/tabtab/fish/__tabtab.fish; or true
+[ -f ~/.config/tabtab/fish/__tabtab.fish ]; and source ~/.config/tabtab/fish/__tabtab.fish; or true
