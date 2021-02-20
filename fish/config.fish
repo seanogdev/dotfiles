@@ -15,7 +15,7 @@ set -x PATH /usr/local/opt/go/libexec/bin $PATH
 set -x PATH "/Applications/Visual Studio Code.app/Contents/Resources/app/bin" $PATH
 
 # Start fnm
-fnm env --use-on-cd | source
+# fnm env --use-on-cd | source
 
 # Start Starship
 starship init fish | source
