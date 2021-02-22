@@ -1,5 +1,5 @@
+set -x DOTFILES_PATH $HOME/dotfiles
 set -x ICLOUD_DOTFILES_PATH ~/Library/Mobile\ Documents/com~apple~CloudDocs/Code/dotfiles
-
 source ~/.config/fish/aliases.fish
 
 # golang
