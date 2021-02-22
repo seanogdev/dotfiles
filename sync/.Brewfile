@@ -1,5 +1,6 @@
 tap "homebrew/bundle"
 tap "homebrew/cask"
+tap "homebrew/cask-fonts"
 tap "homebrew/core"
 tap "miralize/tap", "https://github.com/miralize/homebrew-tap.git"
 brew "ctop"
