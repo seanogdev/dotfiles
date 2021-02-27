@@ -18,14 +18,17 @@ brew "starship"
 brew "youtube-dl"
 cask "docker2"
 cask "epoccam"
+cask "figmadaemon"
 cask "gitfox"
 cask "google-chrome"
 cask "iterm2"
 cask "notion"
+cask "pritunl"
 cask "raycast"
 cask "tableplus"
 cask "telegram"
 cask "visual-studio-code"
+mas "Audiobook Builder", id: 1437681957
 mas "BetterSnapTool", id: 417375580
 mas "Deliveries", id: 290986013
 mas "NepTunes", id: 1006739057
