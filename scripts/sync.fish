@@ -13,7 +13,7 @@ end
 # sync fonts
 set -l cloudFontsPath $ICLOUD_DOTFILES_PATH/sync/fonts
 if test -d $cloudFontsPath
-    ln -sf $cloudFontsPath $HOME/Library/Fonts/
+    ln -sf $cloudFontsPath/* $HOME/Library/Fonts/
 end
 
 # sync ngrok
@@ -21,5 +21,3 @@ set -l cloudNgrokPath $ICLOUD_DOTFILES_PATH/sync/ngrok.yml
 if test -e $cloudNgrokPath
     ln -sf $cloudNgrokPath $HOME/ngrok.yml
 end
-
-
