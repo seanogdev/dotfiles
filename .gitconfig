@@ -3,14 +3,14 @@
 	editor = code --wait
 [user]
 	email = sean@seanogrady.me
-	name = Sean O'Grady
-[url "git@github.com:"]
+	name = "Sean O'Grady"
+[url "ssh://git@github.com/"]
 	insteadOf = https://github.com/
 [pager]
 	branch = false
 [pull]
 	rebase = false
 [fetch]
-    prune = true
+  prune = true
 [init]
 	defaultBranch = main
