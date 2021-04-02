@@ -1,42 +1,13 @@
-function find_up
-    set path (pwd)
-    while true
-        if test -e "$path/$argv[1]"
-            echo "$path/$argv[1]"
-            return
-        end
-        if test -e "$path/$argv[2]"
-            echo "$path/$argv[2]"
-            return
-        end
-        if test $path = "/"
-            return
-        end
-        set path (dirname $path)
-    end
-end
-
-function fnm_use
-    set current (string replace "v" "" (fnm current))
-    set target (string replace "v" "" $argv[1])
-    if test $current != $target
-        fnm use $argv[1]
-    end
-end
-
+set -gx PATH /var/folders/8d/w_mvjyy91v7dwvtllyzljrz40000gn/T/fnm_multishell_7719_1617381006538/bin $PATH
+set -gx FNM_MULTISHELL_PATH /var/folders/8d/w_mvjyy91v7dwvtllyzljrz40000gn/T/fnm_multishell_7719_1617381006538
+set -gx FNM_DIR "/Users/seanogrady/.fnm"
+set -gx FNM_LOGLEVEL info
+set -gx FNM_NODE_DIST_MIRROR "https://nodejs.org/dist"
 function _fnm_autoload_hook --on-variable PWD --description 'Change Node version on directory change'
     status --is-command-substitution; and return
-    set found (find_up .nvmrc .node-version)
-    if test -n "$found"
-        fnm_use (cat $found)
-    else
-        fnm_use system
+    if test -f .node-version -o -f .nvmrc
+        fnm use
     end
 end
 
-fnm env | source
-
-# VSCode open integrated terminal does not trigger PWD hook
-if test $TERM_PROGRAM = "vscode"
-    _fnm_autoload_hook
-end
+_fnm_autoload_hook
