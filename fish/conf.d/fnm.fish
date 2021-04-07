@@ -11,3 +11,5 @@ function _fnm_autoload_hook --on-variable PWD --description 'Change Node version
 end
 
 _fnm_autoload_hook
+
+fnm env | source
