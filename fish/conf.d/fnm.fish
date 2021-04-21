@@ -14,3 +14,7 @@ end
 _fnm_autoload_hook
 
 fnm env | source
+
+if test -f .node-version -o -f .nvmrc
+    fnm use
+end
