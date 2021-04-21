@@ -3,6 +3,8 @@ ln -sf $DOTFILES_PATH/.gitconfig $HOME/
 ln -sf $DOTFILES_PATH/.editorconfig $HOME/
 ln -sf $DOTFILES_PATH/sync/.Brewfile $HOME/
 ln -sf $DOTFILES_PATH/sync/.Npmfile $HOME/
+ln -sf $DOTFILES_PATH/sync/.nvm $HOME/
+
 
 # sync sensitive functions
 set -l cloudFunctionsPath $ICLOUD_DOTFILES_PATH/fish/functions
