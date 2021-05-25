@@ -1,4 +1,4 @@
-function mkdir-move --description 'Create a new directory and navigate to it'
+function mkd --description 'Create a new directory and navigate to it'
     if [ -z "$argv" ]
         echo "No arguments supplied"
         return
