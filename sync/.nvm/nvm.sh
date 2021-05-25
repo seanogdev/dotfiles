@@ -1,5 +1,9 @@
 #! /usr/bin/env sh
 
-eval "`fnm env --use-on-cd`"
+eval "fnm env --shell=bash --use-on-cd"
 
-echo "setting node env"
+if test -f ".nvmrc"; then
+  echo "setting node env"
+  fnm use
+fi
+
