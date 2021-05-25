@@ -10,7 +10,7 @@ SETUVAR __fish_initialized:3100
 SETUVAR _fisher_jethrokuan_2F_z_files:/Users/seanogrady/\x2econfig/fish/functions/__z\x2efish\x1e/Users/seanogrady/\x2econfig/fish/functions/__z_add\x2efish\x1e/Users/seanogrady/\x2econfig/fish/functions/__z_clean\x2efish\x1e/Users/seanogrady/\x2econfig/fish/functions/__z_complete\x2efish\x1e/Users/seanogrady/\x2econfig/fish/conf\x2ed/z\x2efish
 SETUVAR _fisher_jorgebucaran_2F_fisher_files:/Users/seanogrady/\x2econfig/fish/functions/fisher\x2efish\x1e/Users/seanogrady/\x2econfig/fish/completions/fisher\x2efish
 SETUVAR _fisher_miralize_2F_homebrew_2D_aliases_2D_fish_files:/Users/seanogrady/\x2econfig/fish/functions/bbund\x2efish\x1e/Users/seanogrady/\x2econfig/fish/functions/bcubc\x2efish\x1e/Users/seanogrady/\x2econfig/fish/functions/bcubo\x2efish\x1e/Users/seanogrady/\x2econfig/fish/functions/brewp\x2efish\x1e/Users/seanogrady/\x2econfig/fish/functions/brews\x2efish\x1e/Users/seanogrady/\x2econfig/fish/functions/brewsp\x2efish\x1e/Users/seanogrady/\x2econfig/fish/functions/bubc\x2efish\x1e/Users/seanogrady/\x2econfig/fish/functions/bubo\x2efish\x1e/Users/seanogrady/\x2econfig/fish/functions/bubu\x2efish\x1e/Users/seanogrady/\x2econfig/fish/functions/buf\x2efish
-SETUVAR _fisher_plugins:jorgebucaran/fisher\x1ejethrokuan/z\x1emiralize/homebrew\x2daliases\x2dfish
+SETUVAR _fisher_plugins:jorgebucaran/fisher\x1emiralize/homebrew\x2daliases\x2dfish\x1ejethrokuan/z
 SETUVAR fish_color_autosuggestion:555\x1ebrblack
 SETUVAR fish_color_cancel:\x2dr
 SETUVAR fish_color_command:005fd7
