@@ -17,6 +17,8 @@ set -x PATH "/Applications/Visual Studio Code.app/Contents/Resources/app/bin" $P
 # Start Starship
 starship init fish | source
 
+fnm env --use-on-cd | source
+
 # tabtab source for packages
 # uninstall by removing these lines
 [ -f ~/.config/tabtab/fish/__tabtab.fish ]; and source ~/.config/tabtab/fish/__tabtab.fish; or true
