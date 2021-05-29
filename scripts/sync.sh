@@ -24,7 +24,7 @@ echo $cloudFontsPath
 if [[ -d $cloudFontsPath ]]
 then
 echo  $cloudFontsPath
-ln -sf "$cloudFontsPath/"* $HOME/Library/Fonts/ && ls -l $HOME/Library/Fonts/
+y | mv "$cloudFontsPath/"* $HOME/Library/Fonts/ && ls -l $HOME/Library/Fonts/
 fi
 
 ## sync ngrok
