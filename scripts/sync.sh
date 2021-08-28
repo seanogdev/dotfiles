@@ -17,7 +17,7 @@ echo $cloudFontsPath
 if [[ -d $cloudFontsPath ]]
 then
 echo  $cloudFontsPath
-y | cp "$cloudFontsPath/"* $HOME/Library/Fonts/ && ls -l $HOME/Library/Fonts/
+cp -Rf "$cloudFontsPath/"* $HOME/Library/Fonts/ && ls -l $HOME/Library/Fonts/
 fi
 
 ## sync sensitive functions
