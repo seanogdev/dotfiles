@@ -1,5 +1,6 @@
 set -x DOTFILES_PATH $HOME/dotfiles
-set -x ICLOUD_DOTFILES_PATH ~/Library/Mobile\ Documents/com~apple~CloudDocs/Code/dotfiles
+set -x ICLOUD_DOTFILES_PATH "$HOME/Library/Mobile Documents/com~apple~CloudDocs/Code/dotfiles"
+
 source ~/.config/fish/aliases.fish
 
 # golang
@@ -17,8 +18,8 @@ set -x PATH "/Applications/Visual Studio Code.app/Contents/Resources/app/bin" $P
 # Start Starship
 starship init fish | source
 
-fnm env --use-on-cd | source
-
 # tabtab source for packages
 # uninstall by removing these lines
-[ -f ~/.config/tabtab/fish/__tabtab.fish ]; and source ~/.config/tabtab/fish/__tabtab.fish; or true
+if [ -f "$HOME/.config/tabtab/fish/__tabtab.fish" ]
+    source "$HOME/.config/tabtab/fish/__tabtab.fish"
+end
