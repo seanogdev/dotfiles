@@ -1,13 +1,13 @@
-set -l fnmVersions 14.16 12.18.3
+set -l fnmVersions 14 16
 
 if not type -q fnm
-  exit
+    exit
 end
 
 for fnmVersion in $fnmVersions
-  fnm install $fnmVersion
+    fnm install $fnmVersion
 end
 
-echo "Settings default FNM version to $fnmVersions[1]"
-fnm default $fnmVersions[1]
+echo "Settings default FNM version to $fnmVersions[0]"
+fnm default $fnmVersions[0]
 fnm list
