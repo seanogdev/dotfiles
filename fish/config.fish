@@ -8,8 +8,10 @@ set -x GOPATH $HOME/go
 set -x GOBINPATH $GOPATH/bin
 
 # general paths
+
 set -x PATH $HOME/bin $PATH
 set -x PATH $GOBINPATH $PATH
+set -x PATH /opt/homebrew/bin $PATH
 set -x PATH /usr/local/bin $PATH
 set -x PATH /usr/local/sbin $PATH
 set -x PATH /usr/local/opt/go/libexec/bin $PATH

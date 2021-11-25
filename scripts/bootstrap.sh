@@ -25,4 +25,5 @@ fi
 # Package control must be executed first in order for the rest to work
 sh sync.sh
 sh ../packages/setup.sh
+sh ../fish/setup.sh
 

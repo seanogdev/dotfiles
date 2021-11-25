@@ -8,7 +8,11 @@ cd "$DIR"
 sudo -v
 
 info "Installing Homebrew..."
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+if [[ $(command -v brew) == "" ]]; then
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+else
+    brew update
+fi
 
 info "Installing Brewfile packages..."
 brew bundle --global
@@ -16,7 +20,13 @@ success "Finished installing Brewfile packages."
 
 info "Changing default shell"
 
-echo "/usr/local/bin/fish" | sudo tee -a /etc/shells
+FISH_PATH="/usr/local/bin/fish"
+
+if [[ `uname -m` == 'arm64' ]]; then
+    FISH_PATH="/opt/homebrew/bin/fish"
+fi
+
+echo $FISH_PATH | sudo tee -a /etc/shells
 
 chsh -s `which fish`
 
