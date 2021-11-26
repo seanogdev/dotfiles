@@ -1,4 +1,4 @@
-#! /usr/local/bin/fish
+#! /usr/bin/env fish
 
 set -l workAliasesPath "$ICLOUD_DOTFILES_PATH/fish/aliases.fish"
 

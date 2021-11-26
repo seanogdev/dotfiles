@@ -10,22 +10,23 @@ DESTINATION="$(realpath ~/.config/fish)"
 
 info "Setting up fish shell..."
 
-substep_info "Creating fish config folders..."
-mkdir -p "$DESTINATION/functions"
-mkdir -p "$DESTINATION/customs"
-mkdir -p "$DESTINATION/completions"
-mkdir -p "$DESTINATION/conf.d"
+# substep_info "Creating fish config folders..."
+# mkdir -p "$DESTINATION/functions"
+# mkdir -p "$DESTINATION/customs"
+# mkdir -p "$DESTINATION/completions"
+# mkdir -p "$DESTINATION/conf.d"
 
-find * -name "*fish*" | while read fn; do
-    symlink "$SOURCE/$fn" "$DESTINATION/$fn"
-done
-clear_broken_symlinks "$DESTINATION"
+# find * -name "*fish*" | while read fn; do
+#     symlink "$SOURCE/$fn" "$DESTINATION/$fn"
+# done
+# clear_broken_symlinks "$DESTINATION"
 
 FISH_PATH="/usr/local/bin/fish"
-
 if [[ `uname -m` == 'arm64' ]]; then
     FISH_PATH="/opt/homebrew/bin/fish"
 fi
+
+echo "fish path $FISH_PATH"
 
 set_fish_shell() {
     if grep --quiet fish <<< "$SHELL"; then
