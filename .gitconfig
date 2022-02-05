@@ -1,6 +1,7 @@
 [core]
 	excludesfile = ~/dotfiles/.excludesfile
 	editor = code --wait
+	ignorecase = false
 [user]
 	email = sean@seanogrady.me
 	name = Sean O'Grady
