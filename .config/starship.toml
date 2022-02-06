@@ -1,0 +1,8 @@
+[docker_context]
+disabled = true
+
+# [package]
+# format = '[$symbol$version]($style) '
+
+# [nodejs]
+# format = '[$symbol$version]($style) '
