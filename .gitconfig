@@ -17,3 +17,5 @@
 	defaultBranch = main
 [alias]
 	undo = reset --keep HEAD@{1}
+[url "git@github.com:"]
+	insteadOf = https://github.com/
