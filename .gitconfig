@@ -4,7 +4,7 @@
 	ignorecase = false
 [user]
 	email = sean@seanogrady.me
-	name = Sean O'Grady
+	name = "Sean O'Grady"
 [url "ssh://git@github.com/"]
 	insteadOf = https://github.com/
 [pager]
@@ -17,3 +17,5 @@
 	defaultBranch = main
 [alias]
 	undo = reset --keep HEAD@{1}
+[url "git@github.com:"]
+	insteadOf = https://github.com/
