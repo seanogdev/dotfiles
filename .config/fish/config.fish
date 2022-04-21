@@ -5,10 +5,6 @@ set -x ICLOUD_DOTFILES_PATH "$HOME/Library/Mobile Documents/com~apple~CloudDocs/
 
 source ~/.config/fish/aliases.fish
 
-# golang
-set -x GOPATH $HOME/go
-set -x GOBINPATH $GOPATH/bin
-
 # general paths
 
 fish_add_path $HOME/bin
