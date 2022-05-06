@@ -1,2 +1,2 @@
-set -x GOPATH $HOME/go
-set -x GOBINPATH $GOPATH/bin
+set -gx GOPATH $HOME/go
+set -gx GOBINPATH $GOPATH/bin
