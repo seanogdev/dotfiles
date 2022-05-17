@@ -70,6 +70,7 @@ function __git.init
   __git.create_abbr glgga      git log --graph --decorate --all
   __git.create_abbr glo        git log --oneline --decorate --color
   __git.create_abbr glog       git log --oneline --decorate --color --graph
+  __git.create_abbr gloga      git log --oneline --decorate --color --graph --all
   __git.create_abbr glom       git log --oneline --decorate --color \(__git.default_branch\)..
   __git.create_abbr glod       git log --oneline --decorate --color develop..
   __git.create_abbr gloo       "git log --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an%Cgreen%d %Creset%s' --date=short"
@@ -104,6 +105,7 @@ function __git.init
   __git.create_abbr grm        git rm
   __git.create_abbr grmc       git rm --cached
   __git.create_abbr grmv       git remote rename
+  __git.create_abbr grpo       git remote prune origin
   __git.create_abbr grrm       git remote remove
   __git.create_abbr grs        git restore
   __git.create_abbr grset      git remote set-url
