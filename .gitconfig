@@ -4,7 +4,7 @@
 	ignorecase = false
 [user]
 	email = 1761115+miralize@users.noreply.github.com
-	name = Sean O'Grady
+	name = "Sean O'Grady"
 [pager]
 	branch = false
 [pull]
@@ -15,4 +15,5 @@
 	defaultBranch = main
 [alias]
 	undo = reset --keep HEAD@{1}
-
+[url "git@github.com:"]
+	insteadOf = https://github.com/
