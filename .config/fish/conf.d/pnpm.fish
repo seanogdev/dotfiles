@@ -1,2 +1,2 @@
-set -gx PNPM_HOME "/Users/seanogrady/Library/pnpm"
+set -gx PNPM_HOME "$HOME/Library/pnpm"
 set -gx PATH "$PNPM_HOME" $PATH

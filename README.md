@@ -16,6 +16,5 @@ As he mentions in his [dotfiles README](https://github.com/mathiasbynens/dotfile
 
 ```sh
 git clone https://github.com/miralize/dotfiles.git
-cd dotfiles
-sh scripts/bootstrap.sh
+sh dotfiles/setup.sh
 ```

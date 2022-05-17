@@ -3,7 +3,7 @@
 DIR=$(dirname "$0")
 cd "$DIR"
 
-. ../scripts/functions.sh
+. ./scripts/functions.sh
 
 sudo -v
 
@@ -15,7 +15,7 @@ else
 fi
 
 info "Installing Brewfile packages..."
-brew bundle --global
+# brew bundle install --global
 success "Finished installing Brewfile packages."
 
 info "Changing default shell"
@@ -29,5 +29,7 @@ fi
 echo $FISH_PATH | sudo tee -a /etc/shells
 
 chsh -s `which fish`
+
+sh ./sync.sh
 
 
