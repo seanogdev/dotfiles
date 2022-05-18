@@ -1,6 +1,6 @@
 #! /usr/bin/env fish
 
-set -l fnmVersions 14 16
+set -l fnmVersions 14.16.1 16
 set -l defaultFnmVersion $fnmVersions[1]
 
 if not type -q fnm
