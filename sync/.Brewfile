@@ -18,7 +18,6 @@ brew "mas"
 brew "mkcert"
 brew "starship"
 cask "1password"
-cask "1password-cli"
 cask "asset-catalog-tinkerer"
 cask "discord"
 cask "figma"
@@ -38,7 +37,7 @@ cask "transmission"
 cask "visual-studio-code"
 cask "vlc"
 cask "whatsapp"
-mas "1Password for Safari", id: 1569813296
+mas "Balance Lock", id: 1019371109
 mas "BetterSnapTool", id: 417375580
 mas "ColorSlurp", id: 1287239339
 mas "Deliveries", id: 290986013
