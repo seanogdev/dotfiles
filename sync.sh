@@ -23,24 +23,13 @@ if [ ! -d $LOCAL_FISHCONFIG_PATH ]; then
     mkdir -p $LOCAL_FISHCONFIG_PATH
 fi
 
-if [ ! -d $LOCAL_FISHCONFIG_PATH/completions ]; then
-    mkdir -p $LOCAL_FISHCONFIG_PATH/completions
-fi
-ln -sf "$LOCAL_DOTFILES_PATH/fish/completions/"* $LOCAL_FISHCONFIG_PATH/completions
-
-if [ ! -d $LOCAL_FISHCONFIG_PATH/conf.d ]; then
-    mkdir -p $LOCAL_FISHCONFIG_PATH/conf.d
-fi
-ln -sf "$LOCAL_DOTFILES_PATH/fish/conf.d/"* $LOCAL_FISHCONFIG_PATH/conf.d
-
-if [ ! -d $LOCAL_FISHCONFIG_PATH/functions ]; then
-    mkdir -p $LOCAL_FISHCONFIG_PATH/functions
-fi
-ln -sf "$LOCAL_DOTFILES_PATH/fish/functions/"* $LOCAL_FISHCONFIG_PATH/functions
-
+ln -sf "$LOCAL_DOTFILES_PATH/fish/completions" $LOCAL_FISHCONFIG_PATH
+ln -sf "$LOCAL_DOTFILES_PATH/fish/conf.d" $LOCAL_FISHCONFIG_PATH
+ln -sf "$LOCAL_DOTFILES_PATH/fish/functions" $LOCAL_FISHCONFIG_PATH
 ln -sf "$LOCAL_DOTFILES_PATH/fish/aliases.fish" $LOCAL_FISHCONFIG_PATH
 ln -sf "$LOCAL_DOTFILES_PATH/fish/config.fish" $LOCAL_FISHCONFIG_PATH
 ln -sf "$LOCAL_DOTFILES_PATH/fish/fish_plugins" $LOCAL_FISHCONFIG_PATH
+ln -sf "$LOCAL_DOTFILES_PATH/fish/fish_variables.fish" $LOCAL_FISHCONFIG_PATH
 
 ## fonts
 cloudFontsPath="$CLOUD_SYNC_FOLDER_PATH/fonts"
