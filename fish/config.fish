@@ -8,7 +8,7 @@ source ~/.config/fish/aliases.fish
 # general paths
 
 fish_add_path $HOME/bin
-fish_add_path $GOBINPATH
+fish_add_path $GOBIN
 fish_add_path /opt/homebrew/bin
 fish_add_path /opt/homebrew/opt/coreutils/libexec/gnubin
 fish_add_path /usr/local/bin
