@@ -1,5 +1,8 @@
-# [package]
-# format = '[$symbol$version]($style) '
+"$schema" = 'https://starship.rs/config-schema.json'
 
-# [nodejs]
-# format = '[$symbol$version]($style) '
+[package]
+disabled = true
+
+
+[docker_context]
+format = 'via [$symbol colima]($style) '
