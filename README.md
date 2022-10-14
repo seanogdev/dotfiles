@@ -15,6 +15,6 @@ As he mentions in his [dotfiles README](https://github.com/mathiasbynens/dotfile
 ## Installation
 
 ```sh
-git clone https://github.com/miralize/dotfiles.git
+git clone https://github.com/seanogdev/dotfiles.git
 sh dotfiles/setup.sh
 ```
