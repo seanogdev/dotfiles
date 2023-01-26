@@ -13,7 +13,6 @@ ln -sf "$LOCAL_DOTFILES_PATH/.editorconfig" $HOME/
 ln -sf "$LOCAL_DOTFILES_PATH/sync/.Brewfile" $HOME/
 ln -sf "$LOCAL_DOTFILES_PATH/sync" $HOME/
 ln -sf "$LOCAL_DOTFILES_PATH/sync/.Npmfile" $HOME/
-ln -sf "$LOCAL_DOTFILES_PATH/sync/.nvm" $HOME/
 
 ln -sf "$LOCAL_DOTFILES_PATH/sync/starship.toml" $LOCAL_DOTCONFIG_PATH
 
@@ -51,7 +50,5 @@ if [[ -f $cloudNgrokPath ]]
 then
     ln -sf $cloudNgrokPath $HOME/
 fi
-
-
 
 echo "Successfully synced data from dotfiles. Make sure to run fisher manually"
