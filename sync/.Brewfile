@@ -4,7 +4,6 @@ tap "homebrew/cask"
 tap "homebrew/cask-fonts"
 tap "homebrew/cask-versions"
 tap "homebrew/core"
-brew "ctop"
 brew "fish"
 brew "fnm"
 brew "gh"
@@ -39,8 +38,9 @@ mas "ColorSlurp", id: 1287239339
 mas "Deliveries", id: 290986013
 mas "GarageBand", id: 682658836
 mas "iMovie", id: 408981434
+mas "Keyboard Keyboard", id: 1128271725
 mas "Keynote", id: 409183694
-mas "MidiKey", id: 492478362
+mas "Microsoft Remote Desktop", id: 1295203466
 mas "NepTunes", id: 1006739057
 mas "Numbers", id: 409203825
 mas "Pages", id: 409201541
