@@ -5,4 +5,4 @@ disabled = true
 
 
 [docker_context]
-format = 'via [$symbol colima]($style) '
+format = '[$symbol colima]($style) '

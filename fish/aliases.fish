@@ -1,10 +1,10 @@
 #! /usr/bin/env fish
 
-set -l workAliasesPath "$ICLOUD_DOTFILES_PATH/fish/aliases.fish"
+# set -l workAliasesPath "$ICLOUD_DOTFILES_PATH/fish/aliases.fish"
 
-if test -n $workAliasesPath
-    source $workAliasesPath
-end
+# if test -n $workAliasesPath
+#     source $workAliasesPath
+# end
 
 # Easier navigation: .., ..., ...., ....., ~ and -
 function ..
@@ -39,4 +39,8 @@ alias flush="dscacheutil -flushcache; killall -HUP mDNSResponder"
 alias lscleanup="/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user; killall Finder"
 
 # Utility commands
-alias lockbegone="git checkout origin/master -- ./package-lock.json"
+alias s="source ~/.config/fish/config.fish"
+alias c="clear"
+alias lockbegone="git checkout origin/HEAD -- ./package-lock.json"
+
+
