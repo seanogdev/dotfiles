@@ -4,13 +4,19 @@ tap "homebrew/cask"
 tap "homebrew/cask-fonts"
 tap "homebrew/cask-versions"
 tap "homebrew/core"
+brew "colima"
+brew "ctop"
+brew "docker"
+brew "docker-compose"
 brew "fish"
 brew "fnm"
 brew "gh"
 brew "git"
+brew "go"
 brew "mas"
 brew "ripgrep"
 brew "starship"
+brew "wakeonlan"
 cask "1password"
 cask "asset-catalog-tinkerer"
 cask "calibre"
@@ -27,6 +33,7 @@ cask "steam"
 cask "tableplus"
 cask "telegram"
 cask "the-unarchiver"
+cask "tor-browser"
 cask "tower"
 cask "transmission"
 cask "visual-studio-code"
@@ -37,6 +44,7 @@ mas "BetterSnapTool", id: 417375580
 mas "ColorSlurp", id: 1287239339
 mas "Deliveries", id: 290986013
 mas "GarageBand", id: 682658836
+mas "Hand Mirror", id: 1502839586
 mas "iMovie", id: 408981434
 mas "Keyboard Keyboard", id: 1128271725
 mas "Keynote", id: 409183694
