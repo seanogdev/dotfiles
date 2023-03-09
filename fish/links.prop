@@ -1,0 +1,4 @@
+$DOTFILES/fish/completions=$HOME/.config/fish/completions
+$DOTFILES/fish/conf.d=$HOME/.config/fish/conf.d
+$DOTFILES/fish/functions=$HOME/.config/fish/functions
+$DOTFILES/fish/fish_plugins=$HOME/.config/fish/fish_plugins
