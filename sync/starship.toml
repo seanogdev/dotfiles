@@ -1,8 +1,0 @@
-"$schema" = 'https://starship.rs/config-schema.json'
-
-[package]
-disabled = true
-
-
-[docker_context]
-format = '[$symbol colima]($style) '

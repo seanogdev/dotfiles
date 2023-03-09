@@ -3,8 +3,6 @@
 DIR=$(dirname "$0")
 cd "$DIR"
 
-. ./scripts/functions.sh
-
 sudo -v
 
 info "Installing Homebrew..."
@@ -15,7 +13,7 @@ else
 fi
 
 info "Installing Brewfile packages..."
-# brew bundle install --global
+brew bundle install --global
 success "Finished installing Brewfile packages."
 
 info "Changing default shell"
@@ -30,6 +28,6 @@ echo $FISH_PATH | sudo tee -a /etc/shells
 
 chsh -s `which fish`
 
-sh ./sync.sh
+sh ./symlink.sh
 
 
