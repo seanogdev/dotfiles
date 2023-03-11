@@ -71,8 +71,8 @@ style = "bold white"
 format = "[$time]($style)"
 
 [custom.pnpm]
-command = "echo v(pnpm -v)"
-format = '[$symbol($output )]($style)'
+command = "pnpm -v"
+format = '[$symbol(v$output )]($style)'
 description = "The currently installed version of PNPM"
 style = "bold yellow"
 detect_files = ['pnpm-lock.yaml']
