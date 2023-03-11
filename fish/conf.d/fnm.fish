@@ -1,2 +1,2 @@
-fnm --log-level=quiet env --use-on-cd | source
+status is-interactive && fnm env --use-on-cd | source
 fnm completions | source
