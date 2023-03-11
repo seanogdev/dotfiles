@@ -11,7 +11,9 @@ $git_metrics\
 $fill\
 $nodejs\
 ${custom.pnpm}\
-$cmd_duration $jobs $time\
+$cmd_duration\
+$jobs\
+$time\
 $line_break\
 $character"""
 
@@ -69,9 +71,8 @@ style = "bold white"
 format = "[$time]($style)"
 
 [custom.pnpm]
-# take the last string from the output of `pnpm -v`
-command = "pnpm -v"
-format = '[$symbol(v$output )]($style)'
+command = "echo v(pnpm -v)"
+format = '[$symbol($output )]($style)'
 description = "The currently installed version of PNPM"
 style = "bold yellow"
 detect_files = ['pnpm-lock.yaml']
