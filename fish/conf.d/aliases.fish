@@ -8,7 +8,8 @@ alias ....='cd ../../..'
 # Shortcuts
 alias ls=exa
 alias sl=exa
-alias c='clear'
+alias c=clear
+alias rm=trash
 
 # IP addresses
 alias ip-wan="dig +short myip.opendns.com @resolver1.opendns.com"
