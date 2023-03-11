@@ -1,2 +1,2 @@
-fnm env --shell fish --use-on-cd | source
-fnm completions --shell fish | source
+fnm --log-level=quiet env --use-on-cd | source
+fnm completions | source
