@@ -11,6 +11,7 @@ $git_metrics\
 $fill\
 $nodejs\
 ${custom.pnpm}\
+${custom.npm}\
 $cmd_duration\
 $jobs\
 $time\
@@ -69,6 +70,15 @@ symbol = " "
 disabled = false
 style = "bold white"
 format = "[$time]($style)"
+
+[custom.npm]
+description = "Version for npm in the working directory"
+command = "npm --version"
+files = ["package-lock.json"]
+symbol = "🐸 v"
+style = "bold green"
+ignore_timeout = true
+format = "[$symbol($output )]($style)"
 
 [custom.pnpm]
 command = "pnpm -v"
