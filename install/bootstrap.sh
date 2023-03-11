@@ -42,7 +42,7 @@ link_file () {
     then
 
       # ignoring exit 1 from readlink in case where file already exists
-      # shellcheck disable=SC2155
+      # shellcheck disable=SC2155,SC2086
       local currentSrc="$(readlink $dst)"
 
       if [ "$currentSrc" == "$src" ]
@@ -54,6 +54,7 @@ link_file () {
 
         user "File already exists: $dst ($(basename "$src")), what do you want to do?\n\
         [s]kip, [S]kip all, [o]verwrite, [O]verwrite all, [b]ackup, [B]ackup all?"
+        # shellcheck disable=SC2162
         read -n 1 action  < /dev/tty
 
         case "$action" in
@@ -119,13 +120,16 @@ install_dotfiles () {
 
   local overwrite_all=false backup_all=false skip_all=false
 
+  # shellcheck disable=SC2162
   find -H "$DOTFILES" -maxdepth 2 -name 'links.prop' | while read linkfile
   do
+    # shellcheck disable=SC2002
     cat "$linkfile" | while read line
     do
         local src dst dir
         src=$(eval echo "$line" | cut -d '=' -f 1)
         dst=$(eval echo "$line" | cut -d '=' -f 2)
+        # shellcheck disable=SC2086
         dir=$(dirname $dst)
 
         mkdir -p "$dir"
@@ -134,17 +138,7 @@ install_dotfiles () {
   done
 }
 
-# create_env_file () {
-#     if test -f "$HOME/.env.sh"; then
-#         success "$HOME/.env.sh file already exists, skipping"
-#     else
-#         echo "export DOTFILES=$DOTFILES" > $HOME/.env.sh
-#         success 'created ~/.env.sh'
-#     fi
-# }
-
 install_dotfiles
-# create_env_file
 
 echo ''
 echo ''
