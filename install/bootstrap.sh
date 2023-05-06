@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 # Originally from https://github.com/andrew8088/dotfiles/blob/main/install/bootstrap.sh
 # bootstrap installs things.
 
