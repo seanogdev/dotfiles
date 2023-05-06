@@ -5,6 +5,7 @@
 
 cd "$(dirname "$0")/.."
 DOTFILES=$(pwd -P)
+ICLOUD_PATH="$HOME/Library/Mobile Documents/com~apple~CloudDocs"
 
 set -e
 
@@ -139,7 +140,24 @@ install_dotfiles () {
   done
 }
 
+copy_icloud_data() {
+  ## fonts
+  if [ -d "$ICLOUD_PATH/Code/dotfiles/sync/fonts" ]
+  then
+      cp -Rf "$ICLOUD_PATH/Code/dotfiles/sync/fonts/"* "$HOME/Library/Fonts/"
+      success "Copied fonts"
+  fi
+
+  ## sensitive functions
+  if [ -d "$ICLOUD_PATH/Code/dotfiles/sync/fish/functions" ]
+  then
+      ln -sf  "$ICLOUD_PATH/Code/dotfiles/sync/fish/functions"* "$HOME/.config/fish/functions/"
+      success "Linked sensitive functions"
+  fi
+}
+
 install_dotfiles
+copy_icloud_data
 
 echo ''
 echo ''
