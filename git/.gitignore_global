@@ -4,9 +4,6 @@
 .LSOverride
 .nova
 
-# Icon must end with two \r
-Icon
-
 # Thumbnails
 ._*
 
@@ -28,3 +25,5 @@ Temporary Items
 .idea
 *.iml
 .vscode/settings.json
+Icon
+
