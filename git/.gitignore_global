@@ -25,5 +25,4 @@ Temporary Items
 .idea
 *.iml
 .vscode/settings.json
-Icon
-
+Icon[\r]
