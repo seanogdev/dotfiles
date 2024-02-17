@@ -37,75 +37,82 @@ link_file () {
   local skip=
   local action=
 
-  if [ -f "$dst" ] || [ -d "$dst" ] || [ -L "$dst" ]
-  then
-
-    if [ "$overwrite_all" == "false" ] && [ "$backup_all" == "false" ] && [ "$skip_all" == "false" ]
+  # if the src is a directory copy all of the files in the directory instead
+  if [ -d "$src" ]; then
+    for file in "$src"/*; do
+      link_file "$file" "$dst/$(basename "$file")"
+    done
+  else
+    if [ -f "$dst" ] || [ -d "$dst" ] || [ -L "$dst" ]
     then
 
-      # ignoring exit 1 from readlink in case where file already exists
-      # shellcheck disable=SC2155,SC2086
-      local currentSrc="$(readlink $dst)"
-
-      if [ "$currentSrc" == "$src" ]
+      if [ "$overwrite_all" == "false" ] && [ "$backup_all" == "false" ] && [ "$skip_all" == "false" ]
       then
 
-        skip=true;
+        # ignoring exit 1 from readlink in case where file already exists
+        # shellcheck disable=SC2155,SC2086
+        local currentSrc="$(readlink $dst)"
 
-      else
+        if [ "$currentSrc" == "$src" ]
+        then
 
-        user "File already exists: $dst ($(basename "$src")), what do you want to do?\n\
-        [s]kip, [S]kip all, [o]verwrite, [O]verwrite all, [b]ackup, [B]ackup all?"
-        # shellcheck disable=SC2162
-        read -n 1 action  < /dev/tty
+          skip=true;
 
-        case "$action" in
-          o )
-            overwrite=true;;
-          O )
-            overwrite_all=true;;
-          b )
-            backup=true;;
-          B )
-            backup_all=true;;
-          s )
-            skip=true;;
-          S )
-            skip_all=true;;
-          * )
-            ;;
-        esac
+        else
+
+          user "File already exists: $dst ($(basename "$src")), what do you want to do?\n\
+          [s]kip, [S]kip all, [o]verwrite, [O]verwrite all, [b]ackup, [B]ackup all?"
+          # shellcheck disable=SC2162
+          read -n 1 action  < /dev/tty
+
+          case "$action" in
+            o )
+              overwrite=true;;
+            O )
+              overwrite_all=true;;
+            b )
+              backup=true;;
+            B )
+              backup_all=true;;
+            s )
+              skip=true;;
+            S )
+              skip_all=true;;
+            * )
+              ;;
+          esac
+
+        fi
 
       fi
 
+      overwrite=${overwrite:-$overwrite_all}
+      backup=${backup:-$backup_all}
+      skip=${skip:-$skip_all}
+
+      if [ "$overwrite" == "true" ]
+      then
+        rm -rf "$dst"
+        success "removed $dst"
+      fi
+
+      if [ "$backup" == "true" ]
+      then
+        mv "$dst" "${dst}.backup"
+        success "moved $dst to ${dst}.backup"
+      fi
+
+      if [ "$skip" == "true" ]
+      then
+        success "skipped $src"
+      fi
     fi
 
-    overwrite=${overwrite:-$overwrite_all}
-    backup=${backup:-$backup_all}
-    skip=${skip:-$skip_all}
-
-    if [ "$overwrite" == "true" ]
+    if [ "$skip" != "true" ]  # "false" or empty
     then
-      rm -rf "$dst"
-      success "removed $dst"
+      ln -s "$1" "$2"
+      success "linked $1 to $2"
     fi
-
-    if [ "$backup" == "true" ]
-    then
-      mv "$dst" "${dst}.backup"
-      success "moved $dst to ${dst}.backup"
-    fi
-
-    if [ "$skip" == "true" ]
-    then
-      success "skipped $src"
-    fi
-  fi
-
-  if [ "$skip" != "true" ]  # "false" or empty
-  then
-    ln -s "$1" "$2"
-    success "linked $1 to $2"
   fi
 }
 
@@ -113,8 +120,8 @@ link_file () {
 prop () {
    PROP_KEY=$1
    PROP_FILE=$2
-   PROP_VALUE=$(eval echo "$(cat $PROP_FILE | grep "$PROP_KEY" | cut -d'=' -f2)")
-   echo $PROP_VALUE
+   PROP_VALUE=$(eval echo "$(cat "$PROP_FILE" | grep "$PROP_KEY" | cut -d'=' -f2)")
+   echo "$PROP_VALUE"
 }
 
 install_dotfiles () {
