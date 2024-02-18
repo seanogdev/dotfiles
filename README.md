@@ -3,6 +3,7 @@
 This is my personal dotfiles repository. It contains my configuration files for various programs and tools. I use this repository to keep my dotfiles in sync across multiple machines.
 
 Main tools used:
+
 - Brew
 - Git
 - Fish / Fisher
@@ -14,5 +15,5 @@ Main tools used:
 ```sh
 git clone https://github.com/seanogdev/dotfiles.git
 cd dotfiles
-sh install/setup.sh
+sh _scripts/install.sh
 ```
