@@ -1,7 +1,6 @@
 #! /usr/bin/env bash
 
 cd "$(dirname "$0")/.."
-DOTFILES=$(pwd -P)
 
 set -e
 
@@ -34,6 +33,14 @@ then
 else
     brew update
 fi
+
+info "Installing stow"
+
+brew install stow
+
+info "Setting up symlink for dotfiles"
+
+stow -t "$HOME" .
 
 info "Installing Brewfile packages..."
 brew bundle install --global
