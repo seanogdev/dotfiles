@@ -15,7 +15,6 @@ brew "git"
 brew "go"
 brew "jq"
 brew "jsonpp"
-brew "xz"
 brew "mas"
 brew "ollama"
 brew "protobuf", link: false
@@ -27,13 +26,13 @@ brew "stow"
 brew "trash"
 brew "wakeonlan"
 brew "wget"
+brew "yt-dlp"
 brew "zoxide"
 brew "null-dev/firefox-profile-switcher/firefox-profile-switcher-connector"
 cask "1password"
 cask "arc"
 cask "asset-catalog-tinkerer"
 cask "blackhole-2ch"
-cask "calibre"
 cask "discord"
 cask "figma"
 cask "firefox"
@@ -52,6 +51,7 @@ cask "telegram"
 cask "the-unarchiver"
 cask "tower"
 cask "transmission"
+cask "tunnelblick"
 cask "visual-studio-code"
 cask "vlc"
 cask "whatsapp"
@@ -62,7 +62,6 @@ mas "BetterSnapTool", id: 417375580
 mas "ColorSlurp", id: 1287239339
 mas "Deliveries", id: 290986013
 mas "Draw Things", id: 6444050820
-mas "GarageBand", id: 682658836
 mas "Hand Mirror", id: 1502839586
 mas "iMovie", id: 408981434
 mas "Keyboard Keyboard", id: 1128271725
@@ -71,7 +70,6 @@ mas "Microsoft Remote Desktop", id: 1295203466
 mas "NepTunes", id: 1006739057
 mas "Numbers", id: 409203825
 mas "Pages", id: 409201541
-mas "Tweetbot", id: 1384080005
 mas "WireGuard", id: 1451685025
 vscode "aaron-bond.better-comments"
 vscode "adamwalzer.string-converter"
