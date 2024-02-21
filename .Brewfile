@@ -61,7 +61,6 @@ mas "Balance Lock", id: 1019371109
 mas "BetterSnapTool", id: 417375580
 mas "ColorSlurp", id: 1287239339
 mas "Deliveries", id: 290986013
-mas "Draw Things", id: 6444050820
 mas "Hand Mirror", id: 1502839586
 mas "iMovie", id: 408981434
 mas "Keyboard Keyboard", id: 1128271725
