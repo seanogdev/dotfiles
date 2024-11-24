@@ -6,8 +6,8 @@ alias ...='cd ../..'
 alias ....='cd ../../..'
 
 # Shortcuts
-alias ls=exa
-alias sl=exa
+alias ls=eza
+alias sl=eza
 alias c=clear
 alias rm=trash
 
