@@ -1,4 +1,3 @@
-
 ###-begin-pnpm-completion-###
 function _pnpm_completion
   set cmd (commandline -o)
@@ -21,3 +20,4 @@ end
 
 complete -f -d 'pnpm' -c pnpm -a "(_pnpm_completion)"
 ###-end-pnpm-completion-###
+
