@@ -1,16 +1,12 @@
 tap "1password/tap"
 tap "homebrew/bundle"
-tap "homebrew/cask-fonts"
-tap "homebrew/cask-versions"
 tap "homebrew/services"
 tap "null-dev/firefox-profile-switcher"
+brew "xz"
 brew "cmake"
 brew "colima", restart_service: :changed
 brew "ctop"
-brew "deno"
-brew "docker"
-brew "docker-credential-helper"
-brew "exa"
+brew "eza"
 brew "fd"
 brew "fish"
 brew "fnm"
@@ -19,11 +15,11 @@ brew "gh"
 brew "git"
 brew "git-filter-repo"
 brew "go"
+brew "graphviz"
 brew "jq"
 brew "jsonpp"
 brew "llvm"
 brew "mas"
-brew "ollama"
 brew "pkgconf"
 brew "protobuf"
 brew "pyenv"
@@ -39,9 +35,10 @@ brew "yt-dlp"
 brew "zoxide"
 cask "1password"
 cask "arc"
-cask "asset-catalog-tinkerer"
 cask "blackhole-2ch"
+cask "calibre"
 cask "discord"
+cask "eloston-chromium"
 cask "figma"
 cask "firefox"
 cask "font-metropolis"
@@ -62,16 +59,16 @@ cask "telegram"
 cask "the-unarchiver"
 cask "tower"
 cask "transmission"
-cask "tunnelblick"
 cask "visual-studio-code"
 cask "vlc"
 cask "whatsapp"
 cask "zed"
 mas "1Password for Safari", id: 1569813296
 mas "Balance Lock", id: 1019371109
-mas "BetterSnapTool", id: 417375580
 mas "ColorSlurp", id: 1287239339
 mas "Deliveries", id: 290986013
+mas "Draw Things", id: 6444050820
+mas "GarageBand", id: 682658836
 mas "Hand Mirror", id: 1502839586
 mas "iMovie", id: 408981434
 mas "Keyboard Keyboard", id: 1128271725
