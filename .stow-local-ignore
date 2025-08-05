@@ -3,3 +3,4 @@ LICENSE
 _scripts
 .git
 .gitignore
+.DS_Store
