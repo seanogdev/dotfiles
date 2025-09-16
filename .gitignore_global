@@ -16,6 +16,7 @@
 .VolumeIcon.icns
 .com.apple.timemachine.donotpresent
 .claude/**/*.local.json
+CLAUDE.local.md
 
 # Directories potentially created on remote AFP share
 .AppleDB
