@@ -1,3 +1,3 @@
-function gt --description 'Open Visual Studio Code in current directory'
+function gt --description 'Open Git Tower in current directory'
     gittower .
 end
