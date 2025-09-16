@@ -38,10 +38,6 @@ info "Installing stow"
 
 brew install stow
 
-info "Setting up symlink for dotfiles"
-
-stow -t "$HOME" .
-
 info "Installing Brewfile packages..."
 brew bundle install --global
 success "Finished installing Brewfile packages."
