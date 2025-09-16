@@ -58,6 +58,6 @@ echo $FISH_PATH | sudo tee -a /etc/shells
 
 chsh -s "$(which fish)"
 
-sh ./symlink.sh
+sh ./sync.sh
 
 
