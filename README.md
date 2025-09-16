@@ -17,3 +17,9 @@ git clone https://github.com/seanogdev/dotfiles.git
 cd dotfiles
 sh _scripts/install.sh
 ```
+
+## Sync
+
+```sh
+stow --target $HOME --dir ~/path/to/dotfiles --no-folding . --adopt
+```
