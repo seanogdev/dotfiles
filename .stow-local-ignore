@@ -4,3 +4,5 @@ _scripts
 .git
 .gitignore
 .DS_Store
+setup.sh
+sync.sh
