@@ -34,6 +34,8 @@ copy_icloud_data() {
   then
       cp -Rf "$ICLOUD_PATH/Code/dotfiles/sync/fonts/"* "$HOME/Library/Fonts/"
       success "Copied fonts"
+  else
+      fail "No fonts found in iCloud"
   fi
 
   ## sensitive functions
@@ -41,6 +43,8 @@ copy_icloud_data() {
   then
       ln -sf  "$ICLOUD_PATH/Code/dotfiles/sync/fish/functions"* "$HOME/.config/fish/functions/"
       success "Linked sensitive functions"
+  else
+      fail "No sensitive functions found in iCloud"
   fi
 }
 
