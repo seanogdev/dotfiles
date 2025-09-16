@@ -20,6 +20,20 @@ sh _scripts/install.sh
 
 ## Sync
 
+First install Brew
+
 ```sh
-stow --target $HOME --dir ~/path/to/dotfiles --no-folding . --adopt
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+Install [stow](https://www.gnu.org/software/stow/):
+
+```sh
+brew install stow
+```
+
+Then link the dotfiles to your home directory:
+
+```sh
+stow --target $HOME --dir ~/dotfiles --no-folding . --adopt
 ```
