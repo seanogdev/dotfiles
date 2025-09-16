@@ -6,9 +6,6 @@ alias ...='cd ../..'
 alias ....='cd ../../..'
 
 # Shortcuts
-alias ls=eza
-alias sl=eza
-alias c=clear
 alias rm=trash
 
 # IP addresses
@@ -18,7 +15,4 @@ alias ip-all="ifconfig -a | grep -o 'inet6\? \(addr:\)\?\s\?\(\(\([0-9]\+\.\)\{3
 
 # Utility commands
 alias s="source ~/.config/fish/config.fish"
-alias c="clear"
-alias lockbegone="git checkout origin/HEAD -- ./package-lock.json"
-
 
