@@ -1,6 +1,4 @@
 tap "1password/tap"
-tap "homebrew/bundle"
-tap "homebrew/services"
 tap "null-dev/firefox-profile-switcher"
 tap "oven-sh/bun"
 brew "fish"
