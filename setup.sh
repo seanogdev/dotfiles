@@ -44,7 +44,7 @@ info "Installing Brewfile packages..."
 
 sudo brew bundle install --global
 
-info "Syncing iCloud data"
+info "Syncing iCloud data..."
 
 sh ./sync.sh
 
@@ -53,6 +53,4 @@ info "Changing default shell"
 echo "/opt/homebrew/bin/fish" | sudo tee -a /etc/shells
 
 chsh -s "$(which fish)"
-
-
 
