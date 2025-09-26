@@ -44,13 +44,7 @@ success "Finished installing Brewfile packages."
 
 info "Changing default shell"
 
-FISH_PATH="/usr/local/bin/fish"
-
-if [[ $(uname -m) == 'arm64' ]]; then
-    FISH_PATH="/opt/homebrew/bin/fish"
-fi
-
-echo $FISH_PATH | sudo tee -a /etc/shells
+echo "/opt/homebrew/bin/fish" | sudo tee -a /etc/shells
 
 chsh -s "$(which fish)"
 

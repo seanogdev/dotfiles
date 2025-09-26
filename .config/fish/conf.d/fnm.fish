@@ -1,2 +1,1 @@
-status is-interactive && fnm env --use-on-cd | source
-fnm completions | source
+fnm env --use-on-cd --shell fish | source
