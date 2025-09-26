@@ -38,7 +38,7 @@ info "Installing stow"
 
 brew install stow
 
-stow -d "$HOME/projects/personal/dotfiles" -t "$HOME" --no-folding -adopt .
+stow -d "$HOME/projects/personal/dotfiles" -t "$HOME" --no-folding --adopt .
 
 info "Installing Brewfile packages..."
 brew bundle install --global
