@@ -26,14 +26,8 @@ First install Brew
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
-Install [stow](https://www.gnu.org/software/stow/):
+Then run the setup script. This will link your dotfiles to your home directory and install all necessary packages.
 
 ```sh
-brew install stow
-```
-
-Then link the dotfiles to your home directory:
-
-```sh
-stow --target $HOME --dir ~/dotfiles --no-folding . --adopt
+/bin/bash -c "setup.sh"
 ```
