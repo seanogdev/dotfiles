@@ -36,11 +36,17 @@ info "Installing stow"
 
 brew install stow
 
+info "Linking dotfiles with stow"
+
 stow -d "$HOME/projects/personal/dotfiles" -t "$HOME" --no-folding --adopt .
 
 info "Installing Brewfile packages..."
+
 brew bundle install --global
-success "Finished installing Brewfile packages."
+
+info "Syncing iCloud data"
+
+sh ./sync.sh
 
 info "Changing default shell"
 
@@ -48,6 +54,5 @@ echo "/opt/homebrew/bin/fish" | sudo tee -a /etc/shells
 
 chsh -s "$(which fish)"
 
-sh ./sync.sh
 
 
