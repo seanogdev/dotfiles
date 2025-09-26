@@ -1,3 +1,7 @@
+if not set -q fisher_path
+    curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher update
+end
+
 set --query fisher_path || exit
 
 set fish_function_path $fish_function_path[1] $fisher_path/functions $fish_function_path[2..-1]

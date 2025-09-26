@@ -42,7 +42,7 @@ stow -d "$HOME/projects/personal/dotfiles" -t "$HOME" --no-folding --adopt .
 
 info "Installing Brewfile packages..."
 
-brew bundle install --global
+sudo brew bundle install --global
 
 info "Syncing iCloud data"
 
