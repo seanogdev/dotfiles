@@ -29,9 +29,7 @@ info "Installing Homebrew..."
 # if brew is not installed
 if ! command -v brew &> /dev/null
 then
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-else
-    brew update
+    fail "Homebrew could not be found, please install it from https://brew.sh/"
 fi
 
 info "Installing stow"
