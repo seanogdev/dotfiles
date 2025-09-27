@@ -78,10 +78,10 @@ style = "bold green"
 ignore_timeout = true
 format = "[$symbol($output )]($style)"
 
-# [custom.pnpm]
-# command = "pnpm -v"
-# format = '[$symbol(v$output )]($style)'
-# description = "The currently installed version of PNPM"
-# style = "bold yellow"
-# detect_files = ['pnpm-lock.yaml']
-# symbol = 'pnpm '
+[custom.pnpm]
+command = "pnpm -v"
+format = '[$symbol(v$output )]($style)'
+description = "The currently installed version of PNPM"
+style = "bold yellow"
+detect_files = ['pnpm-lock.yaml']
+symbol = 'pnpm '
