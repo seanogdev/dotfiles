@@ -1,1 +1,2 @@
-fnm env --use-on-cd --corepack-enabled --shell fish | source
+status is-interactive && fnm env --corepack-enabled --use-on-cd | source
+fnm completions | source
