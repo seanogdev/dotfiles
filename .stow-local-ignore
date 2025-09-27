@@ -6,3 +6,5 @@ _scripts
 .DS_Store
 setup.sh
 sync.sh
+AGENTS.md
+CLAUDE.md
