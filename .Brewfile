@@ -19,8 +19,10 @@ brew "yt-dlp"
 brew "zoxide"
 brew "oven-sh/bun/bun"
 cask "1password"
+cask "1password-cli"
 cask "blackhole-2ch"
 cask "claude"
+cask "claude-code"
 cask "discord"
 cask "figma"
 cask "firefox"
@@ -39,6 +41,7 @@ cask "telegram"
 cask "the-unarchiver"
 cask "tower"
 cask "visual-studio-code"
+cask "vivaldi"
 cask "vlc"
 cask "whatsapp"
 mas "1Password for Safari", id: 1569813296
@@ -50,7 +53,6 @@ mas "Keyboard Keyboard", id: 1128271725
 mas "NepTunes", id: 1006739057
 mas "Numbers", id: 409203825
 mas "uBlock Origin Lite", id: 6745342698
-mas "WhatsApp", id: 310633997
 vscode "adamwalzer.string-converter"
 vscode "adpyke.codesnap"
 vscode "adpyke.vscode-sql-formatter"
