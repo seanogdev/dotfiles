@@ -1,3 +1,6 @@
 font-family = MonoLisa
-theme = Github Dark High Contrast
 keybind = option+backspace=text:\x17
+theme = Github Dark High Contrast
+window-colorspace = display-p3
+window-padding-x = 12
+window-padding-y = 12
