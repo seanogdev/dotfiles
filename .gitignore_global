@@ -28,4 +28,8 @@ Temporary Items
 *.iml
 .vscode/settings.json
 Icon[\r]
-.sean-tasks/
+
+# For local development, this allows me to keep track
+# of tasks and worktrees without cluttering the main project directory
+._tasks/
+._worktrees/
