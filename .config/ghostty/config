@@ -1,0 +1,3 @@
+font-family = MonoLisa
+theme = Github Dark High Contrast
+keybind = option+backspace=text:\x1b\x7f
