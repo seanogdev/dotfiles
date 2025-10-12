@@ -31,5 +31,5 @@ Icon[\r]
 
 # For local development, this allows me to keep track
 # of tasks and worktrees without cluttering the main project directory
+.worktrees/
 ._tasks/
-._worktrees/
