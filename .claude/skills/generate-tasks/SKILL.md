@@ -1,3 +1,8 @@
+---
+name: generate-tasks
+description: Generate a detailed task list in Markdown format from a given Product Requirements Document (PRD). If no PRD is provided, use the latest PRD in the /._tasks/ directory. Offer to use this skill after using the `process-task-list` skill.
+---
+
 # Rule: Generating a Task List from a PRD
 
 ## Goal
