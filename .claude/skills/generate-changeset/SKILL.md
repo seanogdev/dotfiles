@@ -22,8 +22,7 @@ To guide an AI assistant in creating a changeset file that follows the [@changes
 4.  **Generate changeset content:**
     - Create a markdown file with YAML frontmatter
     - **IMPORTANT:** AI tools should ONLY generate `patch` bump types, never `minor` or `major`
-    - Write a clear, concise summary of the changes following the project's existing changeset style
-    - Follow the pattern: WHAT changed, WHY it changed, and HOW consumers should update (if applicable)
+    - Write a single, clear sentence summary of the changes following the project's existing changeset style
 
 5.  **Save the changeset:**
     - Generate a unique filename using the pattern: `[adjective]-[noun]-[verb].md` (e.g., `happy-lions-jump.md`)
