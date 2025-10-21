@@ -8,10 +8,7 @@ description: Generates clear commit messages from git diffs. Use when writing co
 ## Instructions
 
 1. Run `git diff --staged` to see changes
-2. I'll suggest a commit message with:
-   - Summary under 50 characters
-   - Detailed description
-   - Affected files
+2. I'll suggest a single-sentence commit message under 50 characters
 3. Use conventional commit format (feat:, fix:, docs:, style:, refactor:, test:, chore:)
 4. Ensure clarity and context for future reference
 
