@@ -16,10 +16,12 @@ To guide an AI assistant in creating a changeset file that follows the [@changes
 2.  **Analyze existing changesets:** Read 1-2 existing changeset files in `.changeset/` to understand the project's changeset pattern and style.
 
 3.  **Determine packages to include:**
+
     - In a monorepo: Identify which package(s) were modified by checking `git status` or analyzing the changes
     - In a single-package repo: Use the package name from `package.json`
 
 4.  **Generate changeset content:**
+
     - Create a markdown file with YAML frontmatter
     - **IMPORTANT:** AI tools should ONLY generate `patch` bump types, never `minor` or `major`
     - Write a single, clear sentence summary of the changes following the project's existing changeset style
@@ -37,11 +39,6 @@ To guide an AI assistant in creating a changeset file that follows the [@changes
 ---
 
 Brief summary of the change in present tense
-
-Optional additional details in markdown format explaining:
-- What changed
-- Why it changed
-- How to update code if needed
 ```
 
 For monorepos with multiple packages:
