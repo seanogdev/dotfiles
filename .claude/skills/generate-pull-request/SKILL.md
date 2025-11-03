@@ -11,18 +11,23 @@ To guide an AI assistant in creating a pull request using the GitHub CLI (`gh pr
 
 ## Process
 
-1.  **Check for PR templates:** Look for pull request templates in common locations:
+1.  **Verify branch is pushed:**
+    - Check that the current branch exists on remote: `git ls-remote --heads origin $(git branch --show-current)`
+    - If not pushed, push the branch first: `git push origin HEAD`
+    - This is required before creating a PR
+
+2.  **Check for PR templates:** Look for pull request templates in common locations:
     - `.github/pull_request_template.md`
     - `.github/PULL_REQUEST_TEMPLATE.md`
     - `.github/PULL_REQUEST_TEMPLATE/*.md` (multiple templates)
     - `docs/pull_request_template.md`
 
-2.  **Analyze the template:** If a template exists, read it to understand:
+3.  **Analyze the template:** If a template exists, read it to understand:
     - Required sections and format
     - What information is expected
     - Any checklists or specific requirements
 
-3.  **Gather PR information:**
+4.  **Gather PR information:**
     - **Title:** Generate a clear, concise title summarizing the changes
     - **Description:** Analyze git changes to create a comprehensive description
     - **Changes summary:** List key changes, files modified, and functionality added/updated
@@ -30,18 +35,18 @@ To guide an AI assistant in creating a pull request using the GitHub CLI (`gh pr
     - **Testing:** Document what was tested
     - **Checklist items:** Complete any checklist items from the template
 
-4.  **Analyze git state:**
+5.  **Analyze git state:**
     - Run `git status` to confirm there are changes to include
     - Run `git log origin/[base-branch]..HEAD` to see commits that will be in the PR
     - Run `git diff origin/[base-branch]...HEAD --stat` to get an overview of changes
 
-5.  **Generate PR content:**
+6.  **Generate PR content:**
     - Fill in the template (if it exists) or create a well-structured description
     - Use markdown formatting for readability
     - Include code examples if relevant
     - Link to related issues, PRs, or documentation
 
-6.  **Create the PR:**
+7.  **Create the PR:**
     - Use `gh pr create --title "..." --body "..."`
     - For multi-line body content, use a heredoc for proper formatting:
       ```bash
@@ -133,10 +138,11 @@ EOF
 
 ## Final Instructions
 
-1. Check for PR templates in the repository
-2. Analyze git changes and commits to understand the scope
-3. Generate a comprehensive PR title and description
-4. Use heredoc format for the `--body` parameter
-5. Create the PR using `gh pr create`
-6. Output the PR URL to the user after creation
-7. Remind user to request reviews if needed
+1. Verify the branch is pushed to remote before creating PR
+2. Check for PR templates in the repository
+3. Analyze git changes and commits to understand the scope
+4. Generate a comprehensive PR title and description
+5. Use heredoc format for the `--body` parameter
+6. Create the PR using `gh pr create`
+7. Output the PR URL to the user after creation
+8. Remind user to request reviews if needed

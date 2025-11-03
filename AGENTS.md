@@ -26,6 +26,16 @@ This is a personal dotfiles repository that uses GNU Stow for symlink management
 brew bundle install --global  # Install from .Brewfile
 ```
 
+**Symlink dotfiles after adding/modifying files:**
+
+```bash
+# In Fish shell (recommended)
+stow-local
+
+# Or directly with stow
+stow -d $HOME/projects/personal/dotfiles -t $HOME --no-folding --adopt --stow .
+```
+
 ## Architecture
 
 ### Package Management
@@ -70,6 +80,10 @@ brew bundle install --global  # Install from .Brewfile
 │   └── completions/# Shell completions
 ├── starship.toml   # Prompt configuration
 └── gh/             # GitHub CLI configuration
+
+.claude/
+├── commands/       # Custom Claude Code slash commands
+└── skills/         # Claude Code skills for specialized tasks
 ```
 
 ## Development Environment
