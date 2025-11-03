@@ -6,18 +6,10 @@ set input (cat)
 # Extract values from JSON
 set model (echo $input | jq -r ".model.display_name")
 set cwd (echo $input | jq -r ".workspace.current_dir")
-set tokens_used (echo $input | jq -r ".tokens_used // 0")
-set token_budget (echo $input | jq -r ".token_budget // 0")
+set cost (echo $input | jq -r ".cost.total_cost_usd // 0")
 
-# Calculate context percentage
-set context_pct 0
-if test "$token_budget" -gt 0
-    set context_pct (math "round($tokens_used / $token_budget * 100)" 2>/dev/null)
-    or set context_pct 0
-end
-if test -z "$context_pct"
-    set context_pct 0
-end
+# Get directory name
+set dir_name (basename "$cwd")
 
 # Get git branch info
 set git_branch (git -C "$cwd" --no-optional-locks branch --show-current 2>/dev/null)
@@ -26,37 +18,34 @@ if test -n "$git_branch"
     set git_info " "(printf "\033[1;35m󰘬 %s\033[0m" "$git_branch")
 end
 
-# Get directory name
-set dir_name (basename "$cwd")
+# Segment 1: directory name and git branch
+set segment1 (printf "\033[1;36m%s\033[0m%s" "$dir_name" "$git_info")
 
-# Build right side info
-set right_info ""
+# Segment 2: model name
+set segment2 (printf "\033[38;5;208m%s\033[0m" "$model")
 
-# Add Node.js version if available
-if command -v node >/dev/null 2>&1
-    set node_version (node --version 2>/dev/null)
-    if test -n "$node_version"
-        set right_info "$right_info "(printf "\033[1;32m◆ %s\033[0m" "$node_version")
-    end
+# Segment 3: cost in RAG colors
+# Determine cost color based on thresholds:
+# Green: $0.00 - $2.99
+# Amber: $3.00 - $7.49
+# Red: $7.50+
+set cost_color ""
+set cost_float (printf "%.2f" $cost)
+if test (echo "$cost < 3.00" | bc -l) -eq 1
+    set cost_color "\033[1;32m"  # Green
+else if test (echo "$cost < 7.50" | bc -l) -eq 1
+    set cost_color "\033[1;33m"  # Amber/Yellow
+else
+    set cost_color "\033[1;31m"  # Red
 end
 
-# Add pnpm version if available
-if command -v pnpm >/dev/null 2>&1
-    set pnpm_version (pnpm --version 2>/dev/null)
-    if test -n "$pnpm_version"
-        if test -n "$right_info"
-            set right_info "$right_info "
-        end
-        set right_info "$right_info"(printf "\033[1;33mpnpm v%s\033[0m" "$pnpm_version")
-    end
-end
+set segment3 (printf "%b\$%s\033[0m" "$cost_color" "$cost_float")
 
-# Add current time
-set current_time (date +%H:%M:%S)
-if test -n "$right_info"
-    set right_info "$right_info "
-end
-set right_info "$right_info"(printf "\033[2m%s\033[0m" "$current_time")
+# Yellow color for pipe separators
+set pipe_separator (printf "\033[1;33m | \033[0m")
 
-# Print the complete status line
-printf "\033[1;36m%s\033[0m%s \033[1;33m[%s]\033[0m \033[1;32m[%s%%]\033[0m %s" "$dir_name" "$git_info" "$model" "$context_pct" "$right_info"
+# Build the complete status line with pipe separators
+set output "$segment1$pipe_separator$segment2$pipe_separator$segment3"
+
+# Print the status line
+printf "%s" "$output"
