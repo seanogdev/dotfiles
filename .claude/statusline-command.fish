@@ -6,7 +6,12 @@ set input (cat)
 # Extract values from JSON
 set model (echo $input | jq -r ".model.display_name")
 set cwd (echo $input | jq -r ".workspace.current_dir")
-set cost (echo $input | jq -r ".cost.total_cost_usd // 0")
+
+# Get daily cost from ccusage
+set cost (npx ccusage@latest daily --json --offline --since (date +%Y%m%d) 2>/dev/null | jq -r '.totals.totalCost // 0')
+if test -z "$cost"
+    set cost 0
+end
 
 # Get directory name
 set dir_name (basename "$cwd")
