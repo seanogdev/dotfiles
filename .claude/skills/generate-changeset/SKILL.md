@@ -16,18 +16,16 @@ To guide an AI assistant in creating a changeset file that follows the [@changes
 2.  **Analyze existing changesets:** Read 1-2 existing changeset files in `.changeset/` to understand the project's changeset pattern and style.
 
 3.  **Determine packages to include:**
-
     - In a monorepo: Identify which package(s) were modified by checking `git status` or analyzing the changes
     - In a single-package repo: Use the package name from `package.json`
 
 4.  **Generate changeset content:**
-
     - Create a markdown file with YAML frontmatter
     - **IMPORTANT:** AI tools should ONLY generate `patch` bump types, never `minor` or `major`
     - Write a single, clear sentence summary of the changes following the project's existing changeset style
 
 5.  **Save the changeset:**
-    - Generate a unique filename using the pattern: `[adjective]-[noun]-[verb].md` (e.g., `happy-lions-jump.md`)
+    - Generate a unique filename using the pattern: `[random-adjective]-[random-noun]-[random-verb].md` (e.g., `happy-lions-jump.md`)
     - Save to `.changeset/` directory
     - Inform the user that the changeset has been created and should be committed with their changes
 
@@ -76,13 +74,4 @@ The button component now correctly displays the hover state when the application
 
 - **Format:** Markdown with YAML frontmatter
 - **Location:** `.changeset/`
-- **Filename:** `[adjective]-[noun]-[verb].md`
-
-## Final Instructions
-
-1. Check if project uses changesets before generating
-2. Follow the project's existing changeset pattern
-3. Only use `patch` bump type
-4. Generate a unique, descriptive filename
-5. Keep the summary clear and concise
-6. Remind user to commit the changeset file with their changes
+- **Filename:** `[random-adjective]-[random-noun]-[random-verb].md`

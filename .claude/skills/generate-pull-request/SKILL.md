@@ -41,7 +41,7 @@ To guide an AI assistant in creating a pull request using the GitHub CLI (`gh pr
     - Run `git diff origin/[base-branch]...HEAD --stat` to get an overview of changes
 
 6.  **Generate PR content:**
-    - Fill in the template (if it exists) or create a well-structured description
+    - Fill in the template (if it exists) or use the default structure in [references/default-template.md](references/default-template.md)
     - Use markdown formatting for readability
     - Include code examples if relevant
     - Link to related issues, PRs, or documentation
@@ -56,44 +56,6 @@ To guide an AI assistant in creating a pull request using the GitHub CLI (`gh pr
       )"
       ```
     - Default base branch is usually `main` or `master` unless specified otherwise
-
-## PR Description Structure
-
-If no template exists, use this default structure:
-
-```markdown
-## Summary
-
-Brief overview of what this PR does and why.
-
-## Changes
-
-- List of key changes
-- Organized by component or feature
-- Include file paths when relevant
-
-## Testing
-
-- How this was tested
-- Test cases covered
-- Manual testing performed
-
-## Related Issues
-
-Closes #123
-Relates to #456
-
-## Screenshots (if applicable)
-
-[Include screenshots for UI changes]
-
-## Checklist
-
-- [ ] Tests added/updated
-- [ ] Documentation updated
-- [ ] Changeset added (if applicable)
-- [ ] No breaking changes (or documented if present)
-```
 
 ## Rules
 
@@ -136,13 +98,3 @@ EOF
 )"
 ```
 
-## Final Instructions
-
-1. Verify the branch is pushed to remote before creating PR
-2. Check for PR templates in the repository
-3. Analyze git changes and commits to understand the scope
-4. Generate a comprehensive PR title and description
-5. Use heredoc format for the `--body` parameter
-6. Create the PR using `gh pr create`
-7. Output the PR URL to the user after creation
-8. Remind user to request reviews if needed
