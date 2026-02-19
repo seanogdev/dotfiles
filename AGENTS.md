@@ -2,6 +2,8 @@
 
 This is a personal dotfiles repository that uses GNU Stow for symlink management and Homebrew for package installation. The setup follows a structured approach to manage configuration files across macOS systems.
 
+**Shell: Fish (`/opt/homebrew/bin/fish`) is the default shell. Use Fish for all commands unless noted otherwise.**
+
 ## Setup Commands
 
 **Initial setup:**
@@ -16,20 +18,19 @@ This is a personal dotfiles repository that uses GNU Stow for symlink management
 
 **Sync iCloud data (fonts and sensitive functions):**
 
-```bash
+```fish
 ./sync.sh
 ```
 
 **Update Homebrew packages:**
 
-```bash
+```fish
 brew bundle install --global  # Install from .Brewfile
 ```
 
 **Symlink dotfiles after adding/modifying files:**
 
-```bash
-# In Fish shell (recommended)
+```fish
 stow-local
 
 # Or directly with stow
@@ -82,13 +83,23 @@ stow -d $HOME/projects/personal/dotfiles -t $HOME --no-folding --adopt --stow .
 └── gh/             # GitHub CLI configuration
 
 .claude/
-├── commands/       # Custom Claude Code slash commands
-└── skills/         # Claude Code skills for specialized tasks
+├── agents/             # MCP agent configs
+├── commands/           # Custom slash commands
+├── skills/             # Installable Claude Code skills
+├── CLAUDE.md           # Claude behavior instructions (stow-managed → ~/.claude/CLAUDE.md)
+└── settings.local.json # Local Claude settings (gitignored)
 ```
 
-## Development Environment
+## Maintenance
 
-- Default shell: Fish (`/opt/homebrew/bin/fish`)
-- Node.js: Managed via FNM with automatic version switching
-- Package managers: npm, pnpm (with custom Starship indicators)
-- Editor: VS Code with extensive extension set defined in `.Brewfile`
+**Update all system tools (Homebrew, fish plugins, macOS, etc.):**
+
+```fish
+update-mac
+```
+
+## Gotchas
+
+- **`--adopt` flag**: Stow moves conflicting files from `$HOME` into the dotfiles repo. Run `git diff` after stowing to review any adopted files before committing.
+- **`.stow-local-ignore`**: Lists files excluded from symlinking (e.g., `CLAUDE.md`, `AGENTS.md`, `.git`). Edit to prevent specific files from being linked.
+- **`CLAUDE.md` is a symlink**: Points to `AGENTS.md` so both Claude Code and generic agent tools share the same context.
