@@ -1,6 +1,6 @@
 ---
 name: create-branch
-description: Create a new git branch from main/master with a maximum of 17 characters. Prompts for branch name or infers from context.
+description: Create a new git branch from main/master with a maximum of 17 characters. Use when the user asks to create a branch, start new work, or begin a feature/fix.
 ---
 
 # Create Git Branch

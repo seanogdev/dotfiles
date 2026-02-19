@@ -7,20 +7,13 @@ set input (cat)
 set model (echo $input | jq -r ".model.display_name")
 set cwd (echo $input | jq -r ".workspace.current_dir")
 
-# Get daily cost from ccusage
-set today_date (date +%Y%m%d)
-set ccusage_output (npx ccusage@latest daily --json --offline --since $today_date 2>/dev/null)
+# Get today's cost from ccusage
+set today_iso (date +%Y-%m-%d)
+set ccusage_output (npx ccusage@latest daily --json 2>/dev/null)
+set cost (echo $ccusage_output | jq -r --arg date "$today_iso" '(.daily[] | select(.date == $date) | .totalCost) // 0')
 
-# Validate we got data for today specifically
-set daily_date (echo $ccusage_output | jq -r '.daily[0].date // ""')
-set cost (echo $ccusage_output | jq -r '.totals.totalCost // 0')
-
-# Check if the date matches today and cost is reasonable (< $500/day)
-if test -z "$cost"; or test "$cost" = "null"; or test "$daily_date" != (date +%Y-%m-%d)
+if test -z "$cost"; or test "$cost" = "null"
     set cost 0
-else if test (echo "$cost > 500" | bc -l) -eq 1
-    # If cost seems unreasonably high for a single day, show N/A
-    set cost "N/A"
 end
 
 # Get directory name
