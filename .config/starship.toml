@@ -36,6 +36,7 @@ error_symbol = "[❯](red)"
 [git_branch]
 symbol = " "
 format = "[$symbol$branch]($style) "
+ignore_bare_repo = true
 
 [jobs]
 symbol = ""
