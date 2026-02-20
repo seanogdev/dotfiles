@@ -1,4 +1,4 @@
-You should follow the `karpathy-guidelines` skill for all coding tasks.
+You should follow the karpathy-guidelines in SKILL.md for all coding tasks.
 
 ## Browser Automation
 
