@@ -1,6 +1,6 @@
 ---
 name: move-rename-files
-description: Efficiently move, rename, and update file references across a codebase. Use when the user wants to: (1) move files to a new directory and update all import paths, (2) rename files and fix all references, (3) bulk-restructure a directory and update deep import paths. Follows the project's existing naming conventions.
+description: Efficiently move, rename, and update file references across a codebase. Triggers — (1) move files to a new directory and update all import paths, (2) rename files and fix all references, (3) bulk-restructure a directory and update deep import paths. Follows the project's existing naming conventions.
 ---
 
 # Move, Rename & Update Files
