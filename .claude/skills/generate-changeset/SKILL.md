@@ -54,7 +54,7 @@ Brief summary of the change
 
 1. **ALWAYS use `patch` for bump type** - Never generate `minor` or `major` changesets
 2. **Follow existing style** - Match the tone and format of existing changesets in the project
-3. **Be concise** - Keep the summary brief but informative
+3. **Maximum context, minimum words** - One simple sentence that packs in as much useful context as possible. You may lead with the area of the product being changed (e.g., "Checkout page now..."). Every word should earn its place. No text in brackets, parentheses, or any other delimiters, and no second paragraph or trailing notes.
 4. **Use present tense** - Write summaries in present tense (e.g., "Fixes bug" not "Fixed bug")
 5. **One changeset per logical change** - If there are multiple unrelated changes, create multiple changesets
 
@@ -65,9 +65,7 @@ Brief summary of the change
 "@myapp/ui": patch
 ---
 
-Fixes button hover state in dark mode
-
-The button component now correctly displays the hover state when the application is in dark mode. Previously, the hover state was using the light theme colors.
+Fixes button hover state in dark mode.
 ```
 
 ## Output
