@@ -97,7 +97,7 @@ end
 set w_model (string length -- "$model")
 set w_cost (math "1 + "(string length -- "$cost_display"))  # $ + digits
 set w_tokens (string length -- (printf "%sk/%sk [%s%%]" "$tokens_k" "$size_k" "$pct_display"))
-set w_separators 8  # 2 separators × " • " (3 chars) + 2 spaces flanking the bar
+set w_separators 11  # 3 separators × " • " (3 chars) + 2 spaces flanking the bar
 set w_other (math "$w_dir + $w_git + $w_model + $w_cost + $w_tokens + $w_separators")
 set bar_width (math "max(5, $term_width - $w_other - 7)")
 set filled (math --scale=0 "$bar_width * $used_pct / 100")
@@ -113,7 +113,7 @@ set segment5 (printf "%b%s%s\033[0m" "$token_color" "$filled_str" "$empty_str")
 set pipe_separator (printf " \033[38;5;242m•\033[0m ")
 
 # Build the complete status line with pipe separators
-set output "$segment1$pipe_separator$segment2$pipe_separator$segment3 $segment5 $segment4"
+set output "$segment1$pipe_separator$segment2$pipe_separator$segment5 $segment4$pipe_separator$segment3"
 
 # Print the status line
 printf "%s" "$output"
