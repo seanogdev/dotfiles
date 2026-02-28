@@ -1,6 +1,6 @@
 ---
 name: generate-pull-request
-description: Generate a pull request using GitHub CLI following the project's pull request template.
+description: Generate a pull request using GitHub CLI following the project's PR template.
 ---
 
 # Rule: Generating a Pull Request
@@ -11,23 +11,29 @@ To guide an AI assistant in creating a pull request using the GitHub CLI (`gh pr
 
 ## Process
 
-1.  **Verify branch is pushed:**
+1.  **Check for a changeset (if the project uses changesets):**
+    - Look for a `.changeset` directory at the project root
+    - If it exists, check whether there's already a changeset for the current changes: `ls .changeset/*.md 2>/dev/null | grep -v README`
+    - If no changeset exists yet, generate one now using the `generate-changeset` skill before continuing
+    - This ensures the changeset is committed alongside the changes, not as an afterthought
+
+2.  **Verify branch is pushed:**
     - Check that the current branch exists on remote: `git ls-remote --heads origin $(git branch --show-current)`
     - If not pushed, push the branch first: `git push origin HEAD`
     - This is required before creating a PR
 
-2.  **Check for PR templates:** Look for pull request templates in common locations:
+3.  **Check for PR templates:** Look for pull request templates in common locations:
     - `.github/pull_request_template.md`
     - `.github/PULL_REQUEST_TEMPLATE.md`
     - `.github/PULL_REQUEST_TEMPLATE/*.md` (multiple templates)
     - `docs/pull_request_template.md`
 
-3.  **Analyze the template:** If a template exists, read it to understand:
+4.  **Analyze the template:** If a template exists, read it to understand:
     - Required sections and format
     - What information is expected
     - Any checklists or specific requirements
 
-4.  **Gather PR information:**
+5.  **Gather PR information:**
     - **Title:** Generate a clear, concise title summarizing the changes
     - **Description:** Analyze git changes to create a comprehensive description
     - **Changes summary:** List key changes, files modified, and functionality added/updated
@@ -35,18 +41,18 @@ To guide an AI assistant in creating a pull request using the GitHub CLI (`gh pr
     - **Testing:** Document what was tested
     - **Checklist items:** Complete any checklist items from the template
 
-5.  **Analyze git state:**
+6.  **Analyze git state:**
     - Run `git status` to confirm there are changes to include
     - Run `git log origin/[base-branch]..HEAD` to see commits that will be in the PR
     - Run `git diff origin/[base-branch]...HEAD --stat` to get an overview of changes
 
-6.  **Generate PR content:**
+7.  **Generate PR content:**
     - Fill in the template (if it exists) or use the default structure in [references/default-template.md](references/default-template.md)
     - Use markdown formatting for readability
     - Include code examples if relevant
     - Link to related issues, PRs, or documentation
 
-7.  **Create the PR:**
+8.  **Create the PR:**
     - Use `gh pr create --title "..." --body "..."`
     - For multi-line body content, use a heredoc for proper formatting:
       ```bash
@@ -97,4 +103,3 @@ Closes #789
 EOF
 )"
 ```
-
