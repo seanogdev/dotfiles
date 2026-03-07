@@ -1,6 +1,6 @@
 ---
 name: generate-changeset
-description: Generate a changeset file for the current changes following the changesets pattern used in the project.
+description: Generate a changeset file for the current changes following the changesets pattern used in the project. Use when the user asks to add a changelog entry, document a change for release, bump the version, or says "add a changeset" or "I need a changeset". Also trigger when preparing changes for a PR in a project that uses changesets.
 ---
 
 # Rule: Generating a Changeset

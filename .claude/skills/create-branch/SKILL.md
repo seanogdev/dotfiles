@@ -1,6 +1,6 @@
 ---
 name: create-branch
-description: Create a new git branch from main/master with a maximum of 17 characters. Use when the user asks to create a branch, start new work, or begin a feature/fix.
+description: Create a new git branch from main/master with a maximum of 17 characters. Use when the user asks to create a branch, start new work, begin a feature/fix, work on a ticket, or start implementing something. Also use when the user says things like "let's begin", "new task", or "start fresh".
 ---
 
 # Create Git Branch
@@ -18,8 +18,9 @@ description: Create a new git branch from main/master with a maximum of 17 chara
    - Should use kebab-case (lowercase with hyphens)
    - Should be descriptive but concise
 5. If the suggested/provided name is too long, offer a shortened version
-6. Create the branch: `git checkout -b <branch-name>`
-7. Confirm the branch was created successfully
+6. Create the branch: `git checkout -b <branch-name>` — this switches to the new branch automatically
+7. Push the branch to origin: `git push -u origin <branch-name>`
+8. Confirm the branch was created, you're now on it, and it's tracking origin
 
 ## Branch Naming Guidelines
 
