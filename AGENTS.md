@@ -90,6 +90,10 @@ stow -d $HOME/projects/personal/dotfiles -t $HOME --no-folding --adopt --stow .
 └── settings.local.json # Local Claude settings (gitignored)
 ```
 
+## Setup: Claude Code Status Line
+
+The statusline script lives at `~/.claude/statusline-command.fish` (symlinked from dotfiles via stow).
+
 ## Maintenance
 
 **Update all system tools (Homebrew, fish plugins, macOS, etc.):**

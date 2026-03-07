@@ -1,6 +1,6 @@
 ---
 name: generate-pull-request
-description: Generate a pull request using GitHub CLI following the project's PR template.
+description: Generate a pull request using GitHub CLI following the project's PR template. Use when the user wants to open a PR, submit for review, send changes upstream, create a merge request, or says things like "PR this", "submit this", or "I'm done with this feature".
 ---
 
 # Rule: Generating a Pull Request
