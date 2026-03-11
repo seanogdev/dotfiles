@@ -10,15 +10,6 @@ set tokens_used (echo $input | jq -r '((.context_window.current_usage.input_toke
 set context_size (echo $input | jq -r '.context_window.context_window_size // 200000')
 set used_pct (echo $input | jq -r '.context_window.used_percentage // 0')
 
-# Get today's cost from ccusage
-set today_iso (date +%Y-%m-%d)
-set ccusage_output (npx ccusage@latest daily --json 2>/dev/null)
-set cost (echo $ccusage_output | jq -r --arg date "$today_iso" '(.daily[] | select(.date == $date) | .totalCost) // 0')
-
-if test -z "$cost"; or test "$cost" = "null"
-    set cost 0
-end
-
 # Get directory name
 set dir_name (basename "$cwd")
 
@@ -44,29 +35,7 @@ else
 end
 set segment2 (printf "\033[38;5;208m✻\033[0m %b%s\033[0m" "$model_color" "$model")
 
-# Segment 3: cost in RAG colors
-# Determine cost color based on thresholds:
-# Green: $0.00 - $4.99
-# Amber: $5.00 - $39.99
-# Red: $40.00+
-set cost_color ""
-if test "$cost" = "N/A"
-    set cost_color "\033[1;31m"  # Red for N/A (error state)
-    set cost_display "N/A"
-else
-    set cost_display (printf "%.2f" $cost)
-    if test (echo "$cost < 15.00" | bc -l) -eq 1
-        set cost_color "\033[1;32m"  # Green
-    else if test (echo "$cost < 50.00" | bc -l) -eq 1
-        set cost_color "\033[1;33m"  # Amber/Yellow
-    else
-        set cost_color "\033[1;31m"  # Red
-    end
-end
-
-set segment3 (printf "%b\$%s\033[0m" "$cost_color" "$cost_display")
-
-# Segment 4 & 5: token count and progress bar
+# Segment 3 & 4: token count and progress bar
 # Determine color based on usage percentage
 if test (echo "$used_pct < 50" | bc -l) -eq 1
     set token_color "\033[1;32m"  # Green
@@ -79,27 +48,10 @@ end
 set tokens_k (math --scale=1 "$tokens_used / 1000")
 set size_k (math --scale=0 "$context_size / 1000")
 set pct_display (math --scale=0 "$used_pct")
-set segment4 (printf "%b%sk/%sk [%s%%]\033[0m" "$token_color" "$tokens_k" "$size_k" "$pct_display")
+set segment3 (printf "%b%sk/%sk [%s%%]\033[0m" "$token_color" "$tokens_k" "$size_k" "$pct_display")
 
-# Dynamic bar width: fill remaining terminal width minus a 4-char safety buffer
-set term_width (stty size </dev/tty 2>/dev/null | string split ' ')[2]
-if test -z "$term_width"
-    set term_width (tput cols 2>/dev/null)
-end
-if test -z "$term_width"
-    set term_width 80
-end
-set w_dir (string length -- "$dir_name")
-set w_git 0
-if test -n "$git_branch"
-    set w_git (math "4 + "(string length -- "$git_branch"))  # space + 2-col icon + space + branch
-end
-set w_model (string length -- "$model")
-set w_cost (math "1 + "(string length -- "$cost_display"))  # $ + digits
-set w_tokens (string length -- (printf "%sk/%sk [%s%%]" "$tokens_k" "$size_k" "$pct_display"))
-set w_separators 11  # 3 separators × " • " (3 chars) + 2 spaces flanking the bar
-set w_other (math "$w_dir + $w_git + $w_model + $w_cost + $w_tokens + $w_separators")
-set bar_width (math "max(5, $term_width - $w_other - 7)")
+# Fixed-width progress bar
+set bar_width 16
 set filled (math --scale=0 "$bar_width * $used_pct / 100")
 if test $filled -gt $bar_width
     set filled $bar_width
@@ -107,13 +59,13 @@ end
 set empty (math "$bar_width - $filled")
 set filled_str (string repeat -n $filled "█")
 set empty_str (string repeat -n $empty "░")
-set segment5 (printf "%b%s%s\033[0m" "$token_color" "$filled_str" "$empty_str")
+set segment4 (printf "%b%s%s\033[0m" "$token_color" "$filled_str" "$empty_str")
 
 # Yellow color for pipe separators
 set pipe_separator (printf " \033[38;5;242m•\033[0m ")
 
 # Build the complete status line with pipe separators
-set output "$segment1$pipe_separator$segment2$pipe_separator$segment5 $segment4$pipe_separator$segment3"
+set output "$segment1$pipe_separator$segment2$pipe_separator$segment4 $segment3"
 
 # Print the status line
 printf "%s" "$output"
