@@ -3,6 +3,7 @@ keybind = option+backspace=text:\x17
 keybind = super+alt+shift+j=write_screen_file:open
 keybind = super+shift+j=write_screen_file:paste
 keybind = shift+enter=text:\x1b\r
+tab-inherit-working-directory = true
 theme = Github Dark High Contrast
 window-colorspace = display-p3
 window-padding-x = 12
