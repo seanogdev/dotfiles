@@ -1,4 +1,5 @@
-- Use `agent-browser` for web automation, read `agent-browser --help` for all commands.
-- Use PR templates provided by the repository first.
-- Github: Run `gh help` for all Github CLI commands.
-- I'm using a bad dictation tool. Whenever you hear the words "claw" or "cloud", assume I meant "Claude".
+- Use `rg` instead of `grep`
+- Use `agent-browser` for web automation, read `agent-browser --help` for all commands
+- Use PR templates provided by the repository first
+- Github: Run `gh help` for all Github CLI commands
+- I'm using an open-source dictation tool. Whenever you see the words "claw" or "cloud", assume I meant "Claude"
