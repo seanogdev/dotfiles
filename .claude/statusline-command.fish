@@ -4,7 +4,7 @@
 set input (cat)
 
 # Extract values from JSON
-set model (echo $input | jq -r ".model.display_name")
+set model (echo $input | jq -r ".model.display_name" | string replace " (1M context)" " 1M")
 set cwd (echo $input | jq -r ".workspace.current_dir")
 set tokens_used (echo $input | jq -r '((.context_window.current_usage.input_tokens // 0) + (.context_window.current_usage.cache_creation_input_tokens // 0) + (.context_window.current_usage.cache_read_input_tokens // 0))')
 set context_size (echo $input | jq -r '.context_window.context_window_size // 200000')
@@ -45,10 +45,21 @@ else
     set token_color "\033[1;31m"  # Red
 end
 
-set tokens_k (math --scale=1 "$tokens_used / 1000")
-set size_k (math --scale=0 "$context_size / 1000")
 set pct_display (math --scale=0 "$used_pct")
-set segment3 (printf "%b%sk/%sk [%s%%]\033[0m" "$token_color" "$tokens_k" "$size_k" "$pct_display")
+
+# Format token counts: show as M if >= 1000K, otherwise K
+if test $tokens_used -ge 1000000
+    set tokens_fmt (math --scale=1 "$tokens_used / 1000000")"M"
+else
+    set tokens_fmt (math --scale=1 "$tokens_used / 1000")"k"
+end
+if test $context_size -ge 1000000
+    set size_fmt (math --scale=0 "$context_size / 1000000")"M"
+else
+    set size_fmt (math --scale=0 "$context_size / 1000")"k"
+end
+
+set segment3 (printf "%b󰆼 %s/%s [%s%%]\033[0m" "$token_color" "$tokens_fmt" "$size_fmt" "$pct_display")
 
 # Fixed-width progress bar
 set bar_width 16
