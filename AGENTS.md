@@ -102,6 +102,11 @@ The statusline script lives at `~/.claude/statusline-command.fish` (symlinked fr
 update-mac
 ```
 
+## Ghostty
+
+- **Terminal**: Ghostty is the primary terminal emulator. Config lives at `.config/ghostty/config`.
+- **Docs**: Always verify config options against https://ghostty.org/docs/config/reference before adding them — Ghostty does not warn on unknown fields.
+
 ## Gotchas
 
 - **`--adopt` flag**: Stow moves conflicting files from `$HOME` into the dotfiles repo. Run `git diff` after stowing to review any adopted files before committing.

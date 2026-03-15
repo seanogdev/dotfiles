@@ -1,1 +1,2 @@
-set -gx EDITOR code
+set -gx EDITOR "code --wait"
+set -gx VISUAL "code --wait"
