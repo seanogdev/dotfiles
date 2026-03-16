@@ -8,7 +8,9 @@ set model (echo $input | jq -r ".model.display_name" | string replace " (1M cont
 set cwd (echo $input | jq -r ".workspace.current_dir")
 set tokens_used (echo $input | jq -r '((.context_window.current_usage.input_tokens // 0) + (.context_window.current_usage.cache_creation_input_tokens // 0) + (.context_window.current_usage.cache_read_input_tokens // 0))')
 set context_size (echo $input | jq -r '.context_window.context_window_size // 200000')
-set used_pct (echo $input | jq -r '.context_window.used_percentage // 0')
+set optimal_limit 200000
+set used_pct_of_optimal (echo "$tokens_used $optimal_limit" | awk '{printf "%.2f", ($1 / $2) * 100}')
+set used_pct_of_total (echo "$tokens_used $context_size" | awk '{printf "%.2f", ($1 / $2) * 100}')
 
 # Get directory name
 set dir_name (basename "$cwd")
@@ -36,16 +38,16 @@ end
 set segment2 (printf "\033[38;5;208m✻\033[0m %b%s\033[0m" "$model_color" "$model")
 
 # Segment 3 & 4: token count and progress bar
-# Determine color based on usage percentage
-if test (echo "$used_pct < 50" | bc -l) -eq 1
+# Color based on usage relative to the 200K optimal limit
+if test (echo "$used_pct_of_optimal < 50" | bc -l) -eq 1
     set token_color "\033[1;32m"  # Green
-else if test (echo "$used_pct < 80" | bc -l) -eq 1
+else if test (echo "$used_pct_of_optimal < 80" | bc -l) -eq 1
     set token_color "\033[1;33m"  # Amber
 else
     set token_color "\033[1;31m"  # Red
 end
 
-set pct_display (math --scale=0 "$used_pct")
+set pct_display (math --scale=0 "$used_pct_of_optimal")
 
 # Format token counts: show as M if >= 1000K, otherwise K
 if test $tokens_used -ge 1000000
@@ -53,6 +55,7 @@ if test $tokens_used -ge 1000000
 else
     set tokens_fmt (math --scale=1 "$tokens_used / 1000")"k"
 end
+set optimal_fmt (math --scale=0 "$optimal_limit / 1000")"k"
 if test $context_size -ge 1000000
     set size_fmt (math --scale=0 "$context_size / 1000000")"M"
 else
@@ -61,16 +64,37 @@ end
 
 set segment3 (printf "%b󰆼 %s/%s [%s%%]\033[0m" "$token_color" "$tokens_fmt" "$size_fmt" "$pct_display")
 
-# Fixed-width progress bar
-set bar_width 16
-set filled (math --scale=0 "$bar_width * $used_pct / 100")
-if test $filled -gt $bar_width
-    set filled $bar_width
+# Progress bar: two zones — optimal (0-200K) gets 14 chars, overflow (200K-1M) gets 6 chars
+set optimal_width 14
+set overflow_width 6
+set bar_width (math "$optimal_width + $overflow_width")
+
+# How many chars are filled in each zone
+if test (echo "$tokens_used <= $optimal_limit" | bc -l) -eq 1
+    # Usage within optimal zone
+    set optimal_filled (math --scale=0 "$optimal_width * $tokens_used / $optimal_limit")
+    set overflow_filled 0
+else
+    # Usage spills into overflow zone
+    set optimal_filled $optimal_width
+    set overflow_tokens (math "$tokens_used - $optimal_limit")
+    set overflow_total (math "$context_size - $optimal_limit")
+    set overflow_filled (math --scale=0 "$overflow_width * $overflow_tokens / $overflow_total")
+    if test $overflow_filled -gt $overflow_width
+        set overflow_filled $overflow_width
+    end
 end
-set empty (math "$bar_width - $filled")
-set filled_str (string repeat -n $filled "█")
-set empty_str (string repeat -n $empty "░")
-set segment4 (printf "%b%s%s\033[0m" "$token_color" "$filled_str" "$empty_str")
+
+# Build the bar in a single printf to avoid fish variable concatenation gaps
+set opt_empty (math "$optimal_width - $optimal_filled")
+set ovf_empty (math "$overflow_width - $overflow_filled")
+
+set opt_filled_chars (string repeat -n $optimal_filled "█")
+set opt_empty_chars (string repeat -n $opt_empty "░")
+set ovf_filled_chars (string repeat -n $overflow_filled "█")
+set ovf_empty_chars (string repeat -n $ovf_empty "░")
+
+set segment4 (printf "%b%s\033[38;5;242m%s│\033[0m%b%s\033[38;5;237m%s\033[0m" "$token_color" "$opt_filled_chars" "$opt_empty_chars" "$token_color" "$ovf_filled_chars" "$ovf_empty_chars")
 
 # Yellow color for pipe separators
 set pipe_separator (printf " \033[38;5;242m•\033[0m ")
