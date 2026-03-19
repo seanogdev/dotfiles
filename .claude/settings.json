@@ -71,6 +71,15 @@
             "command": "~/.claude/hooks/block-npmjs-webfetch.sh"
           }
         ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/block-npx-skills.sh"
+          }
+        ]
       }
     ]
   },

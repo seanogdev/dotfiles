@@ -3,3 +3,4 @@
 - Use PR templates provided by the repository first
 - Github: Run `gh help` for all Github CLI commands
 - I'm using an open-source dictation tool. Whenever you see the words "claw" or "cloud", assume I meant "Claude"
+- Use `skills` directly (not `npx skills`) — it's installed globally via pnpm
