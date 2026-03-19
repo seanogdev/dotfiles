@@ -1,0 +1,81 @@
+{
+  "version": 3,
+  "skills": {
+    "agent-browser": {
+      "source": "vercel-labs/agent-browser",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/vercel-labs/agent-browser.git",
+      "skillPath": "skills/agent-browser/SKILL.md",
+      "skillFolderHash": "d22b7962fb118a40f0e2e27af2fdeab12f2651a8",
+      "pluginName": "agent-browser",
+      "installedAt": "2026-03-19T20:39:19.612Z",
+      "updatedAt": "2026-03-19T20:39:19.612Z"
+    },
+    "claude-md-improver": {
+      "source": "anthropics/claude-plugins-official",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/anthropics/claude-plugins-official.git",
+      "skillPath": "plugins/claude-md-management/skills/claude-md-improver/SKILL.md",
+      "skillFolderHash": "7188018e6710998fbc3227fdacd1b2b6e0508c38",
+      "installedAt": "2026-03-19T20:39:33.198Z",
+      "updatedAt": "2026-03-19T20:39:33.198Z"
+    },
+    "frontend-design": {
+      "source": "anthropics/claude-plugins-official",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/anthropics/claude-plugins-official.git",
+      "skillPath": "plugins/frontend-design/skills/frontend-design/SKILL.md",
+      "skillFolderHash": "3bd61bab4d6b858c5d3af8adf14b917ce853e4c5",
+      "installedAt": "2026-03-19T20:39:33.599Z",
+      "updatedAt": "2026-03-19T20:39:33.599Z"
+    },
+    "skill-creator": {
+      "source": "anthropics/claude-plugins-official",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/anthropics/claude-plugins-official.git",
+      "skillPath": "plugins/skill-creator/skills/skill-creator/SKILL.md",
+      "skillFolderHash": "5c26c1472b98de33a48074ba5d3efe3a727b8e37",
+      "installedAt": "2026-03-19T20:39:37.035Z",
+      "updatedAt": "2026-03-19T20:39:37.035Z"
+    },
+    "nuxt": {
+      "source": "antfu/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/antfu/skills.git",
+      "skillPath": "skills/nuxt/SKILL.md",
+      "skillFolderHash": "a83cf8de14f79487619c7938847a0070726225da",
+      "installedAt": "2026-03-19T20:44:05.069Z",
+      "updatedAt": "2026-03-19T20:44:05.069Z"
+    },
+    "vue": {
+      "source": "antfu/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/antfu/skills.git",
+      "skillPath": "skills/vue/SKILL.md",
+      "skillFolderHash": "cff239de1fa9a889b40166c85d13157b8ae5408c",
+      "installedAt": "2026-03-19T20:44:05.425Z",
+      "updatedAt": "2026-03-19T20:44:05.425Z"
+    },
+    "wcag-audit-patterns": {
+      "source": "wshobson/agents",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/wshobson/agents.git",
+      "skillPath": "plugins/accessibility-compliance/skills/wcag-audit-patterns/SKILL.md",
+      "skillFolderHash": "7c02543c9f3ec5d2ee72cf08a0e432094cb337b2",
+      "installedAt": "2026-03-19T20:44:12.933Z",
+      "updatedAt": "2026-03-19T20:44:12.933Z"
+    }
+  },
+  "dismissed": {
+    "findSkillsPrompt": true
+  },
+  "lastSelectedAgents": [
+    "amp",
+    "codex",
+    "gemini-cli",
+    "github-copilot",
+    "kimi-cli",
+    "opencode",
+    "claude-code"
+  ]
+}
