@@ -9,7 +9,7 @@
       "skillFolderHash": "d22b7962fb118a40f0e2e27af2fdeab12f2651a8",
       "pluginName": "agent-browser",
       "installedAt": "2026-03-19T20:39:19.612Z",
-      "updatedAt": "2026-03-19T20:39:19.612Z"
+      "updatedAt": "2026-03-19T21:04:17.281Z"
     },
     "claude-md-improver": {
       "source": "anthropics/claude-plugins-official",
@@ -18,7 +18,7 @@
       "skillPath": "plugins/claude-md-management/skills/claude-md-improver/SKILL.md",
       "skillFolderHash": "7188018e6710998fbc3227fdacd1b2b6e0508c38",
       "installedAt": "2026-03-19T20:39:33.198Z",
-      "updatedAt": "2026-03-19T20:39:33.198Z"
+      "updatedAt": "2026-03-19T21:02:55.005Z"
     },
     "frontend-design": {
       "source": "anthropics/claude-plugins-official",
@@ -27,7 +27,7 @@
       "skillPath": "plugins/frontend-design/skills/frontend-design/SKILL.md",
       "skillFolderHash": "3bd61bab4d6b858c5d3af8adf14b917ce853e4c5",
       "installedAt": "2026-03-19T20:39:33.599Z",
-      "updatedAt": "2026-03-19T20:39:33.599Z"
+      "updatedAt": "2026-03-19T21:03:01.379Z"
     },
     "skill-creator": {
       "source": "anthropics/claude-plugins-official",
@@ -36,7 +36,7 @@
       "skillPath": "plugins/skill-creator/skills/skill-creator/SKILL.md",
       "skillFolderHash": "5c26c1472b98de33a48074ba5d3efe3a727b8e37",
       "installedAt": "2026-03-19T20:39:37.035Z",
-      "updatedAt": "2026-03-19T20:39:37.035Z"
+      "updatedAt": "2026-03-19T21:03:08.695Z"
     },
     "nuxt": {
       "source": "antfu/skills",
@@ -45,7 +45,7 @@
       "skillPath": "skills/nuxt/SKILL.md",
       "skillFolderHash": "a83cf8de14f79487619c7938847a0070726225da",
       "installedAt": "2026-03-19T20:44:05.069Z",
-      "updatedAt": "2026-03-19T20:44:05.069Z"
+      "updatedAt": "2026-03-19T21:03:15.614Z"
     },
     "vue": {
       "source": "antfu/skills",
@@ -54,7 +54,7 @@
       "skillPath": "skills/vue/SKILL.md",
       "skillFolderHash": "cff239de1fa9a889b40166c85d13157b8ae5408c",
       "installedAt": "2026-03-19T20:44:05.425Z",
-      "updatedAt": "2026-03-19T20:44:05.425Z"
+      "updatedAt": "2026-03-19T21:03:23.422Z"
     },
     "wcag-audit-patterns": {
       "source": "wshobson/agents",
@@ -63,7 +63,7 @@
       "skillPath": "plugins/accessibility-compliance/skills/wcag-audit-patterns/SKILL.md",
       "skillFolderHash": "7c02543c9f3ec5d2ee72cf08a0e432094cb337b2",
       "installedAt": "2026-03-19T20:44:12.933Z",
-      "updatedAt": "2026-03-19T20:44:12.933Z"
+      "updatedAt": "2026-03-19T21:03:30.443Z"
     }
   },
   "dismissed": {
