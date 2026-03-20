@@ -64,6 +64,15 @@
       "skillFolderHash": "7c02543c9f3ec5d2ee72cf08a0e432094cb337b2",
       "installedAt": "2026-03-19T20:44:12.933Z",
       "updatedAt": "2026-03-19T21:03:30.443Z"
+    },
+    "turborepo": {
+      "source": "vercel/turborepo",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/vercel/turborepo.git",
+      "skillPath": "skills/turborepo/SKILL.md",
+      "skillFolderHash": "433cbe86c4fd4d16ddd07a7e4ecf6fece4f09ba8",
+      "installedAt": "2026-03-20T17:14:34.965Z",
+      "updatedAt": "2026-03-20T17:14:34.965Z"
     }
   },
   "dismissed": {
