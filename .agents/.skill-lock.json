@@ -6,10 +6,9 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/vercel-labs/agent-browser.git",
       "skillPath": "skills/agent-browser/SKILL.md",
-      "skillFolderHash": "d22b7962fb118a40f0e2e27af2fdeab12f2651a8",
-      "pluginName": "agent-browser",
+      "skillFolderHash": "d601c797f9bbb8e999d98ff25d0ebdfb3acbd6aa",
       "installedAt": "2026-03-19T20:39:19.612Z",
-      "updatedAt": "2026-03-19T21:04:17.281Z"
+      "updatedAt": "2026-03-21T12:02:18.629Z"
     },
     "claude-md-improver": {
       "source": "anthropics/claude-plugins-official",
@@ -70,9 +69,9 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/vercel/turborepo.git",
       "skillPath": "skills/turborepo/SKILL.md",
-      "skillFolderHash": "433cbe86c4fd4d16ddd07a7e4ecf6fece4f09ba8",
+      "skillFolderHash": "ffaddc77a47eb43bed1adde40e223c7781a5e6ba",
       "installedAt": "2026-03-20T17:14:34.965Z",
-      "updatedAt": "2026-03-20T17:14:34.965Z"
+      "updatedAt": "2026-03-21T12:02:38.899Z"
     },
     "pnpm": {
       "source": "antfu/skills",
