@@ -73,6 +73,15 @@
       "skillFolderHash": "433cbe86c4fd4d16ddd07a7e4ecf6fece4f09ba8",
       "installedAt": "2026-03-20T17:14:34.965Z",
       "updatedAt": "2026-03-20T17:14:34.965Z"
+    },
+    "pnpm": {
+      "source": "antfu/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/antfu/skills.git",
+      "skillPath": "skills/pnpm/SKILL.md",
+      "skillFolderHash": "3e2f92c74abae6e9d2e4fc45b5d73a7b307348c9",
+      "installedAt": "2026-03-21T11:49:03.498Z",
+      "updatedAt": "2026-03-21T11:49:03.498Z"
     }
   },
   "dismissed": {
