@@ -107,6 +107,15 @@ update-mac
 - **Terminal**: Ghostty is the primary terminal emulator. Config lives at `.config/ghostty/config`.
 - **Docs**: Always verify config options against https://ghostty.org/docs/config/reference before adding them — Ghostty does not warn on unknown fields.
 
+## Skills
+
+Skills are installed **globally** — never into this repo. Existing skills live at `~/.agent/skills/`. Do not commit skill artifacts to the dotfiles repo. Always use `-g` and `-y` flags:
+
+```fish
+skills add <owner/repo@skill-name> -a claude-code -y -g
+```
+
+
 ## Gotchas
 
 - **`--adopt` flag**: Stow moves conflicting files from `$HOME` into the dotfiles repo. Run `git diff` after stowing to review any adopted files before committing.

@@ -81,6 +81,24 @@
       "skillFolderHash": "3e2f92c74abae6e9d2e4fc45b5d73a7b307348c9",
       "installedAt": "2026-03-21T11:49:03.498Z",
       "updatedAt": "2026-03-21T11:49:03.498Z"
+    },
+    "cloudflare": {
+      "source": "cloudflare/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/cloudflare/skills.git",
+      "skillPath": "skills/cloudflare/SKILL.md",
+      "skillFolderHash": "bc05e15b7e8215cdeaa288e0d2744323eeb5fd05",
+      "installedAt": "2026-03-21T18:14:26.088Z",
+      "updatedAt": "2026-03-21T18:14:26.088Z"
+    },
+    "wrangler": {
+      "source": "cloudflare/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/cloudflare/skills.git",
+      "skillPath": "skills/wrangler/SKILL.md",
+      "skillFolderHash": "14e1631a53c066784caa8bbdd70d94d95c40101a",
+      "installedAt": "2026-03-21T18:14:28.864Z",
+      "updatedAt": "2026-03-21T18:14:28.864Z"
     }
   },
   "dismissed": {
