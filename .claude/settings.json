@@ -55,7 +55,8 @@
       "Skill(agent-browser)",
       "WebFetch(domain:npmx.dev)",
       "WebSearch"
-    ]
+    ],
+    "defaultMode": "auto"
   },
   "hooks": {
     "PreToolUse": [
@@ -87,6 +88,7 @@
     "type": "command",
     "command": "~/.claude/statusline-command.fish"
   },
+  "showClearContextOnPlanAccept": true,
   "skipDangerousModePermissionPrompt": true,
-  "showClearContextOnPlanAccept": true
+  "skipAutoPermissionPrompt": true
 }

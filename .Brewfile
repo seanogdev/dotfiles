@@ -3,6 +3,7 @@ tap "null-dev/firefox-profile-switcher"
 brew "ca-certificates"
 brew "xz"
 brew "agent-browser"
+brew "devspace"
 brew "ffmpeg"
 brew "fish"
 brew "fnm"
@@ -33,7 +34,6 @@ cask "firefox"
 cask "font-metropolis"
 cask "font-monaspace"
 cask "ghostty"
-cask "google-chrome"
 cask "handy"
 cask "kap"
 cask "llamabarn"
@@ -51,10 +51,14 @@ cask "vivaldi"
 cask "vlc"
 cask "whatsapp"
 cask "zed"
+mas "1Password for Safari", id: 1569813296
+mas "Apple Configurator", id: 1037126344
 mas "Deliveries", id: 290986013
+mas "GarageBand", id: 682658836
 mas "Hand Mirror", id: 1502839586
 mas "Keyboard Keyboard", id: 1128271725
 mas "NepTunes", id: 1006739057
+mas "Numbers", id: 409203825
 mas "uBlock Origin Lite", id: 6745342698
 vscode "adamwalzer.string-converter"
 vscode "adpyke.codesnap"
@@ -64,6 +68,7 @@ vscode "amodio.toggle-excluded-files"
 vscode "antfu.iconify"
 vscode "antfu.slidev"
 vscode "anthropic.claude-code"
+vscode "astro-build.astro-vscode"
 vscode "be5invis.vscode-icontheme-nomo-dark"
 vscode "bradlc.vscode-tailwindcss"
 vscode "christian-kohler.npm-intellisense"
