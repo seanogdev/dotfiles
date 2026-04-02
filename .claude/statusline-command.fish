@@ -100,53 +100,49 @@ set segment4 (printf "%b%s\033[38;5;242m%s│\033[0m%b%s\033[38;5;237m%s\033[0m"
 set pipe_separator (printf " \033[38;5;242m•\033[0m ")
 
 # Segment 5: rate limits (5-hour and 7-day windows)
-set rate_limit_info ""
-set rl_5h_pct (echo $input | jq -r '.rate_limits[] | select(.window == "5h") | .used_percentage // empty' 2>/dev/null)
-set rl_5h_reset (echo $input | jq -r '.rate_limits[] | select(.window == "5h") | .resets_at // empty' 2>/dev/null)
-set rl_7d_pct (echo $input | jq -r '.rate_limits[] | select(.window == "7d") | .used_percentage // empty' 2>/dev/null)
-set rl_7d_reset (echo $input | jq -r '.rate_limits[] | select(.window == "7d") | .resets_at // empty' 2>/dev/null)
+#   Each entry: label, jq object key, jq array key, date format
+set rl_windows "5h,five_hour,5h,%H:%M" "7d,seven_day,7d,%d/%m"
+set rate_limit_segments
 
-if test -n "$rl_5h_pct"
-    # Color based on usage
-    if test (echo "$rl_5h_pct < 50" | bc -l) -eq 1
-        set rl5_color "\033[1;32m"
-    else if test (echo "$rl_5h_pct < 80" | bc -l) -eq 1
-        set rl5_color "\033[1;33m"
-    else
-        set rl5_color "\033[1;31m"
+for window in $rl_windows
+    set parts (string split "," $window)
+    set label $parts[1]
+    set obj_key $parts[2]
+    set arr_key $parts[3]
+    set time_fmt $parts[4]
+
+    # Try new object format, fall back to old array format
+    set pct (echo $input | jq -r ".rate_limits.$obj_key.used_percentage // empty" 2>/dev/null)
+    if test -z "$pct"
+        set pct (echo $input | jq -r ".rate_limits[] | select(.window == \"$arr_key\") | .used_percentage // empty" 2>/dev/null)
     end
-    # Format reset time as local HH:MM
-    if test -n "$rl_5h_reset"
-        set rl_5h_clean (echo $rl_5h_reset | string replace -r '\\..*' '' | string replace -r 'Z$' '')
-        set rl_5h_time (date -jf "%Y-%m-%dT%H:%M:%S" "$rl_5h_clean" "+%H:%M" 2>/dev/null; or echo $rl_5h_reset)
-        set rl5_segment (printf "%b5h: %s%% ↻%s\033[0m" "$rl5_color" "$rl_5h_pct" "$rl_5h_time")
-    else
-        set rl5_segment (printf "%b5h: %s%%\033[0m" "$rl5_color" "$rl_5h_pct")
+    test -z "$pct"; and continue
+
+    set reset_at (echo $input | jq -r ".rate_limits.$obj_key.resets_at // empty" 2>/dev/null)
+    if test -z "$reset_at"
+        set reset_at (echo $input | jq -r ".rate_limits[] | select(.window == \"$arr_key\") | .resets_at // empty" 2>/dev/null)
     end
-    set rate_limit_info "$rl5_segment"
+
+    # Color based on usage percentage
+    if test (echo "$pct < 50" | bc -l) -eq 1
+        set rl_color "\033[1;32m"
+    else if test (echo "$pct < 80" | bc -l) -eq 1
+        set rl_color "\033[1;33m"
+    else
+        set rl_color "\033[1;31m"
+    end
+
+    # Dim label, colored percentage, dim reset time
+    set dim "\033[38;5;242m"
+    if test -n "$reset_at"
+        set reset_time (date -r "$reset_at" "+$time_fmt" 2>/dev/null; or echo $reset_at)
+        set -a rate_limit_segments (printf "%b%s %b%s%%\033[0m %b%s\033[0m" "$dim" "$label" "$rl_color" "$pct" "$dim" "$reset_time")
+    else
+        set -a rate_limit_segments (printf "%b%s %b%s%%\033[0m" "$dim" "$label" "$rl_color" "$pct")
+    end
 end
 
-if test -n "$rl_7d_pct"
-    if test (echo "$rl_7d_pct < 50" | bc -l) -eq 1
-        set rl7_color "\033[1;32m"
-    else if test (echo "$rl_7d_pct < 80" | bc -l) -eq 1
-        set rl7_color "\033[1;33m"
-    else
-        set rl7_color "\033[1;31m"
-    end
-    if test -n "$rl_7d_reset"
-        set rl_7d_clean (echo $rl_7d_reset | string replace -r '\\..*' '' | string replace -r 'Z$' '')
-        set rl_7d_time (date -jf "%Y-%m-%dT%H:%M:%S" "$rl_7d_clean" "+%H:%M" 2>/dev/null; or echo $rl_7d_reset)
-        set rl7_segment (printf "%b7d: %s%% ↻%s\033[0m" "$rl7_color" "$rl_7d_pct" "$rl_7d_time")
-    else
-        set rl7_segment (printf "%b7d: %s%%\033[0m" "$rl7_color" "$rl_7d_pct")
-    end
-    if test -n "$rate_limit_info"
-        set rate_limit_info "$rate_limit_info $rl7_segment"
-    else
-        set rate_limit_info "$rl7_segment"
-    end
-end
+set rate_limit_info (string join "$pipe_separator" $rate_limit_segments)
 
 # Build the complete status line with pipe separators
 set output "$segment1$pipe_separator$segment2$pipe_separator$segment4 $segment3"
