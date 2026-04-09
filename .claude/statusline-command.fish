@@ -123,6 +123,9 @@ for window in $rl_windows
         set reset_at (echo $input | jq -r ".rate_limits[] | select(.window == \"$arr_key\") | .resets_at // empty" 2>/dev/null)
     end
 
+    # Round percentage to integer
+    set pct (printf "%.0f" "$pct")
+
     # Color based on usage percentage
     if test (echo "$pct < 50" | bc -l) -eq 1
         set rl_color "\033[1;32m"
