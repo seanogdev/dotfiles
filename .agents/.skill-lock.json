@@ -5,10 +5,11 @@
       "source": "vercel-labs/agent-browser",
       "sourceType": "github",
       "sourceUrl": "https://github.com/vercel-labs/agent-browser.git",
+      "ref": "main",
       "skillPath": "skills/agent-browser/SKILL.md",
-      "skillFolderHash": "d601c797f9bbb8e999d98ff25d0ebdfb3acbd6aa",
+      "skillFolderHash": "b6f762bf402cdfaf6a06514e9ce4142ce3e4fb4c",
       "installedAt": "2026-03-19T20:39:19.612Z",
-      "updatedAt": "2026-03-21T12:02:18.629Z"
+      "updatedAt": "2026-04-08T14:53:15.324Z"
     },
     "claude-md-improver": {
       "source": "anthropics/claude-plugins-official",
@@ -68,10 +69,11 @@
       "source": "vercel/turborepo",
       "sourceType": "github",
       "sourceUrl": "https://github.com/vercel/turborepo.git",
+      "ref": "main",
       "skillPath": "skills/turborepo/SKILL.md",
-      "skillFolderHash": "ffaddc77a47eb43bed1adde40e223c7781a5e6ba",
+      "skillFolderHash": "af601abf2492f693f40cb8e96b3641cf3f843ed6",
       "installedAt": "2026-03-20T17:14:34.965Z",
-      "updatedAt": "2026-03-21T12:02:38.899Z"
+      "updatedAt": "2026-04-08T14:53:18.791Z"
     },
     "pnpm": {
       "source": "antfu/skills",
@@ -86,19 +88,21 @@
       "source": "cloudflare/skills",
       "sourceType": "github",
       "sourceUrl": "https://github.com/cloudflare/skills.git",
+      "ref": "main",
       "skillPath": "skills/cloudflare/SKILL.md",
-      "skillFolderHash": "bc05e15b7e8215cdeaa288e0d2744323eeb5fd05",
+      "skillFolderHash": "f8cb65f36614663c6fabc082be7e905ba5da74d4",
       "installedAt": "2026-03-21T18:14:26.088Z",
-      "updatedAt": "2026-03-21T18:14:26.088Z"
+      "updatedAt": "2026-04-08T14:53:26.756Z"
     },
     "wrangler": {
       "source": "cloudflare/skills",
       "sourceType": "github",
       "sourceUrl": "https://github.com/cloudflare/skills.git",
+      "ref": "main",
       "skillPath": "skills/wrangler/SKILL.md",
-      "skillFolderHash": "14e1631a53c066784caa8bbdd70d94d95c40101a",
+      "skillFolderHash": "10976f5e35835e8a626aa978d6c45b8f9ba91d22",
       "installedAt": "2026-03-21T18:14:28.864Z",
-      "updatedAt": "2026-03-21T18:14:28.864Z"
+      "updatedAt": "2026-04-08T14:53:30.639Z"
     }
   },
   "dismissed": {
