@@ -1,5 +1,3 @@
 - Use `agent-browser` for web automation, read `agent-browser --help` for all commands
 - Use PR templates provided by the repository first. When drafting descriptions use the DAG concept in my content writer skill.
-- Github: Run `gh help` for all Github CLI commands
 - Use `skills` directly (not `npx skills`) — it's installed globally via pnpm. Always pass `-a claude-code` when adding skills
-- I'm using an open-source dictation tool. Whenever you see the words "claw" or "cloud", assume I meant "Claude"
