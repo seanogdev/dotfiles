@@ -109,11 +109,22 @@ update-mac
 
 ## Skills
 
-Skills are installed **globally** — never into this repo. Existing skills live at `~/.agent/skills/`. Do not commit skill artifacts to the dotfiles repo. Always use `-g` and `-y` flags:
+Skills are managed via `gh skill` (GitHub CLI, preview). User-scope skills live at `~/.claude/skills/` (not in this repo). Project-scope skills (shared with the repo) live in `.claude/skills/`. Do not commit user-scope skill artifacts here.
 
 ```fish
-skills add <owner/repo@skill-name> -a claude-code -y -g
+# install remote skill at user scope (default agent: claude-code)
+gh skill install <owner/repo> <skill-name> --agent claude-code --scope user
+
+# install from a large repo by exact path (faster, skips discovery)
+gh skill install anthropics/claude-plugins-official plugins/skill-creator/skills/skill-creator --agent claude-code --scope user
+
+# list / update / search
+gh skill list # (via ls ~/.claude/skills)
+gh skill update --all
+gh skill search <query>
 ```
+
+Project skills currently live in `.claude/skills/`: `generate-changeset`, `generate-pull-request`. iCloud-synced private skills (`content-writer`, `review-pr`) are symlinked into `~/.claude/skills/` by `sync.sh`.
 
 
 ## Gotchas

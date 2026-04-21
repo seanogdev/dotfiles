@@ -1,3 +1,3 @@
 - Use `agent-browser` for web automation, read `agent-browser --help` for all commands
 - Use PR templates provided by the repository first. When drafting descriptions use the DAG concept in my content writer skill.
-- Use `skills` directly (not `npx skills`) — it's installed globally via pnpm. Always pass `-a claude-code` when adding skills
+- Manage skills with `gh skill` (preview). Install remote skills to user scope: `gh skill install <owner/repo> <skill> --agent claude-code --scope user`. Never install skills into this repo.
