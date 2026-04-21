@@ -126,6 +126,15 @@ gh skill search <query>
 
 Project skills currently live in `.claude/skills/`: `generate-changeset`, `generate-pull-request`. iCloud-synced private skills (`content-writer`, `review-pr`) are symlinked into `~/.claude/skills/` by `sync.sh`.
 
+**Backup / restore** (mirrors `brew-backup` / `brew-restore`):
+
+```fish
+skills-backup   # dumps gh-managed skills to .Skillfile (committed, stow-linked to ~/.Skillfile)
+skills-restore  # runs gh skill install for each line (claude-code user scope)
+```
+
+`.Skillfile` lines are `<owner/repo> <skill-path>`. Local/iCloud/project-scope skills are intentionally excluded (no `github-repo` frontmatter).
+
 
 ## Gotchas
 
