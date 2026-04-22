@@ -1,10 +1,10 @@
 vercel-labs/agent-browser skills/agent-browser
 anthropics/claude-plugins-official plugins/claude-md-management/skills/claude-md-improver
 cloudflare/skills skills/cloudflare
-anthropics/claude-plugins-official plugins/frontend-design/skills/frontend-design
+anthropics/skills skills/frontend-design
 antfu/skills skills/nuxt
 antfu/skills skills/pnpm
-anthropics/claude-plugins-official plugins/skill-creator/skills/skill-creator
+anthropics/skills skills/skill-creator
 vercel/turborepo skills/turborepo
 antfu/skills skills/vue
 wshobson/agents plugins/accessibility-compliance/skills/wcag-audit-patterns
