@@ -83,9 +83,8 @@ stow -d $HOME/projects/personal/dotfiles -t $HOME --no-folding --adopt --stow .
 └── gh/             # GitHub CLI configuration
 
 .claude/
-├── agents/             # MCP agent configs
 ├── commands/           # Custom slash commands
-├── skills/             # Installable Claude Code skills
+├── skills/             # Project-scope Claude Code skills
 ├── CLAUDE.md           # Claude behavior instructions (stow-managed → ~/.claude/CLAUDE.md)
 └── settings.local.json # Local Claude settings (gitignored)
 ```
@@ -109,31 +108,34 @@ update-mac
 
 ## Skills
 
-Skills are managed via `gh skill` (GitHub CLI, preview). User-scope skills live at `~/.claude/skills/` (not in this repo). Project-scope skills (shared with the repo) live in `.claude/skills/`. Do not commit user-scope skill artifacts here.
+Skills are managed via `gh skill` (GitHub CLI, preview). The canonical install location is `~/.agents/skills/` (the agentskills.io convention). Claude Code reads from `~/.claude/skills/`, where each gh-managed skill is a symlink into `~/.agents/skills/<name>`. Project-scope skills (shared with the repo) live in `.claude/skills/`. Do not commit user-scope skill artifacts here.
 
 ```fish
-# install remote skill at user scope (default agent: claude-code)
-gh skill install <owner/repo> <skill-name> --agent claude-code --scope user
+# install to the canonical location (use --dir since no --agent maps there at user scope)
+gh skill install <owner/repo> <skill-path> --dir $HOME/.agents/skills --force
 
-# install from a large repo by exact path (faster, skips discovery)
-gh skill install anthropics/claude-plugins-official plugins/skill-creator/skills/skill-creator --agent claude-code --scope user
+# then symlink for Claude Code discovery
+ln -s $HOME/.agents/skills/<name> $HOME/.claude/skills/<name>
 
-# list / update / search
-gh skill list # (via ls ~/.claude/skills)
-gh skill update --all
+# update all skills in the canonical dir
+gh skill update --all --dir $HOME/.agents/skills
+
+# search
 gh skill search <query>
 ```
 
-Project skills currently live in `.claude/skills/`: `generate-changeset`, `generate-pull-request`. iCloud-synced private skills (`content-writer`, `review-pr`) are symlinked into `~/.claude/skills/` by `sync.sh`.
+`gh skill` does not maintain a lock file — it only injects source-tracking metadata into each `SKILL.md` frontmatter. `gh skill update` relies on that plus `--dir` to find skills outside the default host dirs.
+
+Project skills in `.claude/skills/`: `generate-changeset`, `generate-pull-request`. iCloud-synced private skills (`content-writer`, `review-pr`) are symlinked into `~/.claude/skills/` by `sync.sh`.
 
 **Backup / restore** (mirrors `brew-backup` / `brew-restore`):
 
 ```fish
-skills-backup   # dumps gh-managed skills to .Skillfile (committed, stow-linked to ~/.Skillfile)
-skills-restore  # runs gh skill install for each line (claude-code user scope)
+skills-backup   # scans ~/.agents/skills/, dumps to .Skillfile (committed, stow-linked to ~/.Skillfile)
+skills-restore  # installs each line to ~/.agents/skills/ via --dir, then symlinks into ~/.claude/skills/
 ```
 
-`.Skillfile` lines are `<owner/repo> <skill-path>`. Local/iCloud/project-scope skills are intentionally excluded (no `github-repo` frontmatter).
+`.Skillfile` lines are `<owner/repo> <skill-path>`. iCloud and project-scope skills are intentionally excluded (no `github-repo` frontmatter).
 
 
 ## Gotchas
