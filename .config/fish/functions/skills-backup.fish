@@ -1,5 +1,5 @@
-function skills-backup --description "Back up installed claude-code user-scope skills to \$HOME/.Skillfile"
-    set -l skills_dir $HOME/.claude/skills
+function skills-backup --description "Back up installed user-scope skills to \$HOME/.Skillfile"
+    set -l skills_dir $HOME/.agents/skills
     set -l outfile $HOME/.Skillfile
     test -d $skills_dir; or begin
         echo "No skills dir at $skills_dir" >&2
