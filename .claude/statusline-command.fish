@@ -64,38 +64,6 @@ end
 
 set segment3 (printf "%b󰆼 %s/%s [%s%%]\033[0m" "$token_color" "$tokens_fmt" "$size_fmt" "$pct_display")
 
-# Progress bar: two zones — optimal (0-200K) gets 14 chars, overflow (200K-1M) gets 6 chars
-set optimal_width 14
-set overflow_width 6
-set bar_width (math "$optimal_width + $overflow_width")
-
-# How many chars are filled in each zone
-if test (echo "$tokens_used <= $optimal_limit" | bc -l) -eq 1
-    # Usage within optimal zone
-    set optimal_filled (math --scale=0 "$optimal_width * $tokens_used / $optimal_limit")
-    set overflow_filled 0
-else
-    # Usage spills into overflow zone
-    set optimal_filled $optimal_width
-    set overflow_tokens (math "$tokens_used - $optimal_limit")
-    set overflow_total (math "$context_size - $optimal_limit")
-    set overflow_filled (math --scale=0 "$overflow_width * $overflow_tokens / $overflow_total")
-    if test $overflow_filled -gt $overflow_width
-        set overflow_filled $overflow_width
-    end
-end
-
-# Build the bar in a single printf to avoid fish variable concatenation gaps
-set opt_empty (math "$optimal_width - $optimal_filled")
-set ovf_empty (math "$overflow_width - $overflow_filled")
-
-set opt_filled_chars (string repeat -n $optimal_filled "█")
-set opt_empty_chars (string repeat -n $opt_empty "░")
-set ovf_filled_chars (string repeat -n $overflow_filled "█")
-set ovf_empty_chars (string repeat -n $ovf_empty "░")
-
-set segment4 (printf "%b%s\033[38;5;242m%s│\033[0m%b%s\033[38;5;237m%s\033[0m" "$token_color" "$opt_filled_chars" "$opt_empty_chars" "$token_color" "$ovf_filled_chars" "$ovf_empty_chars")
-
 # Yellow color for pipe separators
 set pipe_separator (printf " \033[38;5;242m•\033[0m ")
 
@@ -148,10 +116,25 @@ end
 set rate_limit_info (string join "$pipe_separator" $rate_limit_segments)
 
 # Build the complete status line with pipe separators
-set output "$segment1$pipe_separator$segment2$pipe_separator$segment4 $segment3"
+set line1 "$segment1$pipe_separator$segment2"
+set line2 "$segment3"
 if test -n "$rate_limit_info"
-    set output "$output$pipe_separator$rate_limit_info"
+    set line2 "$line2$pipe_separator$rate_limit_info"
 end
+set single "$line1$pipe_separator$line2"
 
-# Print the status line
-printf "%s" "$output"
+# Measure visible width (strip ANSI), add 1 per double-width nerd-font glyph
+set stripped (string replace -ra '\e\[[0-9;]*m' '' -- "$single")
+set vis_len (string length -- "$stripped")
+set wide_glyphs (string match -ar '[󰘬✻󰆼]' -- "$stripped" | count)
+set vis_len (math "$vis_len + $wide_glyphs")
+
+# Terminal width (fall back to 120 if not on a tty)
+set cols (stty size </dev/tty 2>/dev/null | awk '{print $2}')
+test -z "$cols"; and set cols 120
+
+if test $vis_len -gt $cols
+    printf "%s\n%s" "$line1" "$line2"
+else
+    printf "%s" "$single"
+end
