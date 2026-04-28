@@ -56,7 +56,10 @@
       "WebFetch(domain:npmx.dev)",
       "WebSearch"
     ],
-    "defaultMode": "auto"
+    "defaultMode": "auto",
+    "additionalDirectories": [
+      "/tmp"
+    ]
   },
   "statusLine": {
     "type": "command",
