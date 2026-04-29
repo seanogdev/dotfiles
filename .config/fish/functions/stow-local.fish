@@ -9,7 +9,9 @@ function stow-local --description "Stow dotfiles in the local directory"
             end
             find $HOME -xtype l -delete 2>/dev/null
         end
+        echo "✓ stow-local: linked $DOTFILES_DIR → $HOME"
     else
         echo "Local dotfiles directory does not exist."
+        return 1
     end
 end
