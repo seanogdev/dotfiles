@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Notify (don't auto-run) when manifest files change on pull/merge.
+# Destructive sync (brew-restore --cleanup, skills-restore network calls) stays manual.
+
+changed=$(git diff-tree -r --name-only --no-commit-id ORIG_HEAD HEAD 2>/dev/null) || exit 0
+
+echo "$changed" | grep -q '^\.Brewfile$'  && echo "  → .Brewfile changed — run: brew-restore"
+echo "$changed" | grep -q '^\.Skillfile$' && echo "  → .Skillfile changed — run: skills-restore"
+exit 0
