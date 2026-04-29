@@ -38,6 +38,7 @@ cask "kap"
 cask "mullvad-vpn"
 cask "notion"
 cask "obsidian"
+cask "pritunl"
 cask "slack"
 cask "steam"
 cask "tableplus"
@@ -53,11 +54,9 @@ cask "zed"
 mas "1Password for Safari", id: 1569813296
 mas "Apple Configurator", id: 1037126344
 mas "Deliveries", id: 290986013
-mas "GarageBand", id: 682658836
 mas "Hand Mirror", id: 1502839586
 mas "Keyboard Keyboard", id: 1128271725
 mas "NepTunes", id: 1006739057
-mas "Numbers", id: 409203825
 mas "uBlock Origin Lite", id: 6745342698
 vscode "adamwalzer.string-converter"
 vscode "adpyke.codesnap"
@@ -76,12 +75,12 @@ vscode "dbaeumer.vscode-eslint"
 vscode "editorconfig.editorconfig"
 vscode "esbenp.prettier-vscode"
 vscode "formulahendry.code-runner"
-vscode "github.copilot-chat"
 vscode "github.github-vscode-theme"
 vscode "github.vscode-github-actions"
 vscode "github.vscode-pull-request-github"
 vscode "golang.go"
 vscode "henriiik.vscode-sort"
+vscode "ilich8086.coldfusion"
 vscode "jafd.knockoutjs-templates"
 vscode "johnpapa.vscode-peacock"
 vscode "jtr.vscode-position"
@@ -118,10 +117,9 @@ vscode "usernamehw.errorlens"
 vscode "vitest.explorer"
 vscode "vscode-icons-team.vscode-icons"
 vscode "vue.volar"
+vscode "webpro.vscode-knip"
 vscode "wmaurer.change-case"
 vscode "ybaumes.highlight-trailing-white-spaces"
 vscode "yoavbls.pretty-ts-errors"
 vscode "yzhang.markdown-all-in-one"
 vscode "zengxingxin.sort-js-object-keys"
-go "golang.org/x/tools/gopls"
-go "honnef.co/go/tools/cmd/staticcheck"
