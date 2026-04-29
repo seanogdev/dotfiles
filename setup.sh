@@ -40,6 +40,10 @@ info "Linking dotfiles with stow"
 
 stow -d "$HOME/projects/personal/dotfiles" -t "$HOME" --no-folding --adopt .
 
+info "Enabling repo git hooks"
+
+git -C "$HOME/projects/personal/dotfiles" config core.hooksPath .githooks
+
 info "Installing Brewfile packages..."
 
 sudo brew bundle install --global
