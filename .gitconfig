@@ -19,3 +19,5 @@
 	undo = reset --keep HEAD@{1}
 [url "git@github.com:"]
 	insteadOf = https://github.com/
+[includeIf "gitdir:~/projects/personal/dotfiles/"]
+	path = ~/projects/personal/dotfiles/.config/git/dotfiles-repo.gitconfig
