@@ -40,9 +40,10 @@ info "Linking dotfiles with stow"
 
 stow -d "$HOME/projects/personal/dotfiles" -t "$HOME" --no-folding --adopt .
 
-info "Enabling repo git hooks"
+info "Enabling repo git hooks (Git 2.54+ config-based hooks)"
 
-git -C "$HOME/projects/personal/dotfiles" config core.hooksPath .githooks
+git -C "$HOME/projects/personal/dotfiles" config hook.manifest-notify.event post-merge
+git -C "$HOME/projects/personal/dotfiles" config hook.manifest-notify.command .githooks/post-merge
 
 info "Installing Brewfile packages..."
 
