@@ -15,5 +15,6 @@ function skills-backup --description "Back up installed user-scope skills to \$H
         set repo (string replace -r '^https?://github.com/' '' -- $repo | string replace -r '\.git$' '')
         echo "$repo $path" >> $outfile
     end
+    sort -u -o $outfile $outfile
     echo "Wrote "(wc -l < $outfile | string trim)" skill(s) to $outfile"
 end
