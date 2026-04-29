@@ -6,5 +6,6 @@ function stow-icloud --description "Stow dotfiles in the iCloud directory"
 
     stow -d $ICLOUD_DOTFILES_DIR/fish/conf.d -t $HOME/.config/fish/conf.d --no-folding --adopt --stow .
     stow -d $ICLOUD_DOTFILES_DIR -t $HOME --no-folding --adopt --stow .
+    echo "✓ stow-icloud: linked $ICLOUD_DOTFILES_DIR → $HOME"
 end
 
