@@ -1,3 +1,0 @@
-[hook "manifest-notify"]
-    event = post-merge
-    command = ~/projects/personal/dotfiles/.githooks/post-merge
