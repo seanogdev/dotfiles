@@ -10,7 +10,7 @@ function skills-restore --description "Reinstall skills from \$HOME/.Skillfile i
     for line in (cat $infile)
         test -z "$line"; and continue
         set -l parts (string split ' ' -- $line)
-        gh skill install $parts[1] $parts[2] --dir $agents_dir --force; or continue
+        gh skill install $parts[1] $parts[2] --dir $agents_dir --force </dev/null; or continue
         set -l name (basename $parts[2])
         set -l src $agents_dir/$name
         set -l dst $claude_dir/$name
