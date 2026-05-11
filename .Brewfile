@@ -3,7 +3,9 @@ tap "null-dev/firefox-profile-switcher"
 brew "ca-certificates"
 brew "xz"
 brew "agent-browser"
+brew "colima"
 brew "devspace"
+brew "docker"
 brew "ffmpeg"
 brew "fish"
 brew "fnm"
@@ -11,6 +13,7 @@ brew "fzf"
 brew "gh"
 brew "git"
 brew "go"
+brew "golangci-lint"
 brew "jq"
 brew "lazygit"
 brew "mas"
@@ -33,6 +36,7 @@ cask "figma"
 cask "firefox"
 cask "font-metropolis"
 cask "font-monaspace"
+cask "ghostpepper"
 cask "ghostty"
 cask "kap"
 cask "mullvad-vpn"
@@ -53,10 +57,13 @@ cask "zed"
 mas "1Password for Safari", id: 1569813296
 mas "Apple Configurator", id: 1037126344
 mas "Deliveries", id: 290986013
+mas "GarageBand", id: 682658836
 mas "Hand Mirror", id: 1502839586
 mas "Keyboard Keyboard", id: 1128271725
 mas "NepTunes", id: 1006739057
+mas "Numbers", id: 409203825
 mas "uBlock Origin Lite", id: 6745342698
+mas "WireGuard", id: 1451685025
 vscode "adamwalzer.string-converter"
 vscode "adpyke.codesnap"
 vscode "adpyke.vscode-sql-formatter"
@@ -122,3 +129,11 @@ vscode "ybaumes.highlight-trailing-white-spaces"
 vscode "yoavbls.pretty-ts-errors"
 vscode "yzhang.markdown-all-in-one"
 vscode "zengxingxin.sort-js-object-keys"
+go "github.com/go-delve/delve/cmd/dlv"
+go "github.com/fzipp/gocyclo/cmd/gocyclo"
+go "golang.org/x/tools/cmd/goimports"
+go "github.com/haya14busa/goplay/cmd/goplay"
+go "golang.org/x/tools/gopls"
+go "github.com/cweill/gotests/gotests"
+go "github.com/josharian/impl"
+go "honnef.co/go/tools/cmd/staticcheck"
