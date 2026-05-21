@@ -1,10 +1,11 @@
 {
   "env": {
-    "ENABLE_CLAUDEAI_MCP_SERVERS": "false"
+    "ENABLE_CLAUDEAI_MCP_SERVERS": "false",
+    "CLAUDE_CODE_PACKAGE_MANAGER_AUTO_UPDATE": "1",
   },
   "attribution": {
     "commit": "",
-    "pr": ""
+    "pr": "",
   },
   "permissions": {
     "allow": [
@@ -54,19 +55,18 @@
       "Bash(xargs:*)",
       "Skill(agent-browser)",
       "WebFetch(domain:npmx.dev)",
-      "WebSearch"
+      "WebSearch",
     ],
     "defaultMode": "auto",
-    "additionalDirectories": [
-      "/tmp"
-    ]
+    "additionalDirectories": ["/tmp"],
   },
   "statusLine": {
     "type": "command",
-    "command": "~/.claude/statusline-command.fish"
+    "command": "~/.claude/statusline-command.fish",
   },
   "effortLevel": "high",
   "showClearContextOnPlanAccept": true,
   "skipDangerousModePermissionPrompt": true,
-  "skipAutoPermissionPrompt": true
+  "skipAutoPermissionPrompt": true,
+  "model": "opus",
 }
