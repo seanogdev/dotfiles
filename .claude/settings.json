@@ -13,7 +13,7 @@
       {
         "hooks": [
           {
-            "command": "\"/opt/homebrew/Cellar/chop/1.38.6/bin/chop\" hook",
+            "command": "/opt/homebrew/bin/chop hook",
             "type": "command"
           }
         ],
