@@ -133,6 +133,7 @@ Project skills in `.claude/skills/`: `generate-changeset`, `generate-pull-reques
 ```fish
 skills-backup   # scans ~/.agents/skills/, dumps to .Skillfile (committed, stow-linked to ~/.Skillfile)
 skills-restore  # installs each line to ~/.agents/skills/ via --dir, then symlinks into ~/.claude/skills/
+skills-update   # runs `gh skill update --all` against ~/.agents/skills/ (forwards extra args)
 ```
 
 `.Skillfile` lines are `<owner/repo> <skill-path>`. iCloud and project-scope skills are intentionally excluded (no `github-repo` frontmatter).
