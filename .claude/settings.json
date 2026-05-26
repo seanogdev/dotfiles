@@ -1,29 +1,13 @@
 {
-  "attribution": {
-    "commit": "",
-    "pr": ""
-  },
-  "effortLevel": "high",
   "env": {
     "CLAUDE_CODE_PACKAGE_MANAGER_AUTO_UPDATE": "1",
     "ENABLE_CLAUDEAI_MCP_SERVERS": "false"
   },
-  "hooks": {
-    "PreToolUse": [
-      {
-        "hooks": [
-          {
-            "command": "/opt/homebrew/bin/chop hook",
-            "type": "command"
-          }
-        ],
-        "matcher": "Bash"
-      }
-    ]
+  "attribution": {
+    "commit": "",
+    "pr": ""
   },
-  "model": "opus",
   "permissions": {
-    "additionalDirectories": ["/tmp"],
     "allow": [
       "Bash(agent-browser:*)",
       "Bash(cat:*)",
@@ -73,13 +57,31 @@
       "WebFetch(domain:npmx.dev)",
       "WebSearch"
     ],
-    "defaultMode": "auto"
+    "defaultMode": "auto",
+    "additionalDirectories": [
+      "/tmp"
+    ]
   },
-  "showClearContextOnPlanAccept": true,
-  "skipAutoPermissionPrompt": true,
-  "skipDangerousModePermissionPrompt": true,
+  "model": "opus",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/opt/homebrew/bin/chop hook"
+          }
+        ]
+      }
+    ]
+  },
   "statusLine": {
-    "command": "~/.claude/statusline-command.fish",
-    "type": "command"
-  }
+    "type": "command",
+    "command": "~/.claude/statusline-command.fish"
+  },
+  "effortLevel": "high",
+  "showClearContextOnPlanAccept": true,
+  "skipDangerousModePermissionPrompt": true,
+  "skipAutoPermissionPrompt": true
 }
