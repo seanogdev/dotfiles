@@ -1,4 +1,6 @@
-- Remember to use `chop` for CLI compression
+- Remember to use `rtk` for CLI compression
 - Use `agent-browser` for web automation, read `agent-browser --help` for all commands
 - Use PR templates provided by the repository first. When drafting descriptions use the DAG concept in my content writer skill.
 - Manage skills with `gh skill` (preview). Install remote skills to the canonical dir: `gh skill install <owner/repo> <skill-path> --dir $HOME/.agents/skills --force`, then symlink into `~/.claude/skills/<name>` for Claude Code discovery. Never install skills into this repo.
+
+@RTK.md
