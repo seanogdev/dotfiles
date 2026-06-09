@@ -67,7 +67,7 @@
     "type": "command",
     "command": "~/.claude/statusline-command.fish"
   },
-  "effortLevel": "high",
+  "effortLevel": "xhigh",
   "showClearContextOnPlanAccept": true,
   "skipDangerousModePermissionPrompt": true,
   "skipAutoPermissionPrompt": true
