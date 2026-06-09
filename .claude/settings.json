@@ -58,9 +58,7 @@
       "WebSearch"
     ],
     "defaultMode": "auto",
-    "additionalDirectories": [
-      "/tmp"
-    ]
+    "additionalDirectories": ["/tmp"]
   },
   "model": "opus",
   "statusLine": {
@@ -70,5 +68,6 @@
   "effortLevel": "xhigh",
   "showClearContextOnPlanAccept": true,
   "skipDangerousModePermissionPrompt": true,
+  "theme": "dark",
   "skipAutoPermissionPrompt": true
 }
