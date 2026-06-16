@@ -1,57 +1,108 @@
-tap "1password/tap"
-tap "edouard-claude/tap"
-tap "null-dev/firefox-profile-switcher"
+# Mozilla CA certificate store
 brew "ca-certificates"
+# General-purpose data compression with high compression ratio
 brew "xz"
+# Browser automation CLI for AI agents
 brew "agent-browser"
+# Container runtimes on MacOS (and Linux) with minimal setup
 brew "colima"
+# CLI helps develop/deploy/debug apps with Docker and k8s
 brew "devspace"
-brew "docker"
+# Pack, ship and run any application as a lightweight container
+brew "docker", link: false
+# Play, record, convert, and stream select audio and video codecs
 brew "ffmpeg"
+# User-friendly command-line shell for UNIX-like operating systems
 brew "fish"
+# Fast and simple Node.js version manager
 brew "fnm"
+# Command-line fuzzy finder written in Go
 brew "fzf"
+# GitHub command-line tool
 brew "gh"
+# Distributed revision control system
 brew "git"
+# Git extension for versioning large files
+brew "git-lfs"
+# Open source programming language to build simple/reliable/efficient software
 brew "go"
+# Lightweight and flexible command-line JSON processor
 brew "jq"
+# Simple terminal UI for git commands
 brew "lazygit"
+# Mac App Store command-line interface
 brew "mas"
+# Feature-rich command-line audio/video downloader
 brew "yt-dlp"
+# Media player based on MPlayer and mplayer2
 brew "mpv"
+# Package compiler and linker metadata toolkit
 brew "pkgconf"
+# Search tool like grep and The Silver Searcher
 brew "ripgrep"
+# Safe, concurrent, practical language
 brew "rust"
+# Rust toolchain installer
 brew "rustup"
+# Cross-shell prompt for astronauts
 brew "starship"
+# Organize software neatly under a single directory tree (e.g. /usr/local)
 brew "stow"
+# Internet file retriever
 brew "wget"
+# Shell extension to navigate your filesystem faster
 brew "zoxide"
+# Password manager that keeps all passwords secure behind one password
 cask "1password"
+# Virtual Audio Driver
 cask "blackhole-2ch"
+# Anthropic's official Claude AI desktop app
 cask "claude"
+# Terminal-based AI coding assistant
+cask "claude-code@latest"
+# OpenAI's Codex desktop app for managing coding agents
 cask "codex-app"
+# Voice and text chat software
 cask "discord"
+# Collaborative team software
 cask "figma"
+# Web browser
 cask "firefox"
 cask "font-metropolis"
 cask "font-monaspace"
+# Terminal emulator that uses platform-native UI and GPU acceleration
 cask "ghostty"
+# Open-source screen recorder built with web technology
 cask "kap"
+# Voice-to-text transcription and paste tool
 cask "kitlangton-hex"
+# VPN client
 cask "mullvad-vpn"
+# App to write, plan, collaborate, and get organised
 cask "notion"
+# Knowledge base that works on top of a local folder of plain text Markdown files
 cask "obsidian"
+# Team communication and collaboration software
 cask "slack"
+# Video game digital distribution service
 cask "steam"
+# Mesh VPN based on WireGuard
 cask "tailscale-app"
+# Messaging app with a focus on speed and security
 cask "telegram"
+# Unpacks archive files
 cask "the-unarchiver"
+# Git client focusing on power and productivity
 cask "tower"
+# Open-source code editor
 cask "visual-studio-code"
+# Web browser with built-in email client focusing on customization and control
 cask "vivaldi"
+# Multimedia player
 cask "vlc"
+# Native desktop client for WhatsApp
 cask "whatsapp"
+# Multiplayer code editor
 cask "zed"
 mas "1Password for Safari", id: 1569813296
 mas "Apple Configurator", id: 1037126344
@@ -113,6 +164,7 @@ vscode "simonsiefke.svg-preview"
 vscode "skyapps.fish-vscode"
 vscode "syler.sass-indented"
 vscode "tamasfe.even-better-toml"
+vscode "tauri-apps.tauri-vscode"
 vscode "timonwong.shellcheck"
 vscode "tombonnike.vscode-status-bar-format-toggle"
 vscode "unifiedjs.vscode-mdx"
@@ -126,3 +178,5 @@ vscode "ybaumes.highlight-trailing-white-spaces"
 vscode "yoavbls.pretty-ts-errors"
 vscode "yzhang.markdown-all-in-one"
 vscode "zengxingxin.sort-js-object-keys"
+go "golang.org/x/tools/cmd/goimports"
+go "golang.org/x/tools/gopls"
