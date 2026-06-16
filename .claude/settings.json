@@ -58,14 +58,15 @@
       "WebSearch"
     ],
     "defaultMode": "auto",
-    "additionalDirectories": ["/tmp"]
+    "additionalDirectories": [
+      "/tmp"
+    ]
   },
-  "model": "opus",
   "statusLine": {
     "type": "command",
     "command": "~/.claude/statusline-command.fish"
   },
-  "effortLevel": "xhigh",
+  "effortLevel": "medium",
   "showClearContextOnPlanAccept": true,
   "skipDangerousModePermissionPrompt": true,
   "theme": "dark",
