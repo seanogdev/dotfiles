@@ -37,6 +37,23 @@ else
 end
 set segment2 (printf "\033[38;5;208m✻\033[0m %b%s\033[0m" "$model_color" "$model")
 
+# Segment 2b: reasoning effort level (absent when model lacks effort support)
+set effort (echo $input | jq -r ".effort.level // empty")
+set effort_info ""
+if test -n "$effort"
+    switch $effort
+        case low
+            set effort_color "\033[38;5;111m"  # Periwinkle
+        case medium
+            set effort_color "\033[38;5;75m"   # Blue
+        case high
+            set effort_color "\033[38;5;220m"  # Amber
+        case '*'
+            set effort_color "\033[38;5;167m"  # Red (xhigh/max)
+    end
+    set effort_info (printf "%b󰓅 %s\033[0m" "$effort_color" "$effort")
+end
+
 # Segment 3 & 4: token count and progress bar
 # Color based on usage relative to the 200K optimal limit
 if test (echo "$used_pct_of_optimal < 50" | bc -l) -eq 1
@@ -117,6 +134,9 @@ set rate_limit_info (string join "$pipe_separator" $rate_limit_segments)
 
 # Build the complete status line with pipe separators
 set line1 "$segment1$pipe_separator$segment2"
+if test -n "$effort_info"
+    set line1 "$line1$pipe_separator$effort_info"
+end
 set line2 "$segment3"
 if test -n "$rate_limit_info"
     set line2 "$line2$pipe_separator$rate_limit_info"
@@ -126,7 +146,7 @@ set single "$line1$pipe_separator$line2"
 # Measure visible width (strip ANSI), add 1 per double-width nerd-font glyph
 set stripped (string replace -ra '\e\[[0-9;]*m' '' -- "$single")
 set vis_len (string length -- "$stripped")
-set wide_glyphs (string match -ar '[󰘬✻󰆼]' -- "$stripped" | count)
+set wide_glyphs (string match -ar '[󰘬✻󰆼󰓅]' -- "$stripped" | count)
 set vis_len (math "$vis_len + $wide_glyphs")
 
 # Terminal width (fall back to 120 if not on a tty)
