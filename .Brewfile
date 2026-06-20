@@ -54,8 +54,6 @@ brew "zoxide"
 cask "1password"
 # Virtual Audio Driver
 cask "blackhole-2ch"
-# Anthropic's official Claude AI desktop app
-cask "claude"
 # Terminal-based AI coding assistant
 cask "claude-code@latest"
 # OpenAI's Codex desktop app for managing coding agents
