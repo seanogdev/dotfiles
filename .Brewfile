@@ -9,7 +9,7 @@ brew "colima"
 # CLI helps develop/deploy/debug apps with Docker and k8s
 brew "devspace"
 # Pack, ship and run any application as a lightweight container
-brew "docker", link: false
+brew "docker"
 # Play, record, convert, and stream select audio and video codecs
 brew "ffmpeg"
 # User-friendly command-line shell for UNIX-like operating systems
@@ -32,10 +32,6 @@ brew "jq"
 brew "lazygit"
 # Mac App Store command-line interface
 brew "mas"
-# Feature-rich command-line audio/video downloader
-brew "yt-dlp"
-# Media player based on MPlayer and mplayer2
-brew "mpv"
 # Package compiler and linker metadata toolkit
 brew "pkgconf"
 # Search tool like grep and The Silver Searcher
@@ -50,14 +46,14 @@ brew "starship"
 brew "stow"
 # Internet file retriever
 brew "wget"
+# Feature-rich command-line audio/video downloader
+brew "yt-dlp"
 # Shell extension to navigate your filesystem faster
 brew "zoxide"
 # Password manager that keeps all passwords secure behind one password
 cask "1password"
 # Virtual Audio Driver
 cask "blackhole-2ch"
-# Anthropic's official Claude AI desktop app
-cask "claude"
 # Terminal-based AI coding assistant
 cask "claude-code@latest"
 # OpenAI's Codex desktop app for managing coding agents
@@ -180,3 +176,4 @@ vscode "yzhang.markdown-all-in-one"
 vscode "zengxingxin.sort-js-object-keys"
 go "golang.org/x/tools/cmd/goimports"
 go "golang.org/x/tools/gopls"
+npm "corepack"
