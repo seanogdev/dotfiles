@@ -149,9 +149,23 @@ set vis_len (string length -- "$stripped")
 set wide_glyphs (string match -ar '[󰘬✻󰆼󰓅]' -- "$stripped" | count)
 set vis_len (math "$vis_len + $wide_glyphs")
 
-# Terminal width (fall back to 120 if not on a tty)
-set cols (stty size </dev/tty 2>/dev/null | awk '{print $2}')
-test -z "$cols"; and set cols 120
+# Terminal width. Claude Code does not pass width in the JSON, and the
+# statusline subprocess usually has no controlling tty (so `stty </dev/tty`
+# fails). Try several sources in order, and when width is genuinely unknown
+# prefer wrapping to two lines over a single line the terminal would clip —
+# never drop the trailing (rate-limit) segments.
+set cols ""
+if set -q COLUMNS; and test -n "$COLUMNS"
+    set cols $COLUMNS
+end
+if test -z "$cols"
+    set cols (stty size </dev/tty 2>/dev/null | awk '{print $2}')
+end
+if test -z "$cols"
+    set cols (tput cols 2>/dev/null)
+end
+# Unknown width -> 0 forces the wrap branch so everything stays visible.
+string match -qr '^[0-9]+$' -- "$cols"; or set cols 0
 
 if test $vis_len -gt $cols
     printf "%s\n%s" "$line1" "$line2"
