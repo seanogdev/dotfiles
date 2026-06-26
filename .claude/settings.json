@@ -69,7 +69,8 @@
   "effortLevel": "xhigh",
   "showClearContextOnPlanAccept": true,
   "skipDangerousModePermissionPrompt": true,
+  "skipWorkflowUsageWarning": true,
   "theme": "dark",
   "skipAutoPermissionPrompt": true,
-  "skipWorkflowUsageWarning": true
+  "tui": "fullscreen"
 }
