@@ -15,6 +15,13 @@ function skills-backup --description "Back up installed user-scope skills to \$H
         set repo (string replace -r '^https?://github.com/' '' -- $repo | string replace -r '\.git$' '')
         echo "$repo $path" >> $outfile
     end
-    sort -u -o $outfile $outfile
+    # Sort in place *through* the symlink: `sort -o` renames over the file,
+    # which would replace the stow symlink at ~/.Skillfile with a plain file.
+    set -l sorted (sort -u $outfile)
+    if set -q sorted[1]
+        printf '%s\n' $sorted >$outfile
+    else
+        : >$outfile
+    end
     echo "Wrote "(wc -l < $outfile | string trim)" skill(s) to $outfile"
 end
