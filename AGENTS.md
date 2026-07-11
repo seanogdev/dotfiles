@@ -126,7 +126,7 @@ gh skill search <query>
 
 `gh skill` does not maintain a lock file — it only injects source-tracking metadata into each `SKILL.md` frontmatter. `gh skill update` relies on that plus `--dir` to find skills outside the default host dirs.
 
-Project skills in `.claude/skills/`: `generate-changeset`, `generate-pull-request`. iCloud-synced private skills (`content-writer`, `review-pr`) are symlinked into `~/.claude/skills/` by `sync.sh`.
+Project skills in `.claude/skills/`: `generate-pull-request`. iCloud-synced private skills (`content-writer`, `review-pr`) are symlinked into `~/.claude/skills/` by `sync.sh`.
 
 **Backup / restore** (mirrors `brew-backup` / `brew-restore`):
 
