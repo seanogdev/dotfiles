@@ -1,2 +1,7 @@
-- For all coding tasks use your judgement to decide an appropriate lower power model and run that in a subagent
+- `fd` and `rg` (ripgrep) are installed — prefer them over `find` and `grep`
 - Use `agent-browser` for web automation, read `agent-browser --help` for all commands
+- For coding tasks, delegate to a subagent on the lowest-power model that fits, escalating only when the task warrants it:
+  - **haiku** — mechanical, well-specified work: single-file or trivial edits, renames, boilerplate, formatting, running a command and reporting back, straightforward searches/lookups.
+  - **sonnet** — the default for real coding: multi-file changes, implementing a feature from a clear spec, refactors, writing tests, moderate debugging.
+  - **opus** — hard reasoning only: ambiguous or cross-cutting design, tricky debugging, architecture calls. Prefer handling these on the main agent rather than downgrading.
+  - When torn between two tiers, start lower and escalate only if the subagent struggles. Delegation pays off most for self-contained tasks (the subagent starts without our conversation context, so brief it fully).
