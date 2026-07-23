@@ -1,7 +1,7 @@
+- Current shell is `fish` but `bash` is available for scripts and commands that require it
 - `fd` and `rg` (ripgrep) are installed — prefer them over `find` and `grep`
 - Use `agent-browser` for web automation, read `agent-browser --help` for all commands
-- For coding tasks, delegate to a subagent on the lowest-power model that fits:
+- For coding tasks, often delegate to a subagent on the lowest-power model that fits:
   - **haiku** — mechanical work: trivial edits, renames, boilerplate, running commands, simple searches.
   - **sonnet** — default for real coding: multi-file changes, features from a spec, refactors, tests, moderate debugging.
   - **opus** — hard reasoning only (ambiguous design, tricky debugging, architecture); prefer keeping these on the main agent.
-  - Unsure? Start lower and escalate. Brief the subagent fully — it won't inherit our context.
