@@ -72,5 +72,32 @@
   "skipDangerousModePermissionPrompt": true,
   "skipWorkflowUsageWarning": true,
   "theme": "dark",
-  "skipAutoPermissionPrompt": true
+  "skipAutoPermissionPrompt": true,
+  "skillOverrides": {
+    "claude-md-improver": "off",
+    "cloudflare": "off",
+    "code-review": "off",
+    "frontend-design": "off",
+    "grill-me": "off",
+    "grill-with-docs": "off",
+    "grilling": "off",
+    "handoff": "off",
+    "implement": "off",
+    "improve-codebase-architecture": "off",
+    "nuxt": "off",
+    "pnpm": "off",
+    "review-pr": "off",
+    "rust": "off",
+    "setup-matt-pocock-skills": "off",
+    "skill-creator": "off",
+    "tauri": "off",
+    "tdd": "off",
+    "to-spec": "off",
+    "to-tickets": "off",
+    "turborepo": "off",
+    "vue": "off",
+    "wayfinder": "off",
+    "wcag-audit-patterns": "off",
+    "wrangler": "off"
+  }
 }
