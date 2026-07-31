@@ -1,7 +1,8 @@
+- Dont write any code comments. If I need them, I will ask for them. Always follow this rule.
+- Break code down into logical or small commits. Don't just commit things in big batches.
 - Current shell is `fish` but `bash` is available for scripts and commands that require it
-- `fd` and `rg` (ripgrep) are installed — prefer them over `find` and `grep`
-- Use `agent-browser` for web automation, read `agent-browser --help` for all commands
-- For coding tasks, often delegate to a subagent on the lowest-power model that fits:
-  - **haiku** — mechanical work: trivial edits, renames, boilerplate, running commands, simple searches.
-  - **sonnet** — default for real coding: multi-file changes, features from a spec, refactors, tests, moderate debugging.
-  - **opus** — hard reasoning only (ambiguous design, tricky debugging, architecture); prefer keeping these on the main agent.
+
+Tools to use
+- `rg` (ripgrep) for searching text in files instead of `grep`
+- `fd` for locating files instead of `find`.
+- `agent-browser` for web automation tasks. Use `agent-browser --help` for all commands

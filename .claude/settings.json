@@ -82,13 +82,13 @@
     "type": "command",
     "command": "~/.claude/statusline-command.fish"
   },
-  "effortLevel": "xhigh",
+  "effortLevel": "low",
   "showClearContextOnPlanAccept": true,
   "tui": "fullscreen",
+  "autoMemoryEnabled": false,
   "skipDangerousModePermissionPrompt": true,
   "skipWorkflowUsageWarning": true,
   "theme": "dark",
-  "skipAutoPermissionPrompt": true,
   "autoCompactEnabled": false,
-  "autoMemoryEnabled": false
+  "skipAutoPermissionPrompt": true
 }
