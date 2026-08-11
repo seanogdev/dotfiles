@@ -82,7 +82,6 @@
     "type": "command",
     "command": "~/.claude/statusline-command.fish"
   },
-  "effortLevel": "low",
   "showClearContextOnPlanAccept": true,
   "tui": "fullscreen",
   "autoMemoryEnabled": false,
