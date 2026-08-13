@@ -1,5 +1,5 @@
 - Always use in ASD-STE100 Simplified Technical English.
-- Never write any code comments. If I need them, I will ask for them. Always follow this rule.
+- Never write any code comments. If I need them, I will ask for them. Always follow this rule. Don't delete existing ones.
 - Break code down into logical or small commits. Don't just commit things in big batches.
 - Current shell is `fish` but `bash` is available for scripts and commands that require it
 - When writing a PR description:
