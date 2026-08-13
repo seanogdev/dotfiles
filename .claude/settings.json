@@ -7,6 +7,9 @@
     "commit": "",
     "pr": ""
   },
+  "permissions": {
+    "defaultMode": "auto"
+  },
   "skillOverrides": {
     "claude-md-improver": "off",
     "cloudflare": "off",
@@ -30,9 +33,6 @@
   "showClearContextOnPlanAccept": true,
   "tui": "fullscreen",
   "autoMemoryEnabled": false,
-  "skipDangerousModePermissionPrompt": true,
   "skipWorkflowUsageWarning": true,
-  "theme": "dark",
-  "autoCompactEnabled": false,
-  "skipAutoPermissionPrompt": true
+  "theme": "dark"
 }
