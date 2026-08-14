@@ -37,19 +37,15 @@ gh pr view <number> --json reviews --jq '.reviews[] | {author: .author.login, st
 
 ## Deciding
 
-**A review comment is a hypothesis, not a finding.** Confirm it against the code before you act on it. Read the surrounding file, not only the diff hunk, and where the comment claims a bug, trace the path that would produce it. A reviewer working from a hunk in isolation will often flag something the wider file already handles.
+The goal is the right call on each comment. Agreeing and disagreeing are both fine outcomes, neither one is the target.
 
-If you cannot reproduce the problem the comment describes, that is grounds to push back. Say what you checked.
+So check the claim before acting on it. Read the surrounding file, not only the diff hunk, and where a comment describes a bug, trace the path that would produce it. A reviewer working from a hunk in isolation will sometimes flag something the wider file already handles. Apply the same standard whoever wrote the comment. A senior reviewer and an automated one both get checked, and both are usually right.
 
-Fix it when the claim holds up, and when the reviewer is pointing at a real risk even if their suggested fix is not the one you would pick. Push back when the comment misreads the code, when the change would break something not visible from the diff, when it is a preference this codebase does not share, or when it asks for an abstraction the codebase has not earned yet.
-
-Automated reviewers deserve the most scrutiny. They produce confident, well-formatted findings at a high false positive rate, particularly on anything needing context beyond the diff. Seniority is not evidence either. Check the claim, whoever made it.
-
-There is no target ratio here. Declining most of a weak review is the correct outcome, and agreeing with a comment because disagreeing is awkward is the failure worth avoiding. Equally, do not manufacture disagreement to look rigorous. Say what the code says.
+Fix it when the claim holds up, and when the reviewer is pointing at a real risk even if their suggested fix is not the one you would pick. Say so when it does not hold up: the comment misreads the code, the change would break something not visible from the diff, the problem it describes cannot be reproduced, or it asks for an abstraction the codebase has not earned yet.
 
 A thread with `isOutdated: true` usually means the code moved on. Check whether the concern still applies before spending effort on it.
 
-Where a comment is genuinely ambiguous, say so in the reply instead of guessing at what the reviewer meant.
+Where a comment is genuinely ambiguous, ask in the reply rather than guessing at what the reviewer meant.
 
 ## Applying and replying
 
@@ -79,9 +75,9 @@ The same collaborative register as the `review-pr` skill, from the other side of
 
 **Fixed.** Say what changed, briefly. "Good catch, moved the normalisation into the transformer." A commit sha beats a description of the change.
 
-**Declined.** Show the evidence, not just the verdict. Point at the code that answers the comment: "`useFoo` bails when the ref is null on line 24, so the extra check would be dead code." A reviewer can check a line reference. They cannot check an assertion.
+**Declined.** Point at the code that answers the comment: "`useFoo` bails when the ref is null on line 24, so the extra check would be dead code." A reviewer can check a line reference, they cannot check an assertion. Leave room to be wrong, "happy to change it if you'd rather be explicit", and mean it.
 
-Hold the position, but stay collaborative about it. "Happy to change it if you'd rather be explicit" keeps the door open without conceding the point. Never argue. If a thread is turning into back and forth, say so and take it off the PR.
+Never argue. If a thread is turning into back and forth, say so and take it off the PR.
 
 ## Finishing
 
