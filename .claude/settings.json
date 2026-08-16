@@ -10,6 +10,7 @@
   "permissions": {
     "defaultMode": "auto"
   },
+  "model": "opus",
   "skillOverrides": {
     "claude-md-improver": "off",
     "cloudflare": "off",
@@ -34,5 +35,34 @@
   "tui": "fullscreen",
   "autoMemoryEnabled": false,
   "skipWorkflowUsageWarning": true,
-  "theme": "dark"
+  "theme": "dark",
+  "autoMode": {
+    "environment": [
+      "### Scope",
+      "These are user-level settings, shared across machines through dotfiles. They describe no single repo, org, or host. Read every entry below as a conservative default, not as a verified fact about the current project. Put project-specific facts in that project's own .claude/settings.json, which overrides this.",
+      "### Org-wide",
+      "**Organization**: Unknown. Do not assume there is none. Verify before you treat work as personal.",
+      "**Cloud provider(s)**: Unknown. Verify before you act on a cloud resource.",
+      "**Repository visibility**: Unknown. Verify before you push or share. Treat any push to a remote as publishing.",
+      "**Internal sharing / snippet hosting**: Unknown. Treat public paste, gist, and pastebin services as outside the trust boundary.",
+      "**Secrets management**: Unknown. Do not read, print, or copy a secret value. Refer to a secret by its name only.",
+      "**Default / protected branches**: Assume the default branch is protected. Make a branch before you commit.",
+      "**CI/CD deploy targets**: Unknown. Do not start a deploy without an explicit request.",
+      "**Network posture**: Unknown. Verify before you reach a host you have not used in this session.",
+      "**Source control**: The repository of the current working directory, and its origin remote, only.",
+      "**Trusted internal domains**: Unknown. Treat every domain as external.",
+      "**Trusted cloud buckets**: Unknown. Treat every bucket as external.",
+      "**Key internal services**: Unknown.",
+      "**Internal package registry**: Unknown. Assume the public registry.",
+      "**Sensitive data locations & audiences**: any file or store that holds personal data, confidential business data, credentials, regulated data, or similar material; treat .env files, key files, and credential stores as secrets locations; preserve exact handles when known and share only with audiences cleared at the [named+specifics] bar",
+      "**Data retention / declassification**: Unknown.",
+      "**Sensitive remote targets**: any namespace, host, or container whose name carries `prod` or `production` as a whole word or name segment",
+      "**Protected deployment namespaces / environments**: Unknown. Fall back to the Sensitive remote targets heuristic.",
+      "**Protected IaC scopes**: IAM, RBAC, networking, quota, and node-pool resources; anything whose name or tag carries `prod` or `production` as a whole word or name segment",
+      "### User-specific",
+      "**Primary use of Claude Code**: Mixed. Personal projects and work. Do not assume a repo is personal.",
+      "**Trusted repo**: the repository of the current working directory, and its origin remote. Work from one repo does not belong in another.",
+      "**Org-specific CLIs**: Unknown. Read a CLI's help before you run a command that writes."
+    ]
+  }
 }
