@@ -1,4 +1,3 @@
-- Write in ASD-STE100 Simplified Technical English.
-- Never write code comments. If I want them, I will ask. Leave existing ones alone.
+- If you write a code comment, I want you to do two things: Think about if it's even necessary. If so think about how to shorten it. If it's not necessary, remove it.
 - Break work into small, logical commits rather than one large batch.
 - `fish` is the default shell. Use `bash` for scripts and commands that need it.
