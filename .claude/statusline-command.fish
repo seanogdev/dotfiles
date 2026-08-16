@@ -1,174 +1,161 @@
 #!/opt/homebrew/bin/fish
 
-# Read JSON input from stdin
-set input (cat)
+set -g reset '\033[0m'
+set -g dim '\033[38;5;242m'
+set -g green '\033[1;32m'
+set -g amber '\033[1;33m'
+set -g red '\033[1;31m'
 
-# Extract values from JSON
-set model (echo $input | jq -r ".model.display_name" | string replace " (1M context)" " 1M")
-set cwd (echo $input | jq -r ".workspace.current_dir")
-set tokens_used (echo $input | jq -r '((.context_window.current_usage.input_tokens // 0) + (.context_window.current_usage.cache_creation_input_tokens // 0) + (.context_window.current_usage.cache_read_input_tokens // 0))')
-set context_size (echo $input | jq -r '.context_window.context_window_size // 200000')
-set optimal_limit 200000
-set used_pct_of_optimal (echo "$tokens_used $optimal_limit" | awk '{printf "%.2f", ($1 / $2) * 100}')
-set used_pct_of_total (echo "$tokens_used $context_size" | awk '{printf "%.2f", ($1 / $2) * 100}')
+set -l cyan '\033[1;36m'
+set -l magenta '\033[1;35m'
+set -l orange '\033[38;5;208m'
+set -l periwinkle '\033[38;5;111m'
+set -l blue '\033[38;5;75m'
+set -l gold '\033[38;5;220m'
+set -l rose '\033[38;5;167m'
 
-# Get directory name
-set dir_name (basename "$cwd")
+set -l separator (printf " %b•%b " $dim $reset)
+set -l optimal_limit 200000
 
-# Get git branch info
-set git_branch (git -C "$cwd" --no-optional-locks branch --show-current 2>/dev/null)
-set git_info ""
-if test -n "$git_branch"
-    set git_info " "(printf "\033[1;35m󰘬 %s\033[0m" "$git_branch")
+function usage_color -a pct
+    if test $pct -lt 50
+        printf '%s' $green
+    else if test $pct -lt 80
+        printf '%s' $amber
+    else
+        printf '%s' $red
+    end
 end
+
+function format_count -a value scale
+    if test $value -ge 1000000
+        printf '%sM' (math --scale=$scale "$value / 1000000")
+    else
+        printf '%sk' (math --scale=$scale "$value / 1000")
+    end
+end
+
+function rate_limit_segment -a label pct reset_at time_fmt
+    test -z "$pct"; and return
+
+    set -l rounded (printf "%.0f" "$pct")
+    set -l color (usage_color $rounded)
+
+    if test -n "$reset_at"
+        set -l reset_time (date -r "$reset_at" "$time_fmt" 2>/dev/null; or echo $reset_at)
+        printf '%b%s %b%s%%%b %b%s%b' $dim $label $color $rounded $reset $dim $reset_time $reset
+    else
+        printf '%b%s %b%s%%%b' $dim $label $color $rounded $reset
+    end
+end
+
+# Read JSON input from stdin and extract every field in one pass
+set -l input (cat | string collect)
+set -l fields (printf '%s' $input | jq -r '
+    def window($key; $name):
+        (.rate_limits // null) as $limits
+        | if ($limits | type) == "object" then ($limits[$key] // {})
+          elif ($limits | type) == "array" then (($limits | map(select(.window == $name)) | first) // {})
+          else {} end;
+    def text($value): ($value // "") | tostring;
+    [
+        text(.model.display_name),
+        text(.workspace.current_dir),
+        ( (.context_window.current_usage.input_tokens // 0)
+        + (.context_window.current_usage.cache_creation_input_tokens // 0)
+        + (.context_window.current_usage.cache_read_input_tokens // 0) ),
+        (.context_window.context_window_size // 200000),
+        text(.effort.level),
+        text(window("five_hour"; "5h").used_percentage),
+        text(window("five_hour"; "5h").resets_at),
+        text(window("seven_day"; "7d").used_percentage),
+        text(window("seven_day"; "7d").resets_at)
+    ] | @tsv' | string split \t)
+
+set -l model (string replace " (1M context)" " 1M" -- $fields[1])
+set -l cwd $fields[2]
+set -l tokens_used $fields[3]
+set -l context_size $fields[4]
+set -l effort $fields[5]
 
 # Segment 1: directory name and git branch
-set segment1 (printf "\033[1;36m%s\033[0m%s" "$dir_name" "$git_info")
+set -l dir_name (basename "$cwd")
+set -l git_branch
+test -n "$cwd"; and set git_branch (git -C "$cwd" --no-optional-locks branch --show-current 2>/dev/null)
+set -l segment1 (printf '%b%s%b' $cyan $dir_name $reset)
+if test -n "$git_branch"
+    set segment1 "$segment1"(printf ' %b󰘬 %s%b' $magenta $git_branch $reset)
+end
 
 # Segment 2: model name, color coded by model family
+set -l model_color $orange
 if string match -qi "*haiku*" "$model"
-    set model_color "\033[38;5;111m"  # Serene periwinkle blue
+    set model_color $periwinkle
 else if string match -qi "*sonnet*" "$model"
-    set model_color "\033[38;5;75m"   # Blue
+    set model_color $blue
 else if string match -qi "*opus*" "$model"
-    set model_color "\033[38;5;167m"  # Red
-else
-    set model_color "\033[38;5;208m"  # Fallback orange
+    set model_color $rose
 end
-set segment2 (printf "\033[38;5;208m✻\033[0m %b%s\033[0m" "$model_color" "$model")
+set -l segment2 (printf '%b✻%b %b%s%b' $orange $reset $model_color $model $reset)
 
-# Segment 2b: reasoning effort level (absent when model lacks effort support)
-set effort (echo $input | jq -r ".effort.level // empty")
-set effort_info ""
+# Segment 3: reasoning effort level (absent when model lacks effort support)
+set -l segment3 ""
 if test -n "$effort"
+    set -l effort_color
     switch $effort
         case low
-            set effort_color "\033[38;5;111m"  # Periwinkle
+            set effort_color $periwinkle
         case medium
-            set effort_color "\033[38;5;75m"   # Blue
+            set effort_color $blue
         case high
-            set effort_color "\033[38;5;220m"  # Amber
+            set effort_color $gold
         case '*'
-            set effort_color "\033[38;5;167m"  # Red (xhigh/max)
+            set effort_color $rose
     end
-    set effort_info (printf "%b󰓅 %s\033[0m" "$effort_color" "$effort")
+    set segment3 (printf '%b󰓅 %s%b' $effort_color $effort $reset)
 end
 
-# Segment 3 & 4: token count and progress bar
-# Color based on usage relative to the 200K optimal limit
-if test (echo "$used_pct_of_optimal < 50" | bc -l) -eq 1
-    set token_color "\033[1;32m"  # Green
-else if test (echo "$used_pct_of_optimal < 80" | bc -l) -eq 1
-    set token_color "\033[1;33m"  # Amber
-else
-    set token_color "\033[1;31m"  # Red
-end
-
-set pct_display (math --scale=0 "$used_pct_of_optimal")
-
-# Format token counts: show as M if >= 1000K, otherwise K
-if test $tokens_used -ge 1000000
-    set tokens_fmt (math --scale=1 "$tokens_used / 1000000")"M"
-else
-    set tokens_fmt (math --scale=1 "$tokens_used / 1000")"k"
-end
-set optimal_fmt (math --scale=0 "$optimal_limit / 1000")"k"
-if test $context_size -ge 1000000
-    set size_fmt (math --scale=0 "$context_size / 1000000")"M"
-else
-    set size_fmt (math --scale=0 "$context_size / 1000")"k"
-end
-
-set segment3 (printf "%b󰆼 %s/%s [%s%%]\033[0m" "$token_color" "$tokens_fmt" "$size_fmt" "$pct_display")
-
-# Yellow color for pipe separators
-set pipe_separator (printf " \033[38;5;242m•\033[0m ")
+# Segment 4: token count, colored by usage relative to the 200K optimal limit
+set -l used_pct (math --scale=2 "($tokens_used / $optimal_limit) * 100")
+set -l segment4 (printf '%b󰆼 %s/%s [%s%%]%b' \
+    (usage_color $used_pct) \
+    (format_count $tokens_used 1) \
+    (format_count $context_size 0) \
+    (math --scale=0 "$used_pct") \
+    $reset)
 
 # Segment 5: rate limits (5-hour and 7-day windows)
-#   Each entry: label, jq object key, jq array key, date format
-set rl_windows "5h,five_hour,5h,%H:%M" "7d,seven_day,7d,%d/%m"
-set rate_limit_segments
+set -l rate_limits
+set -a rate_limits (rate_limit_segment 5h "$fields[6]" "$fields[7]" "+%H:%M")
+set -a rate_limits (rate_limit_segment 7d "$fields[8]" "$fields[9]" "+%d/%m")
 
-for window in $rl_windows
-    set parts (string split "," $window)
-    set label $parts[1]
-    set obj_key $parts[2]
-    set arr_key $parts[3]
-    set time_fmt $parts[4]
+# Build the complete status line
+set -l line1 $segment1 $segment2
+test -n "$segment3"; and set -a line1 $segment3
+set -l line2 $segment4 $rate_limits
 
-    # Try new object format, fall back to old array format
-    set pct (echo $input | jq -r ".rate_limits.$obj_key.used_percentage // empty" 2>/dev/null)
-    if test -z "$pct"
-        set pct (echo $input | jq -r ".rate_limits[] | select(.window == \"$arr_key\") | .used_percentage // empty" 2>/dev/null)
-    end
-    test -z "$pct"; and continue
-
-    set reset_at (echo $input | jq -r ".rate_limits.$obj_key.resets_at // empty" 2>/dev/null)
-    if test -z "$reset_at"
-        set reset_at (echo $input | jq -r ".rate_limits[] | select(.window == \"$arr_key\") | .resets_at // empty" 2>/dev/null)
-    end
-
-    # Round percentage to integer
-    set pct (printf "%.0f" "$pct")
-
-    # Color based on usage percentage
-    if test (echo "$pct < 50" | bc -l) -eq 1
-        set rl_color "\033[1;32m"
-    else if test (echo "$pct < 80" | bc -l) -eq 1
-        set rl_color "\033[1;33m"
-    else
-        set rl_color "\033[1;31m"
-    end
-
-    # Dim label, colored percentage, dim reset time
-    set dim "\033[38;5;242m"
-    if test -n "$reset_at"
-        set reset_time (date -r "$reset_at" "+$time_fmt" 2>/dev/null; or echo $reset_at)
-        set -a rate_limit_segments (printf "%b%s %b%s%%\033[0m %b%s\033[0m" "$dim" "$label" "$rl_color" "$pct" "$dim" "$reset_time")
-    else
-        set -a rate_limit_segments (printf "%b%s %b%s%%\033[0m" "$dim" "$label" "$rl_color" "$pct")
-    end
-end
-
-set rate_limit_info (string join "$pipe_separator" $rate_limit_segments)
-
-# Build the complete status line with pipe separators
-set line1 "$segment1$pipe_separator$segment2"
-if test -n "$effort_info"
-    set line1 "$line1$pipe_separator$effort_info"
-end
-set line2 "$segment3"
-if test -n "$rate_limit_info"
-    set line2 "$line2$pipe_separator$rate_limit_info"
-end
-set single "$line1$pipe_separator$line2"
+set line1 (string join "$separator" $line1)
+set line2 (string join "$separator" $line2)
+set -l single "$line1$separator$line2"
 
 # Measure visible width (strip ANSI), add 1 per double-width nerd-font glyph
-set stripped (string replace -ra '\e\[[0-9;]*m' '' -- "$single")
-set vis_len (string length -- "$stripped")
-set wide_glyphs (string match -ar '[󰘬✻󰆼󰓅]' -- "$stripped" | count)
-set vis_len (math "$vis_len + $wide_glyphs")
+set -l stripped (string replace -ra '\e\[[0-9;]*m' '' -- "$single")
+set -l wide_glyphs (string match -ar '[󰘬✻󰆼󰓅]' -- "$stripped" | count)
+set -l vis_len (math (string length -- "$stripped") + $wide_glyphs)
 
 # Terminal width. Claude Code does not pass width in the JSON, and the
 # statusline subprocess usually has no controlling tty (so `stty </dev/tty`
 # fails). Try several sources in order, and when width is genuinely unknown
 # prefer wrapping to two lines over a single line the terminal would clip —
 # never drop the trailing (rate-limit) segments.
-set cols ""
-if set -q COLUMNS; and test -n "$COLUMNS"
-    set cols $COLUMNS
-end
-if test -z "$cols"
-    set cols (stty size </dev/tty 2>/dev/null | awk '{print $2}')
-end
-if test -z "$cols"
-    set cols (tput cols 2>/dev/null)
-end
+set -l cols $COLUMNS
+test -z "$cols"; and set cols (stty size </dev/tty 2>/dev/null | awk '{print $2}')
+test -z "$cols"; and set cols (tput cols 2>/dev/null)
 # Unknown width -> 0 forces the wrap branch so everything stays visible.
 string match -qr '^[0-9]+$' -- "$cols"; or set cols 0
 
 if test $vis_len -gt $cols
-    printf "%s\n%s" "$line1" "$line2"
+    printf '%s\n%s' "$line1" "$line2"
 else
-    printf "%s" "$single"
+    printf '%s' "$single"
 end
