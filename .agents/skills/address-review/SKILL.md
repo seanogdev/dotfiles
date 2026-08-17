@@ -73,11 +73,17 @@ Resolve every thread you replied to, the pushed-back ones included. Nothing is l
 
 The same collaborative register as the `review-pr` skill, from the other side of the table.
 
-**Fixed.** Say what changed, briefly. "Good catch, moved the normalisation into the transformer." A commit sha beats a description of the change.
+**Keep every reply short.** One or two sentences. Three at the outside, and only when a decline needs a second line of evidence. The reviewer already knows the context, so do not restate their comment, do not recap the surrounding code, and do not explain your reasoning step by step. Lead with the outcome. Cut any sentence that does not change what the reviewer does next.
 
-**Declined.** Point at the code that answers the comment: "`useFoo` bails when the ref is null on line 24, so the extra check would be dead code." A reviewer can check a line reference, they cannot check an assertion. Leave room to be wrong, "happy to change it if you'd rather be explicit", and mean it.
+Do not open with filler ("Great point", "You're absolutely right"), do not close with an offer to do more work, and do not add headings, bullet lists or code blocks unless a diff is the shortest way to say it.
+
+**Fixed.** Say what changed, in one sentence. "Moved the normalisation into the transformer." A commit sha beats a description of the change.
+
+**Declined.** Point at the code that answers the comment: "`useFoo` bails when the ref is null on line 24, so the extra check would be dead code." A reviewer can check a line reference, they cannot check an assertion. One line of "happy to change it if you'd rather be explicit" is enough, and mean it.
 
 Never argue. If a thread is turning into back and forth, say so and take it off the PR.
+
+Save the detail for the user-facing summary at the end. That is where length is allowed, not the PR.
 
 ## Finishing
 
