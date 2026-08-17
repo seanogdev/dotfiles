@@ -1,16 +1,16 @@
 ---
 name: address-review
-description: Work through the review comments on a GitHub PR. Fix what should be fixed, reply with the reasoning where it should not, then resolve every thread. Use when a review lands on a PR and the user says "address the review", "fix the review comments", "respond to the review", "handle this review", or points at review feedback to act on.
+description: Work through the review comments on a GitHub PR. Fix what should be fixed, reply with the reasoning where it should not, vote each comment up or down, then resolve every thread. Use when a review lands on a PR and the user says "address the review", "fix the review comments", "respond to the review", "handle this review", or points at review feedback to act on.
 user-invocable: true
 ---
 
 # Address review
 
-Take every unresolved review thread on the PR to a conclusion: fix it or push back, reply either way, then resolve it. If no PR was named, use the open PR for the current branch.
+Take every unresolved review thread on the PR to a conclusion: fix it or push back, reply either way, vote the comment up or down, then resolve it. If no PR was named, use the open PR for the current branch.
 
 ## Reading the threads
 
-REST does not expose thread resolution state, so read them over GraphQL. The `id` on each thread is the node id the reply and resolve mutations need.
+REST does not expose thread resolution state, so read them over GraphQL. The `id` on each thread is the node id the reply and resolve mutations need. The `id` on each comment is the node id the vote mutation needs.
 
 ```bash
 gh api graphql -f query='
@@ -20,7 +20,7 @@ query($owner:String!, $repo:String!, $number:Int!) {
       reviewThreads(first:100) {
         nodes {
           id isResolved isOutdated path line
-          comments(first:20) { nodes { author { login } body } }
+          comments(first:20) { nodes { id author { login } body } }
         }
       }
     }
@@ -32,8 +32,10 @@ query($owner:String!, $repo:String!, $number:Int!) {
 Read the top level review bodies too. General feedback often never becomes an inline thread, and it is the part most likely to be missed.
 
 ```bash
-gh pr view <number> --json reviews --jq '.reviews[] | {author: .author.login, state, body}'
+gh pr view <number> --json reviews --jq '.reviews[] | {id, author: .author.login, state, body}'
 ```
+
+The `id` here is the review node id. A review body takes a vote the same way a comment does.
 
 ## Deciding
 
@@ -47,13 +49,18 @@ A thread with `isOutdated: true` usually means the code moved on. Check whether 
 
 Where a comment is genuinely ambiguous, ask in the reply rather than guessing at what the reviewer meant.
 
-## Applying and replying
+## Applying, voting and replying
 
 Make the fixes, commit them in small logical commits, and push to the PR branch **before** replying. The reply should point at code that is already on the PR.
 
-Then reply to each thread and resolve it:
+Then vote on each comment, reply to its thread, and resolve the thread:
 
 ```bash
+gh api graphql -f query='
+mutation($subjectId:ID!, $content:ReactionContent!) {
+  addReaction(input: {subjectId: $subjectId, content: $content}) { reaction { content } }
+}' -F subjectId=COMMENT_ID -F content=THUMBS_UP
+
 gh api graphql -f query='
 mutation($threadId:ID!, $body:String!) {
   addPullRequestReviewThreadReply(input: {pullRequestReviewThreadId: $threadId, body: $body}) {
@@ -68,6 +75,20 @@ mutation($threadId:ID!) {
 ```
 
 Resolve every thread you replied to, the pushed-back ones included. Nothing is left open.
+
+### What the vote means
+
+The vote records one thing: whether the comment should be addressed. It is not a verdict on the reviewer, and it is not a score for how well the comment was written.
+
+`THUMBS_UP` and `THUMBS_DOWN` are the only two reactions this skill uses. Never send `LAUGH`, `HOORAY`, `CONFUSED`, `HEART`, `ROCKET` or `EYES`, whatever the comment says.
+
+- **`THUMBS_UP`** — the comment should be addressed. Vote it up when you fixed it, and when you agree with it but the fix is out of scope for this PR.
+- **`THUMBS_DOWN`** — the comment should not be addressed. Vote it down when you declined it: it misreads the code, the concern is already handled, or the change would be wrong.
+- **No vote** — you have not decided. Leave a comment unvoted when you asked the reviewer a question instead of making a call, and when a thread is outdated so the point no longer applies either way.
+
+Vote on the comment that raised the point, which is the first comment in the thread. Do not vote on your own reply. One vote per comment, and the vote must match what the reply says. A reply that declines and a thumbs up next to it read as a contradiction.
+
+Vote the top level review bodies the same way, using the review node id as `subjectId`. A review body that only says "LGTM" needs no vote.
 
 ## Reply voice
 
@@ -87,4 +108,4 @@ Save the detail for the user-facing summary at the end. That is where length is 
 
 ## Finishing
 
-Summarise for the user: what was fixed, what was declined and why, and anything that needs their call. Call out anything resolved on thin reasoning. A resolved thread is easy for the reviewer to scroll past, so the user should know where you closed a door on their behalf.
+Summarise for the user: what was fixed, what was declined and why, how each comment was voted, and anything that needs their call. Call out anything resolved on thin reasoning, and any comment you left unvoted. A resolved thread is easy for the reviewer to scroll past, so the user should know where you closed a door on their behalf.
