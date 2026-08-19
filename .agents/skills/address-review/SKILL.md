@@ -6,11 +6,11 @@ user-invocable: true
 
 # Address review
 
-Take every unresolved review thread on the PR to a conclusion: fix it or push back, reply either way, vote the comment up or down, then resolve it. If no PR was named, use the open PR for the current branch.
+Take every unresolved review thread on the PR to a conclusion: fix it or push back, reply either way, vote the comment up or down, then resolve it. Then account for the whole pass to the user. If no PR was named, use the open PR for the current branch.
 
 ## Reading the threads
 
-REST does not expose thread resolution state, so read them over GraphQL. The `id` on each thread is the node id the reply and resolve mutations need. The `id` on each comment is the node id the vote mutation needs.
+REST does not expose thread resolution state, so read them over GraphQL. The `id` on each thread is the node id the reply and resolve mutations need. The `id` on each comment is the node id the vote mutation needs. `viewerHasReacted` marks the comments the user voted on, which the next section weighs.
 
 ```bash
 gh api graphql -f query='
@@ -20,22 +20,48 @@ query($owner:String!, $repo:String!, $number:Int!) {
       reviewThreads(first:100) {
         nodes {
           id isResolved isOutdated path line
-          comments(first:20) { nodes { id author { login } body } }
+          comments(first:20) {
+            nodes {
+              id url author { login } body
+              reactionGroups { content viewerHasReacted }
+            }
+          }
         }
       }
     }
   }
 }' -F owner=OWNER -F repo=REPO -F number=N \
-  --jq '.data.repository.pullRequest.reviewThreads.nodes[] | select(.isResolved == false)'
+  --jq '.data.repository.pullRequest.reviewThreads.nodes[]
+        | select(.isResolved == false)
+        | .comments.nodes |= map({id, url, author: .author.login, body,
+                                  userVotes: [.reactionGroups[] | select(.viewerHasReacted) | .content]})'
 ```
+
+Keep each comment `url`. The summary at the end links its rows by them.
 
 Read the top level review bodies too. General feedback often never becomes an inline thread, and it is the part most likely to be missed.
 
 ```bash
-gh pr view <number> --json reviews --jq '.reviews[] | {id, author: .author.login, state, body}'
+gh api graphql -f query='
+query($owner:String!, $repo:String!, $number:Int!) {
+  repository(owner:$owner, name:$repo) {
+    pullRequest(number:$number) {
+      reviews(first:50) {
+        nodes {
+          id url state author { login } body
+          reactionGroups { content viewerHasReacted }
+        }
+      }
+    }
+  }
+}' -F owner=OWNER -F repo=REPO -F number=N \
+  --jq '.data.repository.pullRequest.reviews.nodes[]
+        | select(.body != "")
+        | {id, url, state, author: .author.login, body,
+           userVotes: [.reactionGroups[] | select(.viewerHasReacted) | .content]}'
 ```
 
-The `id` here is the review node id. A review body takes a vote the same way a comment does.
+The `id` here is the review node id. A review body takes a vote, and carries the user's vote, the same way a comment does.
 
 ## Deciding
 
@@ -48,6 +74,21 @@ Fix it when the claim holds up, and when the reviewer is pointing at a real risk
 A thread with `isOutdated: true` usually means the code moved on. Check whether the concern still applies before spending effort on it.
 
 Where a comment is genuinely ambiguous, ask in the reply rather than guessing at what the reviewer meant.
+
+### Votes the user left
+
+The user votes on review comments too, with the same two reactions. A vote from the user is the one vote that carries weight here. It says they read the comment and formed a view on it before you got to it. Reactions from anyone else are not that signal, and the `userVotes` field leaves them out.
+
+Read the votes before you cast any of your own. `gh` runs as the user's account, so once this skill reacts, its reaction is indistinguishable from theirs. Two things keep them apart: only unresolved threads are in scope, and every thread this skill votes on gets resolved.
+
+**`THUMBS_UP` from the user.** They value the comment. Treat it with more reverence than the rest. Reverence is a higher bar for declining, not agreement by default, so check the claim exactly as carefully. Then:
+
+- Read the whole file and trace the failure path before declining it. The decline needs a line reference, not an assertion.
+- Take the fix where the call is close.
+- An out of scope answer needs a follow-up issue or task, and the reply names it.
+- Tell the user in the summary if you declined it anyway. They may want to reverse that.
+
+**`THUMBS_DOWN` from the user.** They do not want the comment addressed. Take that as the decision and decline it. One exception: where checking the claim turns up a real defect, do not close the thread on it. Leave that thread open and put the evidence in the summary, so the user can change their mind.
 
 ## Applying, voting and replying
 
@@ -74,7 +115,7 @@ mutation($threadId:ID!) {
 }' -F threadId=THREAD_ID
 ```
 
-Resolve every thread you replied to, the pushed-back ones included. Nothing is left open.
+Resolve every thread you replied to, the pushed-back ones included. The only thread that stays open is the one case named in **Votes the user left**: the user voted a comment down and the claim holds up anyway.
 
 ### What the vote means
 
@@ -86,7 +127,9 @@ The vote records one thing: whether the comment should be addressed. It is not a
 - **`THUMBS_DOWN`** — the comment should not be addressed. Vote it down when you declined it: it misreads the code, the concern is already handled, or the change would be wrong.
 - **No vote** — you have not decided. Leave a comment unvoted when you asked the reviewer a question instead of making a call, and when a thread is outdated so the point no longer applies either way.
 
-Vote on the comment that raised the point, which is the first comment in the thread. Do not vote on your own reply. One vote per comment, and the vote must match what the reply says. A reply that declines and a thumbs up next to it read as a contradiction.
+Vote on the comment that raised the point, which is the first comment in the thread. Do not vote on your own reply. One vote per comment, and any vote you cast must match what the reply says. A reply that declines and a thumbs up next to it read as a contradiction.
+
+A comment the user already voted on keeps their vote. It is on the same account as yours, so do not add to it, change it or remove it. Your reply carries your call on those.
 
 Vote the top level review bodies the same way, using the review node id as `subjectId`. A review body that only says "LGTM" needs no vote.
 
@@ -108,4 +151,29 @@ Save the detail for the user-facing summary at the end. That is where length is 
 
 ## Finishing
 
-Summarise for the user: what was fixed, what was declined and why, how each comment was voted, and anything that needs their call. Call out anything resolved on thin reasoning, and any comment you left unvoted. A resolved thread is easy for the reviewer to scroll past, so the user should know where you closed a door on their behalf.
+The summary goes to the user, and it is the last thing the pass produces. Write it once the fixes are pushed and every thread is settled, so the shas and the outcomes in it are real.
+
+Lead with a table, one row per thread, in the order the threads came back from the query:
+
+| Comment | Outcome | Change |
+| --- | --- | --- |
+| [`useFoo.ts:24`](COMMENT_URL) | Fixed | Moved the normalisation into the transformer (`a1b2c3d`) |
+| [`Bar.vue:88`](COMMENT_URL) | Declined | The null guard on line 24 already covers it |
+| [`Baz.ts:12`](COMMENT_URL) | Out of scope | Tracked in #418 |
+
+How to fill it in:
+
+- Link every row to the comment `url`, so the user can read the thread without hunting for it.
+- Use one of five outcomes and nothing else: Fixed, Declined, Out of scope, Asked, Outdated.
+- Name the commit sha for every fix.
+- Keep each Change cell to one line.
+- Give the top level review bodies a row each, linked by review `url`.
+
+Then, under the table, the parts a table cannot hold:
+
+- Every comment the user voted up that you declined anyway, with the reason. This one goes first.
+- Anything you resolved on thin reasoning.
+- Any comment you left unvoted, and any thread you left open.
+- Anything that needs the user's call.
+
+A resolved thread is easy for the reviewer to scroll past, so the user should know where you closed a door on their behalf.
