@@ -13,6 +13,7 @@ set -l periwinkle '\033[38;5;111m'
 set -l blue '\033[38;5;75m'
 set -l gold '\033[38;5;220m'
 set -l rose '\033[38;5;167m'
+set -l lime '\033[38;5;149m'
 
 set -l separator (printf " %b•%b " $dim $reset)
 set -l optimal_limit 200000
@@ -47,6 +48,41 @@ function rate_limit_segment -a label pct reset_at time_fmt
     else
         printf '%b%s %b%s%%%b' $dim $label $color $rounded $reset
     end
+end
+
+# Listening TCP ports of processes whose cwd sits inside the workspace.
+# Matches on cwd + socket, never command name, so it is framework-agnostic.
+function dev_server_ports -a root
+    test -n "$root"; or return
+
+    set -l listeners (lsof -nP -iTCP -sTCP:LISTEN -F pn 2>/dev/null | awk '
+        /^p/ { pid = substr($0, 2) }
+        /^n/ {
+            n = split(substr($0, 2), parts, ":")
+            port = parts[n]
+            if (port ~ /^[0-9]+$/ && !seen[pid " " port]++) print pid, port
+        }')
+    test -n "$listeners"; or return
+
+    set -l pids (printf '%s\n' $listeners | awk '{print $1}' | sort -u | paste -sd, -)
+    set -l matched (lsof -a -d cwd -p $pids -Fpn 2>/dev/null | awk -v root="$root" '
+        /^p/ { pid = substr($0, 2) }
+        /^n/ {
+            cwd = substr($0, 2)
+            if (cwd == root || index(cwd, root "/") == 1) print pid
+        }')
+    test -n "$matched"; or return
+
+    set -l ports
+    for entry in $listeners
+        set -l parts (string split ' ' -- $entry)
+        if contains -- $parts[1] $matched
+            set -a ports $parts[2]
+        end
+    end
+    test -n "$ports"; or return
+
+    printf '%s\n' $ports | sort -un
 end
 
 # Read JSON input from stdin and extract every field in one pass
@@ -115,6 +151,17 @@ if test -n "$effort"
     set segment3 (printf '%b󰓅 %s%b' $effort_color $effort $reset)
 end
 
+# Segment 3b: dev server ports, OSC 8 linked to localhost
+set -l segment3b ""
+set -l ports (dev_server_ports "$cwd")
+if test -n "$ports"
+    set -l link (printf '\e]8;;http://localhost:%s\e\\:%s\e]8;;\e\\' $ports[1] $ports[1])
+    set segment3b (printf '%b󰖟 %s%b' $lime $link $reset)
+    if test (count $ports) -gt 1
+        set segment3b "$segment3b"(printf '%b +%d%b' $dim (math (count $ports) - 1) $reset)
+    end
+end
+
 # Segment 4: token count, colored by usage relative to the 200K optimal limit
 set -l used_pct (math --scale=2 "($tokens_used / $optimal_limit) * 100")
 set -l segment4 (printf '%b󰆼 %s/%s [%s%%]%b' \
@@ -132,15 +179,17 @@ set -a rate_limits (rate_limit_segment 7d "$fields[8]" "$fields[9]" "+%d/%m")
 # Build the complete status line
 set -l line1 $segment1 $segment2
 test -n "$segment3"; and set -a line1 $segment3
+test -n "$segment3b"; and set -a line1 $segment3b
 set -l line2 $segment4 $rate_limits
 
 set line1 (string join "$separator" $line1)
 set line2 (string join "$separator" $line2)
 set -l single "$line1$separator$line2"
 
-# Measure visible width (strip ANSI), add 1 per double-width nerd-font glyph
-set -l stripped (string replace -ra '\e\[[0-9;]*m' '' -- "$single")
-set -l wide_glyphs (string match -ar '[󰘬✻󰆼󰓅]' -- "$stripped" | count)
+# Measure visible width (strip OSC 8 links, then SGR), add 1 per double-width glyph
+set -l stripped (string replace -ra '\e\][^\a\e]*(\e\\\\|\a)' '' -- "$single")
+set stripped (string replace -ra '\e\[[0-9;]*m' '' -- "$stripped")
+set -l wide_glyphs (string match -ar '[󰘬✻󰆼󰓅󰖟]' -- "$stripped" | count)
 set -l vis_len (math (string length -- "$stripped") + $wide_glyphs)
 
 # Terminal width. Claude Code does not pass width in the JSON, and the
