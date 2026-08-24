@@ -14,6 +14,7 @@ set -l blue '\033[38;5;75m'
 set -l gold '\033[38;5;220m'
 set -l rose '\033[38;5;167m'
 set -l lime '\033[38;5;149m'
+set -l violet '\033[38;5;141m'
 
 set -l separator (printf " %b•%b " $dim $reset)
 set -l optimal_limit 200000
@@ -48,6 +49,13 @@ function rate_limit_segment -a label pct reset_at time_fmt
     else
         printf '%b%s %b%s%%%b' $dim $label $color $rounded $reset
     end
+end
+
+# The ST terminator lives in a variable: inline before a conversion, fish's
+# printf emits a literal %s and restarts the format.
+function osc8 -a url label
+    set -l st (printf '\e\\')
+    printf '\e]8;;%s%s%s\e]8;;%s' $url $st $label $st
 end
 
 # Listening TCP ports of processes whose cwd sits inside the workspace.
@@ -155,11 +163,18 @@ end
 set -l segment3b ""
 set -l ports (dev_server_ports "$cwd")
 if test -n "$ports"
-    set -l link (printf '\e]8;;http://localhost:%s\e\\:%s\e]8;;\e\\' $ports[1] $ports[1])
+    set -l link (osc8 "http://localhost:$ports[1]" ":$ports[1]")
     set segment3b (printf '%b󰖟 %s%b' $lime $link $reset)
     if test (count $ports) -gt 1
         set segment3b "$segment3b"(printf '%b +%d%b' $dim (math (count $ports) - 1) $reset)
     end
+end
+
+# Segment 3c: working directory, OSC 8 linked to open in VS Code
+set -l segment3c ""
+if test -n "$cwd"
+    set -l target (string replace -a ' ' %20 -- $cwd)
+    set segment3c (printf '%b󰨞 %s%b' $violet (osc8 "vscode://file$target" code) $reset)
 end
 
 # Segment 4: token count, colored by usage relative to the 200K optimal limit
@@ -180,6 +195,7 @@ set -a rate_limits (rate_limit_segment 7d "$fields[8]" "$fields[9]" "+%d/%m")
 set -l line1 $segment1 $segment2
 test -n "$segment3"; and set -a line1 $segment3
 test -n "$segment3b"; and set -a line1 $segment3b
+test -n "$segment3c"; and set -a line1 $segment3c
 set -l line2 $segment4 $rate_limits
 
 set line1 (string join "$separator" $line1)
@@ -189,7 +205,7 @@ set -l single "$line1$separator$line2"
 # Measure visible width (strip OSC 8 links, then SGR), add 1 per double-width glyph
 set -l stripped (string replace -ra '\e\][^\a\e]*(\e\\\\|\a)' '' -- "$single")
 set stripped (string replace -ra '\e\[[0-9;]*m' '' -- "$stripped")
-set -l wide_glyphs (string match -ar '[󰘬✻󰆼󰓅󰖟]' -- "$stripped" | count)
+set -l wide_glyphs (string match -ar '[󰘬✻󰆼󰓅󰖟󰨞]' -- "$stripped" | count)
 set -l vis_len (math (string length -- "$stripped") + $wide_glyphs)
 
 # Terminal width. Claude Code does not pass width in the JSON, and the
