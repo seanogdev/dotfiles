@@ -14,7 +14,6 @@ set -l blue '\033[38;5;75m'
 set -l gold '\033[38;5;220m'
 set -l rose '\033[38;5;167m'
 set -l lime '\033[38;5;149m'
-set -l violet '\033[38;5;141m'
 
 set -l separator (printf " %b•%b " $dim $reset)
 set -l optimal_limit 200000
@@ -174,7 +173,7 @@ end
 set -l segment3c ""
 if test -n "$cwd"
     set -l target (string replace -a ' ' %20 -- $cwd)
-    set segment3c (printf '%b󰨞 %s%b' $violet (osc8 "vscode://file$target" code) $reset)
+    set segment3c (printf '%b󰨞 %s%b' $blue (osc8 "vscode://file$target" code) $reset)
 end
 
 # Segment 4: token count, colored by usage relative to the 200K optimal limit
