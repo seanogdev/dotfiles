@@ -1,69 +1,16 @@
 ---
 name: address-review
-description: Work through the review comments on a GitHub PR. Fix what should be fixed, reply with the reasoning where it should not, vote each comment up or down, then resolve every thread. Use when a review lands on a PR and the user says "address the review", "fix the review comments", "respond to the review", "handle this review", or points at review feedback to act on.
+description: Work through the review feedback on a GitHub PR, across inline threads, review bodies and conversation comments. Fix what should be fixed, reply with the reasoning where it should not, vote each comment up or down, then resolve every thread that has one. Use when a review lands on a PR and the user says "address the review", "fix the review comments", "respond to the review", "handle this review", or points at review feedback to act on.
 user-invocable: true
 ---
 
 # Address review
 
-Take every piece of unresolved feedback on the PR to a conclusion: fix it or push back, reply either way, vote the comment up or down, then resolve it. Inline threads are only one of the three places it arrives, and the other two are the easiest to miss. Then account for the whole pass to the user. If no PR was named, use the open PR for the current branch.
+Take every piece of unresolved feedback on the PR to a conclusion: fix it or push back, reply either way, vote the comment up or down, then resolve it. Inline threads are only one of three places feedback arrives. Then account for the whole pass to the user. If no PR was named, use the open PR for the current branch.
 
 ## Reading the feedback
 
-REST does not expose thread resolution state, so read them over GraphQL. The `id` on each thread is the node id the reply and resolve mutations need. The `id` on each comment is the node id the vote mutation needs. `viewerHasReacted` marks the comments the user voted on, which the next section weighs.
-
-```bash
-gh api graphql -f query='
-query($owner:String!, $repo:String!, $number:Int!) {
-  repository(owner:$owner, name:$repo) {
-    pullRequest(number:$number) {
-      reviewThreads(first:100) {
-        nodes {
-          id isResolved isOutdated path line
-          comments(first:20) {
-            nodes {
-              id url author { login } body
-              reactionGroups { content viewerHasReacted }
-            }
-          }
-        }
-      }
-    }
-  }
-}' -F owner=OWNER -F repo=REPO -F number=N \
-  --jq '.data.repository.pullRequest.reviewThreads.nodes[]
-        | select(.isResolved == false)
-        | .comments.nodes |= map({id, url, author: .author.login, body,
-                                  userVotes: [.reactionGroups[] | select(.viewerHasReacted) | .content]})'
-```
-
-Keep each comment `url`. The summary at the end links its rows by them.
-
-Read the top level review bodies too. General feedback often never becomes an inline thread, and it is the part most likely to be missed.
-
-```bash
-gh api graphql -f query='
-query($owner:String!, $repo:String!, $number:Int!) {
-  repository(owner:$owner, name:$repo) {
-    pullRequest(number:$number) {
-      reviews(first:50) {
-        nodes {
-          id url state author { login } body
-          reactionGroups { content viewerHasReacted }
-        }
-      }
-    }
-  }
-}' -F owner=OWNER -F repo=REPO -F number=N \
-  --jq '.data.repository.pullRequest.reviews.nodes[]
-        | select(.body != "")
-        | {id, url, state, author: .author.login, body,
-           userVotes: [.reactionGroups[] | select(.viewerHasReacted) | .content]}'
-```
-
-The `id` here is the review node id. A review body takes a vote, and carries the user's vote, the same way a comment does.
-
-Read the comments on the PR itself last. These sit in the conversation, outside any review, and a reviewer will often raise the thing they care about most there rather than against a line.
+Feedback arrives in three places on a PR: inline review threads, review bodies, and conversation comments. They hang off the same node, so one query reads all three. REST does not expose thread resolution state, so read all three over GraphQL.
 
 ```bash
 gh api graphql -f query='
@@ -71,22 +18,46 @@ query($owner:String!, $repo:String!, $number:Int!) {
   repository(owner:$owner, name:$repo) {
     pullRequest(number:$number) {
       id
-      comments(first:100) {
-        nodes {
-          id url author { login } body
-          reactionGroups { content viewerHasReacted }
-        }
+      reviewThreads(first:100) {
+        nodes { id isResolved isOutdated path line comments(first:20) { nodes { ...c } } }
       }
+      reviews(first:50) { nodes { id url state author { login } body ...r } }
+      comments(first:100) { nodes { ...c } }
     }
   }
+}
+fragment r on Reactable { reactionGroups { content viewerHasReacted } }
+fragment c on Reactable {
+  id
+  reactionGroups { content viewerHasReacted }
+  ... on PullRequestReviewComment { url author { login } body }
+  ... on IssueComment { url author { login } body }
 }' -F owner=OWNER -F repo=REPO -F number=N \
-  --jq '{prId: .data.repository.pullRequest.id,
-         comments: [.data.repository.pullRequest.comments.nodes[]
-                    | {id, url, author: .author.login, body,
-                       userVotes: [.reactionGroups[] | select(.viewerHasReacted) | .content]}]}'
+  --jq '.data.repository.pullRequest
+        | {prId: .id,
+           threads: [.reviewThreads.nodes[] | select(.isResolved == false)
+                     | {id, path, line, isOutdated,
+                        comments: [.comments.nodes[] | {id, url, author: .author.login, body,
+                                   userVotes: [.reactionGroups[] | select(.viewerHasReacted) | .content]}]}],
+           reviews: [.reviews.nodes[] | select(.body != "")
+                     | {id, url, state, author: .author.login, body,
+                        userVotes: [.reactionGroups[] | select(.viewerHasReacted) | .content]}],
+           conversation: [.comments.nodes[] | {id, url, author: .author.login, body,
+                          userVotes: [.reactionGroups[] | select(.viewerHasReacted) | .content]}]}'
 ```
 
-Skip the ones the user wrote themselves, and skip the bot noise a PR collects. Keep the `prId`, the reply mutation needs it. There is no thread and no resolution state here, so a conversation comment is in scope until the reply and the vote are on it.
+Skip anything the user wrote themselves, and skip the CI and coverage chatter a PR collects. Keep every `url`. The summary at the end links its rows by them.
+
+Which id goes where:
+
+- `threads[].id` is the node id the reply and resolve mutations need. `threads[].comments[0].id` is the node id the vote mutation needs.
+- `reviews[].id` is the review node id. A review body takes a vote, and carries the user's vote, the same way a comment does.
+- `conversation[].id` votes the same way. There is no thread and no resolution state on these.
+- `prId` is the PR node id. The reply mutation for a review body and a conversation comment needs it.
+
+`viewerHasReacted` marks the comments the user voted on, which the next section weighs.
+
+A review body often never becomes an inline thread, and a reviewer often raises their main point in the conversation rather than against a line. Those two are the easiest to miss.
 
 ## Deciding
 
@@ -117,22 +88,22 @@ Read the votes before you cast any of your own. `gh` runs as the user's account,
 
 ## Applying, voting and replying
 
-Make the fixes, commit them in small logical commits, and push to the PR branch **before** replying. The reply should point at code that is already on the PR.
+Make the fixes, commit them in small logical commits, and push to the PR branch **before** replying. The reply should point at code that is already on the PR. Read every identifier back from its source before it goes in a public reply: the shas from `git log --oneline`, a line number from the file as it now stands, an issue number from `gh`. Never quote one from memory. You have to correct a wrong one in public.
 
-Then vote on each comment, reply to its thread, and resolve the thread:
+Then reply to each thread, vote on the comment that raised it, and resolve the thread. The reply goes first, because a vote may not be reversible.
 
 ```bash
-gh api graphql -f query='
-mutation($subjectId:ID!, $content:ReactionContent!) {
-  addReaction(input: {subjectId: $subjectId, content: $content}) { reaction { content } }
-}' -F subjectId=COMMENT_ID -F content=THUMBS_UP
-
 gh api graphql -f query='
 mutation($threadId:ID!, $body:String!) {
   addPullRequestReviewThreadReply(input: {pullRequestReviewThreadId: $threadId, body: $body}) {
     comment { url }
   }
-}' -F threadId=THREAD_ID -f body='...'
+}' -F threadId=THREAD_ID -F body=@BODY_FILE
+
+gh api graphql -f query='
+mutation($subjectId:ID!, $content:ReactionContent!) {
+  addReaction(input: {subjectId: $subjectId, content: $content}) { reaction { content } }
+}' -F subjectId=COMMENT_ID -F content=THUMBS_UP
 
 gh api graphql -f query='
 mutation($threadId:ID!) {
@@ -140,18 +111,22 @@ mutation($threadId:ID!) {
 }' -F threadId=THREAD_ID
 ```
 
-Pass the body with `-f`, never `-F`. `-F` reads the value from a file when it starts with `@`, and a reply that opens with a mention is the common case.
+**One command per mutation.** A `for` loop over the comment ids, a shell function around the mutation, a `cd` in front of it: each one is a compound command. A worktree-isolated session refuses to run them, and a batch that fails halfway leaves you unable to say what landed.
 
-A review body and a conversation comment have no thread to reply into. Answer both with a comment on the PR, using the `prId` from the query, and open it with the author's `@login` so the reply reads as an answer to their point rather than a stray remark:
+**`BODY_FILE` is a path.** Write the reply to a file and pass the path, whatever the reply contains. A double-quoted body runs every backticked identifier as a command, and strips the code references out of the reply. `-F` with a literal value reads a leading `@mention` as a filename. A body that looked safe inline is how those failures happen, so do not judge them case by case.
+
+**Retry once on a transient server error.** The vote and the resolve are idempotent, so repeat them freely. A reply is not: GitHub will sometimes post it and then fail the response, so re-read the thread before you send it again.
+
+A review body and a conversation comment have no thread to reply into. Answer both with a new conversation comment, built from the `prId`. Open it with the author's `@login`, so the reply reads as an answer and not a stray remark:
 
 ```bash
 gh api graphql -f query='
 mutation($subjectId:ID!, $body:String!) {
   addComment(input: {subjectId: $subjectId, body: $body}) { commentEdge { node { url } } }
-}' -F subjectId=PR_ID -f body='...'
+}' -F subjectId=PR_ID -F body=@BODY_FILE
 ```
 
-Resolve every thread you replied to, the pushed-back ones included. The only thread that stays open is the one case named in **Votes the user left**: the user voted a comment down and the claim holds up anyway. Nothing in the conversation resolves, so there the reply and the vote are the whole close.
+Resolve every thread you replied to, the pushed-back ones included. The only thread that stays open is the one case named in **Votes the user left**: the user voted a comment down and the claim holds up anyway. You cannot resolve a conversation comment, so the reply and the vote close it.
 
 ### What the vote means
 
@@ -165,9 +140,18 @@ The vote records one thing: whether the comment should be addressed. It is not a
 
 Vote on the comment that raised the point, which is the first comment in the thread. Do not vote on your own reply. One vote per comment, and any vote you cast must match what the reply says. A reply that declines and a thumbs up next to it read as a contradiction.
 
+If `removeReaction` returns `FORBIDDEN`, as it does on this account, the only way back is REST, and it takes REST ids rather than node ids:
+
+```bash
+gh api /repos/OWNER/REPO/pulls/comments/COMMENT_ID/reactions
+gh api -X DELETE /repos/OWNER/REPO/pulls/comments/COMMENT_ID/reactions/REACTION_ID
+```
+
+Use `issues/comments` for a conversation comment.
+
 A comment the user already voted on keeps their vote. It is on the same account as yours, so do not add to it, change it or remove it. Your reply carries your call on those.
 
-Vote the top level review bodies and the conversation comments the same way, using the review or comment node id as `subjectId`. A review body that only says "LGTM" needs no vote, and neither does a conversation comment that raises nothing to act on.
+Vote the review bodies and the conversation comments the same way. Use the review or comment node id as `subjectId`. Skip the vote where nothing is raised to act on, an "LGTM" body included.
 
 ## Reply voice
 
@@ -189,7 +173,7 @@ Save the detail for the user-facing summary at the end. That is where length is 
 
 The summary goes to the user, and it is the last thing the pass produces. Write it once the fixes are pushed and every thread is settled, so the shas and the outcomes in it are real.
 
-Lead with a table, one row per piece of feedback, in the order it came back from the queries, inline threads first:
+Lead with a table, one row per piece of feedback, in query order:
 
 | Comment | Outcome | Change |
 | --- | --- | --- |
@@ -199,11 +183,11 @@ Lead with a table, one row per piece of feedback, in the order it came back from
 
 How to fill it in:
 
-- Link every row to the comment `url`, so the user can read the thread without hunting for it.
+- Link every row to its `url`, so the user can read the feedback without hunting for it.
 - Use one of five outcomes and nothing else: Fixed, Declined, Out of scope, Asked, Outdated.
 - Name the commit sha for every fix.
 - Keep each Change cell to one line.
-- Give the top level review bodies and the conversation comments a row each, linked by their own `url`. Mark the source in the Comment cell where the row is not an inline one, `review body` or `conversation`, so the user can see the feedback outside the diff was covered.
+- Give the review bodies and the conversation comments a row each. Mark the Comment cell on any row that is not inline: `review body` or `conversation`.
 
 Then, under the table, the parts a table cannot hold:
 
