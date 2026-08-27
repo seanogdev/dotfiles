@@ -6,9 +6,9 @@ user-invocable: true
 
 # Address review
 
-Take every unresolved review thread on the PR to a conclusion: fix it or push back, reply either way, vote the comment up or down, then resolve it. Then account for the whole pass to the user. If no PR was named, use the open PR for the current branch.
+Take every piece of unresolved feedback on the PR to a conclusion: fix it or push back, reply either way, vote the comment up or down, then resolve it. Inline threads are only one of the three places it arrives, and the other two are the easiest to miss. Then account for the whole pass to the user. If no PR was named, use the open PR for the current branch.
 
-## Reading the threads
+## Reading the feedback
 
 REST does not expose thread resolution state, so read them over GraphQL. The `id` on each thread is the node id the reply and resolve mutations need. The `id` on each comment is the node id the vote mutation needs. `viewerHasReacted` marks the comments the user voted on, which the next section weighs.
 
@@ -63,6 +63,31 @@ query($owner:String!, $repo:String!, $number:Int!) {
 
 The `id` here is the review node id. A review body takes a vote, and carries the user's vote, the same way a comment does.
 
+Read the comments on the PR itself last. These sit in the conversation, outside any review, and a reviewer will often raise the thing they care about most there rather than against a line.
+
+```bash
+gh api graphql -f query='
+query($owner:String!, $repo:String!, $number:Int!) {
+  repository(owner:$owner, name:$repo) {
+    pullRequest(number:$number) {
+      id
+      comments(first:100) {
+        nodes {
+          id url author { login } body
+          reactionGroups { content viewerHasReacted }
+        }
+      }
+    }
+  }
+}' -F owner=OWNER -F repo=REPO -F number=N \
+  --jq '{prId: .data.repository.pullRequest.id,
+         comments: [.data.repository.pullRequest.comments.nodes[]
+                    | {id, url, author: .author.login, body,
+                       userVotes: [.reactionGroups[] | select(.viewerHasReacted) | .content]}]}'
+```
+
+Skip the ones the user wrote themselves, and skip the bot noise a PR collects. Keep the `prId`, the reply mutation needs it. There is no thread and no resolution state here, so a conversation comment is in scope until the reply and the vote are on it.
+
 ## Deciding
 
 The goal is the right call on each comment. Agreeing and disagreeing are both fine outcomes, neither one is the target.
@@ -107,7 +132,7 @@ mutation($threadId:ID!, $body:String!) {
   addPullRequestReviewThreadReply(input: {pullRequestReviewThreadId: $threadId, body: $body}) {
     comment { url }
   }
-}' -F threadId=THREAD_ID -F body='...'
+}' -F threadId=THREAD_ID -f body='...'
 
 gh api graphql -f query='
 mutation($threadId:ID!) {
@@ -115,7 +140,18 @@ mutation($threadId:ID!) {
 }' -F threadId=THREAD_ID
 ```
 
-Resolve every thread you replied to, the pushed-back ones included. The only thread that stays open is the one case named in **Votes the user left**: the user voted a comment down and the claim holds up anyway.
+Pass the body with `-f`, never `-F`. `-F` reads the value from a file when it starts with `@`, and a reply that opens with a mention is the common case.
+
+A review body and a conversation comment have no thread to reply into. Answer both with a comment on the PR, using the `prId` from the query, and open it with the author's `@login` so the reply reads as an answer to their point rather than a stray remark:
+
+```bash
+gh api graphql -f query='
+mutation($subjectId:ID!, $body:String!) {
+  addComment(input: {subjectId: $subjectId, body: $body}) { commentEdge { node { url } } }
+}' -F subjectId=PR_ID -f body='...'
+```
+
+Resolve every thread you replied to, the pushed-back ones included. The only thread that stays open is the one case named in **Votes the user left**: the user voted a comment down and the claim holds up anyway. Nothing in the conversation resolves, so there the reply and the vote are the whole close.
 
 ### What the vote means
 
@@ -131,7 +167,7 @@ Vote on the comment that raised the point, which is the first comment in the thr
 
 A comment the user already voted on keeps their vote. It is on the same account as yours, so do not add to it, change it or remove it. Your reply carries your call on those.
 
-Vote the top level review bodies the same way, using the review node id as `subjectId`. A review body that only says "LGTM" needs no vote.
+Vote the top level review bodies and the conversation comments the same way, using the review or comment node id as `subjectId`. A review body that only says "LGTM" needs no vote, and neither does a conversation comment that raises nothing to act on.
 
 ## Reply voice
 
@@ -153,7 +189,7 @@ Save the detail for the user-facing summary at the end. That is where length is 
 
 The summary goes to the user, and it is the last thing the pass produces. Write it once the fixes are pushed and every thread is settled, so the shas and the outcomes in it are real.
 
-Lead with a table, one row per thread, in the order the threads came back from the query:
+Lead with a table, one row per piece of feedback, in the order it came back from the queries, inline threads first:
 
 | Comment | Outcome | Change |
 | --- | --- | --- |
@@ -167,7 +203,7 @@ How to fill it in:
 - Use one of five outcomes and nothing else: Fixed, Declined, Out of scope, Asked, Outdated.
 - Name the commit sha for every fix.
 - Keep each Change cell to one line.
-- Give the top level review bodies a row each, linked by review `url`.
+- Give the top level review bodies and the conversation comments a row each, linked by their own `url`. Mark the source in the Comment cell where the row is not an inline one, `review body` or `conversation`, so the user can see the feedback outside the diff was covered.
 
 Then, under the table, the parts a table cannot hold:
 
