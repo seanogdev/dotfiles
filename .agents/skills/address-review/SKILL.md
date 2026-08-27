@@ -10,6 +10,8 @@ Take every piece of unresolved feedback on the PR to a conclusion: fix it or pus
 
 ## Reading the feedback
 
+**Query first, every time.** Read the feedback from the API as the first action of the pass, before anything else. A read from earlier in this conversation is stale and cannot be reused: reviewers add comments while a pass is running, and a second invocation minutes after the first usually means something landed in between. So an earlier query result, an earlier summary, or a recollection of what the threads said is never the input here. Nothing is up to date until this query says so, and "I just read this" is not evidence that it is.
+
 Feedback arrives in three places on a PR: inline review threads, review bodies, and conversation comments. They hang off the same node, so one query reads all three. REST does not expose thread resolution state, so read all three over GraphQL.
 
 ```bash
@@ -176,6 +178,8 @@ Never argue. If a thread is turning into back and forth, say so and take it off 
 Save the detail for the user-facing summary at the end. That is where length is allowed, not the PR.
 
 ## Finishing
+
+**Re-read the feedback before the summary.** Run the query from **Reading the feedback** again, against the API. The pass took time, and a reviewer may have commented during it. Anything unresolved that the first read missed goes through the same decide, reply, vote, resolve loop, and then query once more. Only write the summary when a fresh query comes back with nothing left to act on.
 
 The summary goes to the user, and it is the last thing the pass produces. Write it once the fixes are pushed and every thread is settled, so the shas and the outcomes in it are real.
 
