@@ -144,7 +144,9 @@ Pick a route in this order:
    `--state ~/.config/agent-browser/github-auth.json` on every run after that. This is the default
    choice. It survives the browser being open and does not care which profile is which. That file is
    a live GitHub session, so treat it as a credential: keep it under `~/.config`, never inside a
-   repo, and `chmod 600` it after saving.
+   repo, and `chmod 600` it after saving. Set `AGENT_BROWSER_ENCRYPTION_KEY` to a 64 character hex
+   key to have it encrypted at rest. Saved state expires after 30 days, so expect to sign in again
+   and re-save when the upload suddenly lands on a login page.
 2. **A running browser over CDP.** Works only when the browser was started with
    `--remote-debugging-port=9222`. Then `agent-browser connect 9222`, or `--auto-connect` to find it.
    Nothing is written to disk, but a normal launch has no debugging port, so this usually needs a
