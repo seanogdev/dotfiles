@@ -86,6 +86,10 @@ in, so a scratch file cannot end up in a commit:
 gh pr view --json body -q .body > /tmp/pr-body-before.md
 ```
 
+`gh pr view -q .body` appends a newline the body does not have. Feed that straight back through
+`--body-file` and the description gains a blank line on every run, so strip the trailing newline
+before writing.
+
 Carry across everything the skill does not own:
 
 - Image and video markup wherever it sits: `![alt](url)`, `<img ...>`, `<video ...>`, and bare
