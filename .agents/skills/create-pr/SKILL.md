@@ -160,17 +160,29 @@ type credentials into a login form.
 
 ### The sub-agent
 
-Spawn one. Give it the PR URL, the absolute path of every image, a caption for each, and the auth
-flag from above. Tell it to:
+The browser only uploads. It does not write the description. GitHub publishes an attachment the
+moment a file input accepts it, so the comment box the file was dropped into never has to be
+submitted. That keeps the browser away from the PR body and leaves the body to `gh pr edit` and the
+rules in step 6.
 
-1. Load the `agent-browser` skill and open the PR.
-2. Edit the description. Do not add a comment.
-3. Upload the files under the `## Screenshots` heading with `agent-browser upload`, one at a time,
-   waiting for each upload to finish before starting the next.
-4. Save the description.
-5. Report back the `https://github.com/user-attachments/...` URL it got for every image.
+Spawn one sub-agent. Give it the PR URL, the absolute path of every image, and the auth flag from
+above. Tell it to:
 
-Keep those URLs. They are what the next run has to carry across in step 6.
+1. Load the `agent-browser` skill and open the PR with `--state`.
+2. Wait for the comment editor to mount. The file inputs are absent on first paint. `#fc-issue-<id>-body`
+   is the description and `#fc-new_comment_field` is the reply box.
+3. Upload into the reply box, one file at a time:
+   `agent-browser upload "#fc-new_comment_field" <path>`.
+4. Read the result back out of the textarea. GitHub writes an HTML tag, not markdown:
+   `<img width="..." height="..." alt="..." src="https://github.com/user-attachments/assets/<uuid>" />`.
+5. Clear the textarea. Never submit the comment.
+6. Report one `https://github.com/user-attachments/assets/...` URL per image.
+
+Write those URLs into `## Screenshots` yourself and update the body with `gh pr edit`, following
+step 6. Keep them. They are what the next run has to carry across.
+
+An attachment on a private repo needs a signed-in browser to open. A plain `curl` gets a 404. That
+is expected and not a failed upload.
 
 ## 8. Apply labels
 
