@@ -55,7 +55,8 @@ each one changed.
 </details>
 ```
 
-Leave a `## Screenshots` section empty. The author attaches the images.
+Leave a `## Screenshots` heading. The images under it belong to the author. Leave it empty, and
+never write placeholder text into it.
 
 Use complete sentences and proper punctuation. Do not use em dashes.
 
@@ -66,11 +67,42 @@ a non-native English speaker and a non-technical reader can follow.
 
 Push the branch. Then check for an open PR on it with `gh pr view`.
 
-- If a PR exists, rewrite its body with `gh pr edit`.
 - If no PR exists, create it with `gh pr create`.
+- If a PR exists, carry the author's content across first, then rewrite the body with `gh pr edit`.
 
 Open the PR ready for review. Pass `--draft` only when the user asks for a draft, or when the work
 is unfinished.
+
+### Carry the author's content across
+
+`gh pr edit --body` replaces the entire body. Anything attached by hand is gone, and an image cannot
+be put back from the CLI once it is lost. Treat every existing body as something to merge into, not
+something to overwrite.
+
+Save the current body before you touch it. Write it to `/tmp`, never into the repo you are working
+in, so a scratch file cannot end up in a commit:
+
+```bash
+gh pr view --json body -q .body > /tmp/pr-body-before.md
+```
+
+Carry across everything the skill does not own:
+
+- Image and video markup wherever it sits: `![alt](url)`, `<img ...>`, `<video ...>`, and bare
+  `https://github.com/user-attachments/...` links.
+- The whole `## Screenshots` section, verbatim.
+- Any heading the author added that is not `Changes`, the file table, or part of the repo template.
+
+Put each image back under the heading it sat under before. Keep its caption and its order.
+
+Then verify. List every asset URL in the old body:
+
+```bash
+grep -oE 'https://[^ )">]*(user-attachments|githubusercontent)[^ )">]*' /tmp/pr-body-before.md | sort -u
+```
+
+Every URL that command prints must appear in the new body. If one is missing, the edit is wrong.
+Put it back and run the check again. Do not run `gh pr edit` until the check passes.
 
 ## 7. Apply labels
 
