@@ -139,7 +139,8 @@ confirm.
 
 Pick a route in this order:
 
-1. **A saved state file.** Sign in once in the browser `agent-browser` launches, then
+1. **A saved state file.** `agent-browser` is headless by default, so the sign-in needs a window:
+   `agent-browser --headed open https://github.com/login`. Sign in there once, then
    `agent-browser state save ~/.config/agent-browser/github-auth.json`. Pass
    `--state ~/.config/agent-browser/github-auth.json` on every run after that. This is the default
    choice. It survives the browser being open and does not care which profile is which. That file is
