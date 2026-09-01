@@ -1,19 +1,12 @@
 ---
 name: manage-skills
-description: Install, update, back up, and restore Claude Code skills for this dotfiles setup via `gh skill` and the skills-backup/restore/update fish functions. Use when the user wants to install a new skill, update skills, back up or restore the skill inventory, or asks about .Skillfile.
+description: Install, update, back up, and restore Claude Code skills for this dotfiles setup via `gh skill` and the skills-install/backup/restore/update fish functions. Use when the user wants to install a new skill, update skills, back up or restore the skill inventory, or asks about .Skillfile.
 ---
 
 Skills are managed with `gh skill` (GitHub CLI, preview). The canonical install location is `~/.agents/skills/` (the agentskills.io convention), and Claude Code reads from `~/.claude/skills/`, where each managed skill is a symlink into `~/.agents/skills/<name>`.
 
 ```fish
-# `--agent universal --scope user` resolves to ~/.agents/skills
-gh skill install <owner/repo> <skill-path> --agent universal --scope user --force
-
-# then symlink for Claude Code discovery
-ln -s $HOME/.agents/skills/<name> $HOME/.claude/skills/<name>
-
-# update takes no --agent, so scope it with --dir
-gh skill update --all --dir $HOME/.agents/skills
+skills-install <owner/repo> <skill-path>  # installs into ~/.agents/skills, then symlinks
 gh skill search <query>
 ```
 
