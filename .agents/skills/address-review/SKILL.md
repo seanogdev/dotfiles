@@ -50,12 +50,12 @@ fragment c on Reactable {
 
 Skip anything the user wrote themselves, and skip the CI and coverage chatter a PR collects. Keep every `url`. The summary at the end links its rows by them.
 
-Which id goes where:
+Which id becomes which plan field:
 
-- `threads[].id` is the node id the reply and resolve mutations need. `threads[].comments[0].id` is the node id the vote mutation needs.
-- `reviews[].id` is the review node id. A review body takes a vote, and carries the user's vote, the same way a comment does.
-- `conversation[].id` votes the same way. There is no thread and no resolution state on these.
-- `prId` is the PR node id. The reply mutation for a review body and a conversation comment needs it.
+- `threads[].id` is a `threadId`, and `threads[].comments[0].id` is that item's `commentId`.
+- `reviews[].id` is the `commentId` of a review body. A review body takes a vote, and carries the user's vote, the same way a comment does.
+- `conversation[].id` is the `commentId` of a conversation comment. There is no thread and no resolution state on these.
+- `prId` is the PR node id, and it is the `prId` of every review body and conversation item. Neither has a thread to reply into.
 
 `viewerHasReacted` marks the comments the user voted on, which the next section weighs.
 
@@ -92,41 +92,51 @@ Read the votes before you cast any of your own. `gh` runs as the user's account,
 
 Make the fixes, commit them in small logical commits, and push to the PR branch **before** replying. The reply should point at code that is already on the PR. Read every identifier back from its source before it goes in a public reply: the shas from `git log`, a line number from the file as it now stands, an issue number from `gh`. Never quote one from memory. You have to correct a wrong one in public.
 
-Then reply to each thread, vote on the comment that raised it, and resolve the thread. The reply goes first, because a vote may not be reversible.
+Then build a plan and hand it to `apply.sh`, which lives beside this file:
 
 ```bash
-gh api graphql -f query='
-mutation($threadId:ID!, $body:String!) {
-  addPullRequestReviewThreadReply(input: {pullRequestReviewThreadId: $threadId, body: $body}) {
-    comment { url }
-  }
-}' -F threadId=THREAD_ID -F body=@BODY_FILE
-
-gh api graphql -f query='
-mutation($subjectId:ID!, $content:ReactionContent!) {
-  addReaction(input: {subjectId: $subjectId, content: $content}) { reaction { content } }
-}' -F subjectId=COMMENT_ID -F content=THUMBS_UP
-
-gh api graphql -f query='
-mutation($threadId:ID!) {
-  resolveReviewThread(input: {threadId: $threadId}) { thread { isResolved } }
-}' -F threadId=THREAD_ID
+~/.claude/skills/address-review/apply.sh PLAN.json
 ```
 
-**One command per mutation.** A `for` loop over the comment ids, a shell function around the mutation, a `cd` in front of it: each one is a compound command. A worktree-isolated session refuses to run them, and a batch that fails halfway leaves you unable to say what landed.
+It sends every reply at once, and follows each one with that item's vote and resolve. The ordering is per item, so a slow thread never holds up the rest, and a reply always lands before the vote it explains.
 
-**`BODY_FILE` is a path.** Write the reply to a file and pass the path, whatever the reply contains. A double-quoted body runs every backticked identifier as a command, and strips the code references out of the reply. `-F` with a literal value reads a leading `@mention` as a filename. A body that looked safe inline is how those failures happen, so do not judge them case by case.
+One object per piece of feedback:
 
-**Retry once on a transient server error.** The vote and the resolve are idempotent, so repeat them freely. A reply is not: GitHub will sometimes post it and then fail the response, so re-read the thread before you send it again.
+```json
+[
+  { "ref": "useFoo.ts:24",
+    "threadId": "PRRT_kwDO...",
+    "commentId": "PRRC_kwDO...",
+    "bodyFile": "/tmp/reply-usefoo.md",
+    "vote": "THUMBS_UP",
+    "resolve": true },
+  { "ref": "review body (alice)",
+    "prId": "PR_kwDO...",
+    "commentId": "PRR_kwDO...",
+    "bodyFile": "/tmp/reply-alice.md",
+    "vote": "THUMBS_DOWN" }
+]
+```
 
-A review body and a conversation comment have no thread to reply into. Answer both with a new conversation comment, built from the `prId`. Open it with the author's `@login`, so the reply reads as an answer and not a stray remark:
+- `ref` labels the row in the output. Use the name the summary table will use.
+- `threadId` replies into an inline thread. `prId` posts a new conversation comment instead, which is how a review body and a conversation comment get answered, so open those bodies with the author's `@login`. Exactly one of the two.
+- `commentId` is what the vote lands on: the first comment in the thread, or the review or conversation node itself. Never your own reply.
+- `bodyFile` is a path, never the body itself. A double-quoted body runs every backticked identifier as a command and strips the code references out of the reply. Write the reply to a file whatever it contains, and do not judge that case by case.
+- `vote` is `THUMBS_UP` or `THUMBS_DOWN`, or leave it out for no vote.
+- `resolve` defaults to false, so a thread you mean to close needs `"resolve": true` on it.
+
+Read the plan back before it goes out. `--dry-run` prints what would be sent and sends nothing:
 
 ```bash
-gh api graphql -f query='
-mutation($subjectId:ID!, $body:String!) {
-  addComment(input: {subjectId: $subjectId, body: $body}) { commentEdge { node { url } } }
-}' -F subjectId=PR_ID -F body=@BODY_FILE
+~/.claude/skills/address-review/apply.sh --dry-run PLAN.json
 ```
+
+What the script guarantees, so you do not have to:
+
+- It validates the whole plan, body files included, before it sends anything. A plan that fails halfway is the expensive failure.
+- Four items run at a time. `ADDRESS_REVIEW_JOBS` changes that, but GitHub throttles concurrent writes from one account, so raising it is mostly a way to get rate limited.
+- A failed vote or resolve is retried, because both are idempotent. A reply never is. Where a reply fails, that item's vote and resolve are skipped, so no thread ends up voted and closed with nothing said in it.
+- It exits non-zero listing what failed, and prints the url of every reply that landed. Re-read any thread whose reply failed before sending it again: GitHub will sometimes post the reply and then fail the response.
 
 Resolve every thread you replied to, the pushed-back ones included. The only thread that stays open is the one case named in **Votes the user left**: the user voted a comment down and the claim holds up anyway. You cannot resolve a conversation comment, so the reply and the vote close it.
 
@@ -153,7 +163,7 @@ Use `issues/comments` for a conversation comment.
 
 A comment the user already voted on keeps their vote. It is on the same account as yours, so do not add to it, change it or remove it. Your reply carries your call on those.
 
-Vote the review bodies and the conversation comments the same way. Use the review or comment node id as `subjectId`. Skip the vote where nothing is raised to act on, an "LGTM" body included.
+Vote the review bodies and the conversation comments the same way, with their own node id as the item's `commentId`. Skip the vote where nothing is raised to act on, an "LGTM" body included.
 
 ## Reply voice
 
