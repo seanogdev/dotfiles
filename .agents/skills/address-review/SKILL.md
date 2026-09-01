@@ -113,7 +113,15 @@ mutation($threadId:ID!) {
 }' -F threadId=THREAD_ID
 ```
 
-**One command per mutation.** A `for` loop over the comment ids, a shell function around the mutation, a `cd` in front of it: each one is a compound command. A worktree-isolated session refuses to run them, and a batch that fails halfway leaves you unable to say what landed.
+**Three rounds, not three per thread.** The reply-before-vote ordering only binds within a thread. Across threads nothing depends on anything, so send the whole PR's worth of mutations as parallel tool calls, one round at a time:
+
+1. Every reply body file.
+2. Every reply and every new conversation comment.
+3. Every vote and every resolve.
+
+Votes and resolves share a round because neither one waits on the other. A twelve-thread PR is three rounds, not thirty-six calls in a line. Hold a round open until all of its calls come back, so a failure is visible before the next round builds on it.
+
+**One command per mutation.** A `for` loop over the comment ids, a shell function around the mutation, a `cd` in front of it: each one is a compound command. A worktree-isolated session refuses to run them, and a batch that fails halfway leaves you unable to say what landed. A round is many separate calls issued at once, each still one command, which is what makes it safe.
 
 **`BODY_FILE` is a path.** Write the reply to a file and pass the path, whatever the reply contains. A double-quoted body runs every backticked identifier as a command, and strips the code references out of the reply. `-F` with a literal value reads a leading `@mention` as a filename. A body that looked safe inline is how those failures happen, so do not judge them case by case.
 
