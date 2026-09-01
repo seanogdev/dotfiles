@@ -12,52 +12,17 @@ Take every piece of unresolved feedback on the PR to a conclusion: fix it or pus
 
 **Query first, every time.** Read the feedback from the API as the first action of the pass, before anything else. A read from earlier in this conversation is stale and cannot be reused: reviewers add comments while a pass is running, and a second invocation minutes after the first usually means something landed in between. So an earlier query result, an earlier summary, or a recollection of what the threads said is never the input here. Nothing is up to date until this query says so, and "I just read this" is not evidence that it is.
 
-Feedback arrives in three places on a PR: inline review threads, review bodies, and conversation comments. They hang off the same node, so one query reads all three. REST does not expose thread resolution state, so read all three over GraphQL.
-
 ```bash
-gh api graphql -f query='
-query($owner:String!, $repo:String!, $number:Int!) {
-  repository(owner:$owner, name:$repo) {
-    pullRequest(number:$number) {
-      id
-      reviewThreads(first:100) {
-        nodes { id isResolved isOutdated path line comments(first:20) { nodes { ...c } } }
-      }
-      reviews(first:50) { nodes { id url state author { login } body ...r } }
-      comments(first:100) { nodes { ...c } }
-    }
-  }
-}
-fragment r on Reactable { reactionGroups { content viewerHasReacted } }
-fragment c on Reactable {
-  id
-  reactionGroups { content viewerHasReacted }
-  ... on PullRequestReviewComment { url author { login } body }
-  ... on IssueComment { url author { login } body }
-}' -F owner=OWNER -F repo=REPO -F number=N \
-  --jq '.data.repository.pullRequest
-        | {prId: .id,
-           threads: [.reviewThreads.nodes[] | select(.isResolved == false)
-                     | {id, path, line, isOutdated,
-                        comments: [.comments.nodes[] | {id, url, author: .author.login, body,
-                                   userVotes: [.reactionGroups[] | select(.viewerHasReacted) | .content]}]}],
-           reviews: [.reviews.nodes[] | select(.body != "")
-                     | {id, url, state, author: .author.login, body,
-                        userVotes: [.reactionGroups[] | select(.viewerHasReacted) | .content]}],
-           conversation: [.comments.nodes[] | {id, url, author: .author.login, body,
-                          userVotes: [.reactionGroups[] | select(.viewerHasReacted) | .content]}]}'
+~/.claude/skills/address-review/fetch.sh [PR]
 ```
 
-Skip anything the user wrote themselves, and skip the CI and coverage chatter a PR collects. Keep every `url`. The summary at the end links its rows by them.
+Feedback arrives in three places on a PR: inline review threads, review bodies, and conversation comments. This reads all three in one go, keeps only the unresolved threads, and defaults to the open PR for the current branch.
 
-Which id becomes which plan field:
+Skip anything `viewer` wrote themselves, and skip the CI and coverage chatter a PR collects. Keep every `url`. The summary at the end links its rows by them.
 
-- `threads[].id` is a `threadId`, and `threads[].comments[0].id` is that item's `commentId`.
-- `reviews[].id` is the `commentId` of a review body. A review body takes a vote, and carries the user's vote, the same way a comment does.
-- `conversation[].id` is the `commentId` of a conversation comment. There is no thread and no resolution state on these.
-- `prId` is the PR node id, and it is the `prId` of every review body and conversation item. Neither has a thread to reply into.
+Which id becomes which plan field: `threads[].id` is a `threadId` and `threads[].comments[0].id` is that item's `commentId`; `reviews[].id` and `conversation[].id` are each their own `commentId`, and both take the `prId`, since neither has a thread to reply into. A review body carries a vote, and the user's vote, the same way a comment does.
 
-`viewerHasReacted` marks the comments the user voted on, which the next section weighs.
+`userVotes` marks the comments the user voted on, which the next section weighs.
 
 A review body often never becomes an inline thread, and a reviewer often raises their main point in the conversation rather than against a line. Those two are the easiest to miss.
 
@@ -98,7 +63,7 @@ Then build a plan and hand it to `apply.sh`, which lives beside this file:
 ~/.claude/skills/address-review/apply.sh PLAN.json
 ```
 
-It sends every reply at once, and follows each one with that item's vote and resolve. The ordering is per item, so a slow thread never holds up the rest, and a reply always lands before the vote it explains.
+It sends every reply at once, and follows each one with that item's vote and resolve. The ordering is per item, so a slow thread never holds up the rest, and a reply always lands before the vote it explains. Where a reply fails, that item's vote and resolve are skipped, so no thread ends up voted and closed with nothing said in it.
 
 One object per piece of feedback:
 
@@ -125,18 +90,7 @@ One object per piece of feedback:
 - `vote` is `THUMBS_UP` or `THUMBS_DOWN`, or leave it out for no vote.
 - `resolve` defaults to false, so a thread you mean to close needs `"resolve": true` on it.
 
-Read the plan back before it goes out. `--dry-run` prints what would be sent and sends nothing:
-
-```bash
-~/.claude/skills/address-review/apply.sh --dry-run PLAN.json
-```
-
-What the script guarantees, so you do not have to:
-
-- It validates the whole plan, body files included, before it sends anything. A plan that fails halfway is the expensive failure.
-- Four items run at a time. `ADDRESS_REVIEW_JOBS` changes that, but GitHub throttles concurrent writes from one account, so raising it is mostly a way to get rate limited.
-- A failed vote or resolve is retried, because both are idempotent. A reply never is. Where a reply fails, that item's vote and resolve are skipped, so no thread ends up voted and closed with nothing said in it.
-- It exits non-zero listing what failed, and prints the url of every reply that landed. Re-read any thread whose reply failed before sending it again: GitHub will sometimes post the reply and then fail the response.
+Read the plan back with `--dry-run` before it goes out.
 
 Resolve every thread you replied to, the pushed-back ones included. The only thread that stays open is the one case named in **Votes the user left**: the user voted a comment down and the claim holds up anyway. You cannot resolve a conversation comment, so the reply and the vote close it.
 
@@ -152,14 +106,7 @@ The vote records one thing: whether the comment should be addressed. It is not a
 
 Vote on the comment that raised the point, which is the first comment in the thread. Do not vote on your own reply. One vote per comment, and any vote you cast must match what the reply says. A reply that declines and a thumbs up next to it read as a contradiction.
 
-If `removeReaction` returns `FORBIDDEN`, as it does on this account, the only way back is REST, and it takes REST ids rather than node ids:
-
-```bash
-gh api /repos/OWNER/REPO/pulls/comments/COMMENT_ID/reactions
-gh api -X DELETE /repos/OWNER/REPO/pulls/comments/COMMENT_ID/reactions/REACTION_ID
-```
-
-Use `issues/comments` for a conversation comment.
+Undo a vote with `~/.claude/skills/address-review/unvote.sh COMMENT_URL`. A vote on a review body cannot be undone at all, so be sure of that one before casting it.
 
 A comment the user already voted on keeps their vote. It is on the same account as yours, so do not add to it, change it or remove it. Your reply carries your call on those.
 
@@ -189,7 +136,7 @@ Save the detail for the user-facing summary at the end. That is where length is 
 
 ## Finishing
 
-**Re-read the feedback before the summary.** Run the query from **Reading the feedback** again, against the API. The pass took time, and a reviewer may have commented during it. Anything unresolved that the first read missed goes through the same decide, reply, vote, resolve loop, and then query once more. Only write the summary when a fresh query comes back with nothing left to act on.
+**Re-read the feedback before the summary.** Run `fetch.sh` again. The pass took time, and a reviewer may have commented during it. Anything unresolved that the first read missed goes through the same decide, reply, vote, resolve loop, and then query once more. Only write the summary when a fresh query comes back with nothing left to act on.
 
 The summary goes to the user, and it is the last thing the pass produces. Write it once the fixes are pushed and every thread is settled, so the shas and the outcomes in it are real.
 
