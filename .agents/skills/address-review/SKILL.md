@@ -57,10 +57,10 @@ Read the votes before you cast any of your own. `gh` runs as the user's account,
 
 Make the fixes, commit them in small logical commits, and push to the PR branch **before** replying. The reply should point at code that is already on the PR. Read every identifier back from its source before it goes in a public reply: the shas from `git log`, a line number from the file as it now stands, an issue number from `gh`. Never quote one from memory. You have to correct a wrong one in public.
 
-Then build a plan and hand it to `apply.sh`, which lives beside this file:
+Then build a plan and hand it to `apply.ts`, which lives beside this file:
 
 ```bash
-~/.claude/skills/address-review/apply.sh PLAN.json
+~/.claude/skills/address-review/apply.ts PLAN.json
 ```
 
 It sends every reply at once, and follows each one with that item's vote and resolve. The ordering is per item, so a slow thread never holds up the rest, and a reply always lands before the vote it explains. Where a reply fails, that item's vote and resolve are skipped, so no thread ends up voted and closed with nothing said in it.
