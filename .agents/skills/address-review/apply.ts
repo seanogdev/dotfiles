@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Execute a review-response plan: reply, vote and resolve across every thread at once.
-// Usage: apply.ts [--dry-run] PLAN.json   (PLAN of "-" reads stdin)
+// Usage: apply.ts PLAN.json   (PLAN of "-" reads stdin)
 
 import { execFile } from 'node:child_process'
 import { readFile } from 'node:fs/promises'
@@ -225,10 +225,8 @@ const table = (rows: string[][], head: string[]): string => {
   return [line(head), ...rows.map(line)].join('\n')
 }
 
-const argv = process.argv.slice(2)
-const dry = argv[0] === '--dry-run' && argv.shift()
-const target = argv[0]
-if (!target || target === '-h' || target === '--help') die('usage: apply.ts [--dry-run] PLAN.json')
+const target = process.argv[2]
+if (!target || target === '-h' || target === '--help') die('usage: apply.ts PLAN.json')
 
 const readStdin = async (): Promise<string> => {
   const chunks: Buffer[] = []
@@ -265,15 +263,6 @@ for (const item of plan!) {
 if (missing.length) {
   console.error(`apply.ts: missing or empty body files\n  ${missing.join('\n  ')}`)
   process.exit(2)
-}
-
-if (dry) {
-  console.log(table(
-    plan!.map((v) => [v.ref, v.bodyFile ? (v.threadId ? 'reply' : 'comment') : '-', v.vote || '-', v.resolve ? 'resolve' : '-']),
-    ['REF', 'REPLY', 'VOTE', 'RESOLVE'],
-  ))
-  console.log(`\n${plan!.length} items, ${JOBS} at a time.`)
-  process.exit(0)
 }
 
 const viewer = await gql('{ viewer { login } }', [], '.data.viewer.login')

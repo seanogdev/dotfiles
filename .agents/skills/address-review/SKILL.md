@@ -90,8 +90,6 @@ One object per piece of feedback:
 - `vote` is `THUMBS_UP` or `THUMBS_DOWN`, or leave it out for no vote.
 - `resolve` defaults to false, so a thread you mean to close needs `"resolve": true` on it.
 
-Read the plan back with `--dry-run` before it goes out.
-
 Resolve every thread you replied to, the pushed-back ones included. The only thread that stays open is the one case named in **Votes the user left**: the user voted a comment down and the claim holds up anyway. You cannot resolve a conversation comment, so the reply and the vote close it.
 
 ### What the vote means
