@@ -37,11 +37,6 @@ const die = (msg: string): never => {
 }
 
 const Q = {
-  reply: `mutation($threadId:ID!, $body:String!) {
-    addPullRequestReviewThreadReply(input: {pullRequestReviewThreadId: $threadId, body: $body}) {
-      comment { url }
-    }
-  }`,
   comment: `mutation($subjectId:ID!, $body:String!) {
     addComment(input: {subjectId: $subjectId, body: $body}) { commentEdge { node { url } } }
   }`,
@@ -54,12 +49,15 @@ const Q = {
 }
 
 // No shell, so a body or an id never gets a chance to be parsed as one.
-const gql = async (query: string, args: string[], jq?: string): Promise<string> => {
-  const argv = ['api', 'graphql', '-f', `query=${query}`, ...args]
+const api = async (args: string[], jq?: string): Promise<string> => {
+  const argv = ['api', ...args]
   if (jq) argv.push('--jq', jq)
   const { stdout } = await run('gh', argv)
   return stdout.trim()
 }
+
+const gql = (query: string, args: string[], jq?: string): Promise<string> =>
+  api(['graphql', '-f', `query=${query}`, ...args], jq)
 
 const retry = async <T>(fn: () => Promise<T>, attempts = 3): Promise<T> => {
   for (let i = 1; ; i++) {
@@ -80,7 +78,8 @@ const errText = (e: unknown): string => {
 const Q_EXISTING = {
   thread: `query($id:ID!) {
     node(id:$id) { ... on PullRequestReviewThread {
-      comments(first:50) { nodes { author { login } body url } } } }
+      comments(first:50) { nodes { databaseId author { login } body url } }
+      pullRequest { number repository { nameWithOwner } } } }
   }`,
   pr: `query($id:ID!) {
     node(id:$id) { ... on PullRequest {
@@ -88,49 +87,85 @@ const Q_EXISTING = {
   }`,
 }
 
-// A reply is the one mutation here that is not idempotent, so re-running a plan
-// would post it twice. Look for it before sending it.
-const alreadyReplied = async (item: PlanItem, body: string, viewer: string) => {
-  const isThread = Boolean(item.threadId)
-  const raw = await gql(
-    isThread ? Q_EXISTING.thread : Q_EXISTING.pr,
-    ['-f', `id=${isThread ? item.threadId : item.prId}`],
-    '.data.node.comments.nodes',
-  )
-  const nodes: { author: { login: string } | null; body: string; url: string }[] = JSON.parse(raw || '[]')
-  const hit = nodes.find((n) => n.author?.login === viewer && n.body.trim() === body.trim())
-  return hit?.url
+interface Comment {
+  databaseId?: number
+  author: { login: string } | null
+  body: string
+  url: string
 }
 
-async function applyItem(item: PlanItem, viewer: string): Promise<Result> {
-  const out: Result = { ref: item.ref, reply: 'skipped', replyUrl: '', vote: 'skipped', resolve: 'skipped', err: '' }
+const duplicateOf = (nodes: Comment[], body: string, viewer: string) =>
+  nodes.find((n) => n.author?.login === viewer && n.body.trim() === body.trim())?.url
 
-  if (item.bodyFile) {
-    const isThread = Boolean(item.threadId)
-    const body = await readFile(item.bodyFile, 'utf8')
-    const existing = await alreadyReplied(item, body, viewer).catch(() => undefined)
-    if (existing) {
-      out.reply = 'duplicate'
-      out.replyUrl = existing
-    } else try {
-      out.replyUrl = await gql(
-        isThread ? Q.reply : Q.comment,
-        isThread
-          ? ['-f', `threadId=${item.threadId}`, '-F', `body=@${item.bodyFile}`]
-          : ['-f', `subjectId=${item.prId}`, '-F', `body=@${item.bodyFile}`],
-        isThread
-          ? '.data.addPullRequestReviewThreadReply.comment.url'
-          : '.data.addComment.commentEdge.node.url',
-      )
-      out.reply = 'ok'
-    } catch (e) {
-      // Leave the vote and the resolve alone: a thread with no reply must not
-      // end up voted and closed.
-      out.reply = 'failed'
-      out.err = errText(e)
-      return out
-    }
+// A reply is the one call here that is not idempotent, so re-running a plan
+// would post it twice. This read looks for it, and doubles as the source of the
+// REST coordinates the reply needs.
+const readThread = async (threadId: string) => {
+  const raw = await gql(Q_EXISTING.thread, ['-f', `id=${threadId}`], '.data.node')
+  const node: { comments: { nodes: Comment[] }; pullRequest: { number: number; repository: { nameWithOwner: string } } } =
+    JSON.parse(raw)
+  return {
+    comments: node.comments.nodes,
+    replyTo: node.comments.nodes[0]?.databaseId,
+    repo: node.pullRequest.repository.nameWithOwner,
+    number: node.pullRequest.number,
   }
+}
+
+const readConversation = async (prId: string): Promise<Comment[]> => {
+  const raw = await gql(Q_EXISTING.pr, ['-f', `id=${prId}`], '.data.node.comments.nodes')
+  return JSON.parse(raw || '[]')
+}
+
+async function postReply(item: PlanItem, viewer: string, out: Result): Promise<void> {
+  if (!item.bodyFile) return
+  const body = await readFile(item.bodyFile, 'utf8')
+
+  try {
+    if (item.threadId) {
+      const thread = await readThread(item.threadId)
+      const existing = duplicateOf(thread.comments, body, viewer)
+      if (existing) {
+        out.reply = 'duplicate'
+        out.replyUrl = existing
+        return
+      }
+      if (!thread.replyTo) throw new Error('thread has no comment to reply to')
+      // REST, not addPullRequestReviewThreadReply: that mutation files the reply
+      // under an open pending review, where only its author can read it.
+      out.replyUrl = await api(
+        [
+          '--method',
+          'POST',
+          `repos/${thread.repo}/pulls/${thread.number}/comments/${thread.replyTo}/replies`,
+          '-F',
+          `body=@${item.bodyFile}`,
+        ],
+        '.html_url',
+      )
+    } else {
+      const existing = duplicateOf(await readConversation(item.prId!), body, viewer)
+      if (existing) {
+        out.reply = 'duplicate'
+        out.replyUrl = existing
+        return
+      }
+      out.replyUrl = await gql(
+        Q.comment,
+        ['-f', `subjectId=${item.prId}`, '-F', `body=@${item.bodyFile}`],
+        '.data.addComment.commentEdge.node.url',
+      )
+    }
+    out.reply = 'ok'
+  } catch (e) {
+    out.reply = 'failed'
+    out.err = errText(e)
+  }
+}
+
+async function voteAndResolve(item: PlanItem, out: Result): Promise<Result> {
+  // A thread with no reply must not end up voted and closed.
+  if (out.reply === 'failed') return out
 
   // Both are idempotent, so both retry, and neither waits on the other.
   const [vote, resolve] = await Promise.allSettled([
@@ -242,8 +277,15 @@ if (dry) {
 }
 
 const viewer = await gql('{ viewer { login } }', [], '.data.viewer.login')
+const results: Result[] = plan!.map((item) => (
+  { ref: item.ref, reply: 'skipped', replyUrl: '', vote: 'skipped', resolve: 'skipped', err: '' }
+))
 
-const results = await pool(plan!, JOBS, (item) => applyItem(item, viewer))
+// Every reply goes out, then every vote and resolve. Rounds, not per item, so a
+// vote never lands on a thread ahead of the reply that explains it.
+const pairs = plan!.map((item, i) => [item, results[i]] as const)
+await pool(pairs, JOBS, ([item, out]) => postReply(item, viewer, out))
+await pool(pairs, JOBS, ([item, out]) => voteAndResolve(item, out))
 
 console.log(table(results.map((r) => [r.ref, r.reply, r.vote, r.resolve]), ['REF', 'REPLY', 'VOTE', 'RESOLVE']))
 
