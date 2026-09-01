@@ -63,7 +63,7 @@ Then build a plan and hand it to `apply.ts`, which lives beside this file:
 ~/.claude/skills/address-review/apply.ts PLAN.json
 ```
 
-It sends every reply at once, and follows each one with that item's vote and resolve. The ordering is per item, so a slow thread never holds up the rest, and a reply always lands before the vote it explains. Where a reply fails, that item's vote and resolve are skipped, so no thread ends up voted and closed with nothing said in it.
+It sends every reply at once, and follows each one with that item's vote and resolve. The ordering is per item, so a slow thread never holds up the rest, and a reply always lands before the vote it explains. Where a reply fails, that item's vote and resolve are skipped, so no thread ends up voted and closed with nothing said in it. Running the same plan twice is safe: a reply already on the thread in your name is reported as `duplicate` and not sent again.
 
 One object per piece of feedback:
 

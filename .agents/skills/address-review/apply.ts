@@ -7,7 +7,7 @@ import { readFile } from 'node:fs/promises'
 import { promisify } from 'node:util'
 
 type Vote = 'THUMBS_UP' | 'THUMBS_DOWN'
-type State = 'ok' | 'failed' | 'skipped'
+type State = 'ok' | 'failed' | 'skipped' | 'duplicate'
 
 interface PlanItem {
   ref: string
@@ -77,12 +77,42 @@ const errText = (e: unknown): string => {
   return (x.stderr || x.stdout || x.message || String(e)).trim().split('\n')[0]
 }
 
-async function applyItem(item: PlanItem): Promise<Result> {
+const Q_EXISTING = {
+  thread: `query($id:ID!) {
+    node(id:$id) { ... on PullRequestReviewThread {
+      comments(first:50) { nodes { author { login } body url } } } }
+  }`,
+  pr: `query($id:ID!) {
+    node(id:$id) { ... on PullRequest {
+      comments(last:50) { nodes { author { login } body url } } } }
+  }`,
+}
+
+// A reply is the one mutation here that is not idempotent, so re-running a plan
+// would post it twice. Look for it before sending it.
+const alreadyReplied = async (item: PlanItem, body: string, viewer: string) => {
+  const isThread = Boolean(item.threadId)
+  const raw = await gql(
+    isThread ? Q_EXISTING.thread : Q_EXISTING.pr,
+    ['-f', `id=${isThread ? item.threadId : item.prId}`],
+    '.data.node.comments.nodes',
+  )
+  const nodes: { author: { login: string } | null; body: string; url: string }[] = JSON.parse(raw || '[]')
+  const hit = nodes.find((n) => n.author?.login === viewer && n.body.trim() === body.trim())
+  return hit?.url
+}
+
+async function applyItem(item: PlanItem, viewer: string): Promise<Result> {
   const out: Result = { ref: item.ref, reply: 'skipped', replyUrl: '', vote: 'skipped', resolve: 'skipped', err: '' }
 
   if (item.bodyFile) {
     const isThread = Boolean(item.threadId)
-    try {
+    const body = await readFile(item.bodyFile, 'utf8')
+    const existing = await alreadyReplied(item, body, viewer).catch(() => undefined)
+    if (existing) {
+      out.reply = 'duplicate'
+      out.replyUrl = existing
+    } else try {
       out.replyUrl = await gql(
         isThread ? Q.reply : Q.comment,
         isThread
@@ -211,7 +241,9 @@ if (dry) {
   process.exit(0)
 }
 
-const results = await pool(plan!, JOBS, applyItem)
+const viewer = await gql('{ viewer { login } }', [], '.data.viewer.login')
+
+const results = await pool(plan!, JOBS, (item) => applyItem(item, viewer))
 
 console.log(table(results.map((r) => [r.ref, r.reply, r.vote, r.resolve]), ['REF', 'REPLY', 'VOTE', 'RESOLVE']))
 
