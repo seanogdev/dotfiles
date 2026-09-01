@@ -68,7 +68,7 @@ a non-native English speaker and a non-technical reader can follow.
 Push the branch. Then check for an open PR on it with `gh pr view`.
 
 - If no PR exists, create it with `gh pr create`.
-- If a PR exists, merge into the body it already has, then write it back with `gh pr edit`.
+- If a PR exists, merge into the body it already has, then write it back with `pr-body.sh` below.
 
 Open the PR ready for review. Pass `--draft` only when the user asks for a draft, or when the work
 is unfinished.
@@ -78,12 +78,14 @@ is unfinished.
 `gh pr edit` replaces the entire body, and an image attached by hand cannot be restored from the CLI
 once it is gone. Treat the existing body as something to merge into.
 
-Save it first. Keep the file in `/tmp` so no scratch file lands in the repo, and strip the newline
-`gh` adds, which otherwise grows the body by a blank line on every run:
-
 ```bash
-gh pr view --json body -q .body | perl -pe 'chomp if eof' > /tmp/pr-body-before.md
+~/.claude/skills/create-pr/pr-body.sh save > /tmp/pr-body-before.md
+~/.claude/skills/create-pr/pr-body.sh edit /tmp/pr-body-new.md
 ```
+
+`edit` refuses to write a body that drops an attachment the author added, and strips the trailing
+newline `gh` adds, which otherwise grows the body by a blank line on every run. `check` runs the
+same guard and edits nothing.
 
 Keep everything the skill does not own:
 
@@ -92,18 +94,8 @@ Keep everything the skill does not own:
 - The whole `## Screenshots` section, verbatim.
 - Any heading the author added that is not `Changes`, the file table, or part of the repo template.
 
-Every image keeps its heading, its caption and its position.
-
-Write the new body to a file with no trailing newline and pass it as `gh pr edit --body-file`.
-
-Before that edit, confirm nothing was dropped:
-
-```bash
-grep -oE 'https://[^ )">]*(user-attachments|githubusercontent)[^ )">]*' /tmp/pr-body-before.md | sort -u
-```
-
-Every URL it prints must appear in the new body. If one is missing, put it back. Do not run
-`gh pr edit` until the check passes.
+Every image keeps its heading, its caption and its position. The guard compares attachment urls and
+nothing else, so a caption or a heading you drop around one still gets through.
 
 ## 7. Attach screenshots the session already produced
 
