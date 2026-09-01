@@ -9,6 +9,7 @@ cloudflare/skills skills/wrangler
 joshuadavidthomas/agent-skills rust
 kingsidharth/skills tauri
 mattpocock/skills skills/engineering/code-review
+mattpocock/skills skills/engineering/domain-modeling
 mattpocock/skills skills/engineering/grill-with-docs
 mattpocock/skills skills/engineering/implement
 mattpocock/skills skills/engineering/improve-codebase-architecture
