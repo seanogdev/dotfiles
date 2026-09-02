@@ -4,12 +4,10 @@ brew "ca-certificates"
 brew "xz"
 # Browser automation CLI for AI agents
 brew "agent-browser"
-# Container runtimes on MacOS (and Linux) with minimal setup
-brew "colima"
+# Cross-platform make
+brew "cmake"
 # CLI helps develop/deploy/debug apps with Docker and k8s
 brew "devspace"
-# Pack, ship and run any application as a lightweight container
-brew "docker"
 # Play, record, convert, and stream select audio and video codecs
 brew "ffmpeg"
 # User-friendly command-line shell for UNIX-like operating systems
@@ -66,12 +64,12 @@ cask "figma"
 cask "firefox"
 cask "font-metropolis"
 cask "font-monaspace"
+# Speech-to-text and meeting transcription tool
+cask "ghostpepper"
 # Terminal emulator that uses platform-native UI and GPU acceleration
 cask "ghostty"
 # Open-source screen recorder built with web technology
 cask "kap"
-# Voice-to-text transcription and paste tool
-cask "kitlangton-hex"
 # VPN client
 cask "mullvad-vpn"
 # App to write, plan, collaborate, and get organised
@@ -108,6 +106,7 @@ mas "Keyboard Keyboard", id: 1128271725
 mas "NepTunes", id: 1006739057
 mas "uBlock Origin Lite", id: 6745342698
 mas "WireGuard", id: 1451685025
+mas "Xcode", id: 497799835
 vscode "adamwalzer.string-converter"
 vscode "adpyke.codesnap"
 vscode "adpyke.vscode-sql-formatter"
@@ -134,6 +133,7 @@ vscode "ilich8086.coldfusion"
 vscode "jafd.knockoutjs-templates"
 vscode "johnpapa.vscode-peacock"
 vscode "jtr.vscode-position"
+vscode "llvm-vs-code-extensions.lldb-dap"
 vscode "mechatroner.rainbow-csv"
 vscode "midnightsyntax.vscode-wrap-console-log"
 vscode "mikestead.dotenv"
@@ -158,6 +158,7 @@ vscode "rust-lang.rust-analyzer"
 vscode "sdras.vue-vscode-snippets"
 vscode "simonsiefke.svg-preview"
 vscode "skyapps.fish-vscode"
+vscode "swiftlang.swift-vscode"
 vscode "syler.sass-indented"
 vscode "tamasfe.even-better-toml"
 vscode "tauri-apps.tauri-vscode"

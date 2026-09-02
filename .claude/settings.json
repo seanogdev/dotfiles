@@ -10,7 +10,7 @@
   "permissions": {
     "defaultMode": "auto"
   },
-  "model": "opus",
+  "model": "sonnet",
   "skillOverrides": {
     "claude-md-improver": "off",
     "cloudflare": "off",
@@ -18,18 +18,21 @@
     "improve-codebase-architecture": "off",
     "nuxt": "off",
     "rust": "off",
-    "setup-matt-pocock-skills": "off",
     "skill-creator": "off",
     "tauri": "off",
     "tdd": "off",
     "turborepo": "off",
-    "wayfinder": "off",
     "wcag-audit-patterns": "off",
     "wrangler": "off"
   },
   "statusLine": {
     "type": "command",
     "command": "~/.claude/statusline-command.fish"
+  },
+  "modelSettings": {
+    "claude-sonnet-5": {
+      "effortLevel": "medium"
+    }
   },
   "showClearContextOnPlanAccept": true,
   "tui": "fullscreen",
@@ -64,5 +67,7 @@
       "**Trusted repo**: the repository of the current working directory, and its origin remote. Work from one repo does not belong in another.",
       "**Org-specific CLIs**: Unknown. Read a CLI's help before you run a command that writes."
     ]
-  }
+  },
+  "agentPushNotifEnabled": true,
+  "inputNeededNotifEnabled": true
 }
