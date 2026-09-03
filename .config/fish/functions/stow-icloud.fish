@@ -1,11 +1,14 @@
-function stow-icloud --description "Stow dotfiles in the iCloud directory"
+function stow-icloud --description "Mirror iCloud dotfiles locally, then stow the mirror"
     if not test -d $ICLOUD_DOTFILES_DIR
         echo "iCloud dotfiles directory does not exist."
         return 1
     end
 
-    stow -d $ICLOUD_DOTFILES_DIR/fish/conf.d -t $HOME/.config/fish/conf.d --no-folding --adopt --stow .
-    stow -d $ICLOUD_DOTFILES_DIR -t $HOME --no-folding --adopt --stow .
-    echo "✓ stow-icloud: linked $ICLOUD_DOTFILES_DIR → $HOME"
+    mkdir -p $ICLOUD_MIRROR_DIR
+    rsync -a --delete "$ICLOUD_DOTFILES_DIR/" "$ICLOUD_MIRROR_DIR/"
+
+    stow -d $ICLOUD_MIRROR_DIR/fish/conf.d -t $HOME/.config/fish/conf.d --no-folding --adopt --stow .
+    stow -d $ICLOUD_MIRROR_DIR -t $HOME --no-folding --adopt --stow .
+    echo "✓ stow-icloud: mirrored $ICLOUD_DOTFILES_DIR → $ICLOUD_MIRROR_DIR, linked → $HOME"
 end
 
