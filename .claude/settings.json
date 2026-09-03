@@ -10,7 +10,6 @@
   "permissions": {
     "defaultMode": "auto"
   },
-  "model": "sonnet",
   "skillOverrides": {
     "claude-md-improver": "off",
     "cloudflare": "off",
@@ -39,6 +38,8 @@
   "autoMemoryEnabled": false,
   "skipWorkflowUsageWarning": true,
   "theme": "dark",
+  "inputNeededNotifEnabled": true,
+  "agentPushNotifEnabled": true,
   "autoMode": {
     "environment": [
       "### Scope",
@@ -67,7 +68,5 @@
       "**Trusted repo**: the repository of the current working directory, and its origin remote. Work from one repo does not belong in another.",
       "**Org-specific CLIs**: Unknown. Read a CLI's help before you run a command that writes."
     ]
-  },
-  "agentPushNotifEnabled": true,
-  "inputNeededNotifEnabled": true
+  }
 }
