@@ -34,7 +34,7 @@ query($owner:String!, $repo:String!, $number:Int!) {
     pullRequest(number:$number) {
       id
       reviewThreads(first:100) {
-        nodes { id isResolved isOutdated path line comments(first:20) { nodes { ...c } } }
+        nodes { id isResolved isOutdated path line comments(first:50) { nodes { ...c } } }
       }
       reviews(first:50) { nodes { id url state author { login } body ...r } }
       comments(first:100) { nodes { ...c } }
@@ -48,11 +48,19 @@ fragment c on Reactable {
   ... on PullRequestReviewComment { url author { login } body }
   ... on IssueComment { url author { login } body }
 }' -f owner="$OWNER" -f repo="$REPO" -F number="$NUMBER" \
-  --jq '{viewer: .data.viewer.login}
+  --jq '.data.viewer.login as $viewer
+        | {viewer: $viewer}
         + (.data.repository.pullRequest
         | {prId: .id,
-           threads: [.reviewThreads.nodes[] | select(.isResolved == false)
-                     | {id, path, line, isOutdated,
+           threads: [.reviewThreads.nodes[]
+                     # Unresolved, plus any thread this account replied in that
+                     # someone has spoken on since. GitHub leaves a thread
+                     # resolved when a new comment lands, so a reviewer
+                     # answering a closed thread is invisible without this.
+                     | select(.isResolved == false
+                              or (any(.comments.nodes[1:][]; .author.login == $viewer)
+                                  and (.comments.nodes | last | .author.login) != $viewer))
+                     | {id, path, line, isOutdated, isResolved,
                         comments: [.comments.nodes[] | {id, url, author: .author.login, body,
                                    userVotes: [.reactionGroups[] | select(.viewerHasReacted) | .content]}]}],
            reviews: [.reviews.nodes[] | select(.body != "")

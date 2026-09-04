@@ -6,7 +6,7 @@ user-invocable: true
 
 # Address review
 
-Take every piece of unresolved feedback on the PR to a conclusion: fix it or push back, reply either way, vote the comment up or down, then resolve it. Inline threads are only one of three places feedback arrives. Then account for the whole pass to the user. If no PR was named, use the open PR for the current branch.
+Take every piece of live feedback on the PR to a conclusion: fix it or push back, reply either way, vote the comment up or down, then resolve it. Inline threads are only one of three places feedback arrives. Then account for the whole pass to the user. If no PR was named, use the open PR for the current branch.
 
 ## Reading the feedback
 
@@ -16,9 +16,11 @@ Take every piece of unresolved feedback on the PR to a conclusion: fix it or pus
 ~/.claude/skills/address-review/fetch.sh [PR]
 ```
 
-Feedback arrives in three places on a PR: inline review threads, review bodies, and conversation comments. This reads all three in one go, keeps only the unresolved threads, and defaults to the open PR for the current branch.
+Feedback arrives in three places on a PR: inline review threads, review bodies, and conversation comments. This reads all three in one go, keeps the threads that are still live, and defaults to the open PR for the current branch.
 
-Skip anything `viewer` wrote themselves, and skip the CI and coverage chatter a PR collects. Keep every `url`. The summary at the end links its rows by them.
+Still live means unresolved, plus any thread you replied in that someone has spoken on since. GitHub leaves a thread resolved when a new comment lands on it, so a reviewer answering the reply you closed a thread with would otherwise never reach the next pass. Those come back carrying `isResolved: true`.
+
+Skip anything `viewer` wrote themselves, and skip the CI and coverage chatter a PR collects. Your own replies inside a thread are the exception: they are what the reviewer is answering, so read them. Keep every `url`. The summary at the end links its rows by them.
 
 Which id becomes which plan field: `threads[].id` is a `threadId` and `threads[].comments[0].id` is that item's `commentId`; `reviews[].id` and `conversation[].id` are each their own `commentId`, and both take the `prId`, since neither has a thread to reply into. A review body carries a vote, and the user's vote, the same way a comment does.
 
@@ -38,11 +40,19 @@ A thread with `isOutdated: true` usually means the code moved on. Check whether 
 
 Where a comment is genuinely ambiguous, ask in the reply rather than guessing at what the reviewer meant.
 
+### Threads that have come back
+
+`isResolved: true` on a thread means you settled it on an earlier pass and someone has replied since. The earlier call is not binding. The reviewer has read it and answered it, which is the case for deciding again rather than for standing behind the first answer.
+
+Read the whole thread, your own reply included, and treat the last comment as the live one. Then decide it the way any other comment gets decided. A reviewer who answers a decline with a path you did not trace has earned a second look; one who repeats the original point with nothing new behind it has not, and saying so once more is the whole reply. Where they accept the answer or just say thanks, nothing needs doing: it stays resolved, it needs no plan item, and a row in the summary is the whole of it.
+
+Otherwise reply, re-vote where the call moved, and resolve again. Reactions add rather than replace, so casting the opposite vote leaves both of them on the comment. Clear the old one with `unvote.sh` first.
+
 ### Votes the user left
 
 The user votes on review comments too, with the same two reactions. A vote from the user is the one vote that carries weight here. It says they read the comment and formed a view on it before you got to it. Reactions from anyone else are not that signal, and the `userVotes` field leaves them out.
 
-Read the votes before you cast any of your own. `gh` runs as the user's account, so once this skill reacts, its reaction is indistinguishable from theirs. Two things keep them apart: only unresolved threads are in scope, and every thread this skill votes on gets resolved.
+Read the votes before you cast any of your own. `gh` runs as the user's account, so once this skill reacts, its reaction is indistinguishable from theirs. Your own reply in the thread is what tells them apart. No reply from you means the vote is theirs. Where you have replied, the vote is yours from that pass and the reply says which way it went, unless the two disagree, in which case the user changed it and that disagreement is the signal.
 
 **`THUMBS_UP` from the user.** They value the comment. Treat it with more reverence than the rest. Reverence is a higher bar for declining, not agreement by default, so check the claim exactly as carefully. Then:
 
@@ -90,7 +100,7 @@ One object per piece of feedback:
 - `vote` is `THUMBS_UP` or `THUMBS_DOWN`, or leave it out for no vote.
 - `resolve` defaults to false, so a thread you mean to close needs `"resolve": true` on it.
 
-Resolve every thread you replied to, the pushed-back ones included. The only thread that stays open is the one case named in **Votes the user left**: the user voted a comment down and the claim holds up anyway. You cannot resolve a conversation comment, so the reply and the vote close it.
+Resolve every thread you replied to, the pushed-back ones included. A thread that has come back gets `"resolve": true` again; the mutation is idempotent, so re-closing one costs nothing and keeps the plan uniform. The only thread that stays open is the one case named in **Votes the user left**: the user voted a comment down and the claim holds up anyway. You cannot resolve a conversation comment, so the reply and the vote close it.
 
 ### What the vote means
 
@@ -134,7 +144,7 @@ Save the detail for the user-facing summary at the end. That is where length is 
 
 ## Finishing
 
-**Re-read the feedback before the summary.** Run `fetch.sh` again. The pass took time, and a reviewer may have commented during it. Anything unresolved that the first read missed goes through the same decide, reply, vote, resolve loop, and then query once more. Only write the summary when a fresh query comes back with nothing left to act on.
+**Re-read the feedback before the summary.** Run `fetch.sh` again. The pass took time, and a reviewer may have commented during it. Anything the first read missed goes through the same decide, reply, vote, resolve loop, and then query once more. A thread you have just answered drops out of the next read, because your reply is the last comment on it. Only write the summary when a fresh query comes back with nothing left to act on.
 
 The summary goes to the user, and it is the last thing the pass produces. Write it once the fixes are pushed and every thread is settled, so the shas and the outcomes in it are real.
 
@@ -149,7 +159,7 @@ Lead with a table, one row per piece of feedback, in query order:
 How to fill it in:
 
 - Link every row to its `url`, so the user can read the feedback without hunting for it.
-- Use one of five outcomes and nothing else: Fixed, Declined, Out of scope, Asked, Outdated.
+- Use one of six outcomes and nothing else: Fixed, Declined, Out of scope, Asked, Outdated, Acknowledged. Acknowledged is for a thread that came back only to accept the last answer.
 - Name the commit sha for every fix.
 - Keep each Change cell to one line.
 - Give the review bodies and the conversation comments a row each. Mark the Comment cell on any row that is not inline: `review body` or `conversation`.
@@ -157,6 +167,7 @@ How to fill it in:
 Then, under the table, the parts a table cannot hold:
 
 - Every comment the user voted up that you declined anyway, with the reason. This one goes first.
+- Every thread that came back from an earlier pass, and whether the reviewer's answer moved your call.
 - Anything you resolved on thin reasoning.
 - Any comment you left unvoted, and any thread you left open.
 - Anything that needs the user's call.
