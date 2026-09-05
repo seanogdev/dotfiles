@@ -13,15 +13,17 @@ file_path=$(echo "$input" | jq -r '.tool_input.file_path // empty')
 offset=$(echo "$input" | jq -r '.tool_input.offset // empty')
 limit=$(echo "$input" | jq -r '.tool_input.limit // empty')
 
+allow='{"hookSpecificOutput": {"hookEventName": "PreToolUse", "permissionDecision": "allow"}}'
+
 # Allow targeted reads — Claude already knows which section it needs
 if [ -n "$offset" ] || [ -n "$limit" ]; then
-  echo '{"decision": "allow"}'
+  echo "$allow"
   exit 0
 fi
 
 if reason=$(should_delegate_file "$file_path"); then
-  jq -n --arg reason "$reason" '{"decision": "block", "reason": $reason}'
+  jq -n --arg reason "$reason" '{"hookSpecificOutput": {"hookEventName": "PreToolUse", "permissionDecision": "deny", "permissionDecisionReason": $reason}}'
   exit 0
 fi
 
-echo '{"decision": "allow"}'
+echo "$allow"

@@ -7,18 +7,20 @@ set -euo pipefail
 dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$dir/lib/thresholds.sh"
 
+allow='{"hookSpecificOutput": {"hookEventName": "PreToolUse", "permissionDecision": "allow"}}'
+
 input=$(cat)
 command=$(echo "$input" | jq -r '.tool_input.command // empty')
 
 if [ -z "$command" ]; then
-  echo '{"decision": "allow"}'
+  echo "$allow"
   exit 0
 fi
 
 # Skip piped commands (cat file | grep) and redirections (cat file > out) —
 # those are targeted, not bulk reads into context
 if echo "$command" | grep -qE '\||>'; then
-  echo '{"decision": "allow"}'
+  echo "$allow"
   exit 0
 fi
 
@@ -34,13 +36,13 @@ if echo "$command" | grep -qE '^(cat|head|tail|less|more) '; then
 fi
 
 if [ -z "$file_path" ]; then
-  echo '{"decision": "allow"}'
+  echo "$allow"
   exit 0
 fi
 
 if reason=$(should_delegate_file "$file_path"); then
-  jq -n --arg reason "$reason" '{"decision": "block", "reason": ($reason + " (via cat/head/tail)")}'
+  jq -n --arg reason "${reason} (via cat/head/tail)" '{"hookSpecificOutput": {"hookEventName": "PreToolUse", "permissionDecision": "deny", "permissionDecisionReason": $reason}}'
   exit 0
 fi
 
-echo '{"decision": "allow"}'
+echo "$allow"
