@@ -1,0 +1,46 @@
+#!/bin/bash
+# PreToolUse hook on Bash. Catches cat/head/tail/less/more on large files,
+# which bypass the Read hook, and points Claude at the bulk-reader
+# subagent instead. Size logic lives in lib/thresholds.sh.
+
+set -euo pipefail
+dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$dir/lib/thresholds.sh"
+
+input=$(cat)
+command=$(echo "$input" | jq -r '.tool_input.command // empty')
+
+if [ -z "$command" ]; then
+  echo '{"decision": "allow"}'
+  exit 0
+fi
+
+# Skip piped commands (cat file | grep) and redirections (cat file > out) —
+# those are targeted, not bulk reads into context
+if echo "$command" | grep -qE '\||>'; then
+  echo '{"decision": "allow"}'
+  exit 0
+fi
+
+file_path=""
+if echo "$command" | grep -qE '^(cat|head|tail|less|more) '; then
+  args=$(echo "$command" | sed -E 's/^(cat|head|tail|less|more) +//')
+  for arg in $args; do
+    case "$arg" in
+      -*) continue ;;
+      *) file_path=$(echo "$arg" | tr -d '"'"'"); break ;;
+    esac
+  done
+fi
+
+if [ -z "$file_path" ]; then
+  echo '{"decision": "allow"}'
+  exit 0
+fi
+
+if reason=$(should_delegate_file "$file_path"); then
+  jq -n --arg reason "$reason" '{"decision": "block", "reason": ($reason + " (via cat/head/tail)")}'
+  exit 0
+fi
+
+echo '{"decision": "allow"}'
