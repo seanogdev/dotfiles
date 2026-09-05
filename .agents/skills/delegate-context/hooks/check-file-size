@@ -1,0 +1,27 @@
+#!/bin/bash
+# PreToolUse hook on Read. Blocks a full read of a large file and points
+# Claude at the bulk-reader subagent instead. Size logic lives in
+# lib/thresholds.sh; this script only speaks the hook's JSON protocol.
+
+set -euo pipefail
+dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$dir/lib/thresholds.sh"
+
+input=$(cat)
+
+file_path=$(echo "$input" | jq -r '.tool_input.file_path // empty')
+offset=$(echo "$input" | jq -r '.tool_input.offset // empty')
+limit=$(echo "$input" | jq -r '.tool_input.limit // empty')
+
+# Allow targeted reads — Claude already knows which section it needs
+if [ -n "$offset" ] || [ -n "$limit" ]; then
+  echo '{"decision": "allow"}'
+  exit 0
+fi
+
+if reason=$(should_delegate_file "$file_path"); then
+  jq -n --arg reason "$reason" '{"decision": "block", "reason": $reason}'
+  exit 0
+fi
+
+echo '{"decision": "allow"}'
