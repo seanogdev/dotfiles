@@ -30,6 +30,10 @@ brew "jq"
 brew "lazygit"
 # Mac App Store command-line interface
 brew "mas"
+# Deep clean and optimize your Mac
+brew "mole"
+# Identify unused code in Swift projects
+brew "periphery"
 # Package compiler and linker metadata toolkit
 brew "pkgconf"
 # Search tool like grep and The Silver Searcher
@@ -42,6 +46,10 @@ brew "rustup"
 brew "starship"
 # Organize software neatly under a single directory tree (e.g. /usr/local)
 brew "stow"
+# Formatting technology for Swift source code
+brew "swift-format"
+# Tool to enforce Swift style and conventions
+brew "swiftlint"
 # Internet file retriever
 brew "wget"
 # Feature-rich command-line audio/video downloader
