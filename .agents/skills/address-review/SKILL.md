@@ -34,6 +34,8 @@ The goal is the right call on each comment. Agreeing and disagreeing are both fi
 
 So check the claim before acting on it. Read the surrounding file, not only the diff hunk, and where a comment describes a bug, trace the path that would produce it. A reviewer working from a hunk in isolation will sometimes flag something the wider file already handles. Apply the same standard whoever wrote the comment. A senior reviewer and an automated one both get checked, and both are usually right.
 
+The comment was written against some commit, and the branch has likely moved since. Before acting on it, check the file as it stands now, not the snippet quoted in the comment or the diff hunk it was raised against. A later commit can already fix what the comment describes, move the line it points at, or change the code around it enough that the concern no longer applies. Where the comment's line number or quoted code no longer matches the file, that gap is itself a sign the code moved on, and the current version is what decides the call.
+
 Fix it when the claim holds up, and when the reviewer is pointing at a real risk even if their suggested fix is not the one you would pick. Say so when it does not hold up: the comment misreads the code, the change would break something not visible from the diff, the problem it describes cannot be reproduced, or it asks for an abstraction the codebase has not earned yet.
 
 A thread with `isOutdated: true` usually means the code moved on. Check whether the concern still applies before spending effort on it.
