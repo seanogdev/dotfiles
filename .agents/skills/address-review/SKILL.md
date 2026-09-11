@@ -12,7 +12,7 @@ Take every piece of live feedback to a conclusion: fix it or push back, then acc
 
 **A PR.** The default. If no PR was named, use the open PR for the current branch.
 
-**Local.** A review sitting in this conversation — a `/code-review` report, a pasted set of comments, the user listing what they want changed — or a file they point at. Everything about deciding and fixing is the same; what drops away is the half that needs a PR to talk to.
+**Local.** A review sitting in this conversation — a `/code-review` report, a pasted set of comments, the user listing what they want changed — or a file they point at. Everything about deciding and fixing is the same. What drops away is the per-comment half: there is nothing to reply into, vote on or resolve. A PR still gets one comment for the round.
 
 Which one it is: a path or an `@file` in the invocation means the file. The user pointing at feedback already in the conversation ("address that", "fix those", "work through the review above") with no PR named means the context. Otherwise it is the PR. Where they name both, read both and run each under its own rules, then give one summary covering the lot.
 
@@ -142,11 +142,23 @@ Vote the review bodies and the conversation comments the same way, with their ow
 
 ### Local
 
-Make the fixes and commit them in small logical commits the same way. There is nowhere to reply, nothing to vote on and no thread to resolve, so there is no plan and no `apply.ts` — and nothing is pushed unless the user asks or the branch is already on a PR. Leave the feedback file itself as it is; the summary is what records the outcomes.
+Make the fixes and commit them in small logical commits the same way. Nothing here has a thread to reply into or a comment to vote on, so the plan above has no per-item rows.
+
+Where the branch has an open PR, push and leave one comment on it saying what changed this round and why. The review happened off the PR, so without that comment the branch grows commits nothing on the PR accounts for, and the next reader has no idea what drove them. Keep it to a line per point, each naming its sha, in the voice below.
+
+It goes through `apply.ts` as a single item carrying a `prId` and a `bodyFile` and nothing else, which posts it as a conversation comment and skips the vote and the resolve. An identical body already posted in your name comes back as `duplicate`, so a re-run does not double it up.
+
+```json
+[{ "ref": "round summary", "prId": "PR_kwDO...", "bodyFile": "/tmp/round.md" }]
+```
+
+`gh pr view --json id --jq .id` is where that `prId` comes from when no `fetch.sh` ran this pass.
+
+With no PR on the branch, nothing is pushed unless the user asks and the summary is the whole of the output. Leave the feedback file itself as it is either way.
 
 ## Reply voice
 
-PR only. Local feedback has nowhere to reply, so the reasoning that would have gone in a reply goes in the summary instead, where length is allowed.
+For everything this skill posts on a PR: the thread replies, and the round comment a local pass leaves.
 
 The same collaborative register as the `review-pr` skill, from the other side of the table.
 
