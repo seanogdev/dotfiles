@@ -1,14 +1,24 @@
 ---
 name: address-review
-description: Work through the review feedback on a GitHub PR, across inline threads, review bodies and conversation comments. Fix what should be fixed, reply with the reasoning where it should not, vote each comment up or down, then resolve every thread that has one. Use when a review lands on a PR and the user says "address the review", "fix the review comments", "respond to the review", "handle this review", or points at review feedback to act on.
+description: Work through the review feedback on a GitHub PR, across inline threads, review bodies and conversation comments. Fix what should be fixed, reply with the reasoning where it should not, vote each comment up or down, then resolve every thread that has one. Works local feedback the same way — a review sitting in this conversation, or in a file — minus the parts that need a PR. Use when a review lands and the user says "address the review", "fix the review comments", "respond to the review", "handle this review", "work through the feedback in review.md", or points at review feedback to act on.
 user-invocable: true
 ---
 
 # Address review
 
-Take every piece of live feedback on the PR to a conclusion: fix it or push back, reply either way, vote the comment up or down, then resolve it. Inline threads are only one of three places feedback arrives. Then account for the whole pass to the user. If no PR was named, use the open PR for the current branch.
+Take every piece of live feedback to a conclusion: fix it or push back, then account for the whole pass to the user. On a PR that also means replying either way, voting the comment up or down, and resolving the thread, where inline threads are only one of three places feedback arrives.
+
+## Where the feedback is
+
+**A PR.** The default. If no PR was named, use the open PR for the current branch.
+
+**Local.** A review sitting in this conversation — a `/code-review` report, a pasted set of comments, the user listing what they want changed — or a file they point at. Everything about deciding and fixing is the same; what drops away is the half that needs a PR to talk to.
+
+Which one it is: a path or an `@file` in the invocation means the file. The user pointing at feedback already in the conversation ("address that", "fix those", "work through the review above") with no PR named means the context. Otherwise it is the PR. Where they name both, read both and run each under its own rules, then give one summary covering the lot.
 
 ## Reading the feedback
+
+### On a PR
 
 **Query first, every time.** Read the feedback from the API as the first action of the pass, before anything else. A read from earlier in this conversation is stale and cannot be reused: reviewers add comments while a pass is running, and a second invocation minutes after the first usually means something landed in between. So an earlier query result, an earlier summary, or a recollection of what the threads said is never the input here. Nothing is up to date until this query says so, and "I just read this" is not evidence that it is.
 
@@ -28,6 +38,14 @@ Which id becomes which plan field: `threads[].id` is a `threadId` and `threads[]
 
 A review body often never becomes an inline thread, and a reviewer often raises their main point in the conversation rather than against a line. Those two are the easiest to miss.
 
+### Local
+
+**Read it at the start of the pass, every time.** A file gets read again even if it was read minutes ago, for the same reason the PR gets queried again: the user edits these files, and the copy from earlier in this conversation is stale. Where the feedback is in the conversation instead, the latest version of it wins — the user narrowing it or adding to it after the fact is part of the feedback, not a footnote to it.
+
+Split it into items, one per distinct point. A paragraph raising three things is three items; a numbered list is already split. Keep the `path:line` each one points at, since that is what the summary labels its rows by when there are no urls.
+
+Nothing is filtered out here and every item is live: there is no thread state and there are no reactions, so **Threads that have come back** and **Votes the user left** are both PR-only. What stands in for a vote is the user saying it out loud — "the second one matters", "ignore the lint one". Weigh that exactly as their `THUMBS_UP` or `THUMBS_DOWN` is weighed below, because it is the same signal arriving by a different route.
+
 ## Deciding
 
 The goal is the right call on each comment. Agreeing and disagreeing are both fine outcomes, neither one is the target.
@@ -40,7 +58,7 @@ Fix it when the claim holds up, and when the reviewer is pointing at a real risk
 
 A thread with `isOutdated: true` usually means the code moved on. Check whether the concern still applies before spending effort on it.
 
-Where a comment is genuinely ambiguous, ask in the reply rather than guessing at what the reviewer meant.
+Where a comment is genuinely ambiguous, ask rather than guessing at what the reviewer meant: in the reply on a PR, and straight to the user where the feedback is local.
 
 ### Threads that have come back
 
@@ -122,7 +140,13 @@ A comment the user already voted on keeps their vote. It is on the same account 
 
 Vote the review bodies and the conversation comments the same way, with their own node id as the item's `commentId`. Skip the vote where nothing is raised to act on, an "LGTM" body included.
 
+### Local
+
+Make the fixes and commit them in small logical commits the same way. There is nowhere to reply, nothing to vote on and no thread to resolve, so there is no plan and no `apply.ts` — and nothing is pushed unless the user asks or the branch is already on a PR. Leave the feedback file itself as it is; the summary is what records the outcomes.
+
 ## Reply voice
+
+PR only. Local feedback has nowhere to reply, so the reasoning that would have gone in a reply goes in the summary instead, where length is allowed.
 
 The same collaborative register as the `review-pr` skill, from the other side of the table.
 
@@ -146,7 +170,7 @@ Save the detail for the user-facing summary at the end. That is where length is 
 
 ## Finishing
 
-**Re-read the feedback before the summary.** Run `fetch.sh` again. The pass took time, and a reviewer may have commented during it. Anything the first read missed goes through the same decide, reply, vote, resolve loop, and then query once more. A thread you have just answered drops out of the next read, because your reply is the last comment on it. Only write the summary when a fresh query comes back with nothing left to act on.
+**Re-read the feedback before the summary.** Run `fetch.sh` again — the pass took time, and a reviewer may have commented during it. On local feedback, read the file again for the same reason, and check whether the user has said anything since the invocation that changes the ask. Anything the first read missed goes through the same decide, reply, vote, resolve loop, and then query once more. A thread you have just answered drops out of the next read, because your reply is the last comment on it. Only write the summary when a fresh query comes back with nothing left to act on.
 
 The summary goes to the user, and it is the last thing the pass produces. Write it once the fixes are pushed and every thread is settled, so the shas and the outcomes in it are real.
 
@@ -160,15 +184,15 @@ Lead with a table, one row per piece of feedback, in query order:
 
 How to fill it in:
 
-- Link every row to its `url`, so the user can read the feedback without hunting for it.
-- Use one of six outcomes and nothing else: Fixed, Declined, Out of scope, Asked, Outdated, Acknowledged. Acknowledged is for a thread that came back only to accept the last answer.
+- Link every row to its `url`, so the user can read the feedback without hunting for it. A local item has no url: label it `path:line` and leave it unlinked.
+- Use one of six outcomes and nothing else: Fixed, Declined, Out of scope, Asked, Outdated, Acknowledged. Acknowledged is for a thread that came back only to accept the last answer, so it is PR-only.
 - Name the commit sha for every fix.
 - Keep each Change cell to one line.
 - Give the review bodies and the conversation comments a row each. Mark the Comment cell on any row that is not inline: `review body` or `conversation`.
 
 Then, under the table, the parts a table cannot hold:
 
-- Every comment the user voted up that you declined anyway, with the reason. This one goes first.
+- Every comment the user voted up, or said out loud that they wanted, that you declined anyway, with the reason. This one goes first.
 - Every thread that came back from an earlier pass, and whether the reviewer's answer moved your call.
 - Anything you resolved on thin reasoning.
 - Any comment you left unvoted, and any thread you left open.
