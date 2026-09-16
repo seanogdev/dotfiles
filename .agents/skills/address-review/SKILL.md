@@ -162,7 +162,7 @@ For everything this skill posts on a PR: the thread replies, and the round comme
 
 **Keep every reply short.** One or two sentences. Three at the outside, and only when a decline needs a second line of evidence. Lead with the outcome. Cut any sentence that does not change what the reviewer does next.
 
-**Write it in simple technical English.** One idea per sentence, 20 words or less. Active voice, and name who did what. Simple present or simple past. No `-ing` verb forms, no idiom, no slang, no metaphor. Write "removes" not "bails", "starts" not "kicks off". Use the same word for the same thing each time. Drop the words that add emphasis and no information: "just", "simply", "actually", "really", "basically".
+**Write it in simple technical English.** One idea per sentence. Active voice, and name who did what. Simple present or simple past. No `-ing` verb forms, no idiom, no slang, no metaphor. Write "removes" not "bails", "starts" not "kicks off". Use the same word for the same thing each time. Drop the words that add emphasis and no information: "just", "simply", "actually", "really", "basically".
 
 **Cut what the reviewer can already see.** They have their own comment, the file and the line the thread sits on, the diff, and the sha you linked. So none of this goes in a reply:
 
@@ -207,9 +207,12 @@ How to fill it in:
 - Use one of six outcomes and nothing else: Fixed, Declined, Out of scope, Asked, Outdated, Acknowledged. Acknowledged is for a thread that came back only to accept the last answer, so it is PR-only.
 - Name the commit sha for every fix.
 - Keep each Change cell to one line.
+- Write the Change cell in the same simple technical English as the replies.
+- Do not repeat the Outcome word in the Change cell. "Fixed" beside "Fixed the null guard" says it twice.
+- Do not repeat the file or the line from the Comment cell.
 - Give the review bodies and the conversation comments a row each. Mark the Comment cell on any row that is not inline: `review body` or `conversation`.
 
-Then, under the table, the parts a table cannot hold:
+Then, under the table, the parts a table cannot hold. Add only what the table cannot carry. Never restate a row:
 
 - Every comment the user voted up, or said out loud that they wanted, that you declined anyway, with the reason. This one goes first.
 - Every thread that came back from an earlier pass, and whether the reviewer's answer moved your call.
