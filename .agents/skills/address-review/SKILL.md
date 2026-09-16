@@ -158,7 +158,7 @@ With no PR on the branch, nothing is pushed unless the user asks and the summary
 
 ## Reply voice
 
-For everything this skill posts on a PR: the thread replies, and the round comment a local pass leaves.
+For everything this skill writes: the thread replies, the round comment a local pass leaves, any follow-up issue it opens, and the summary at the end.
 
 **Keep every reply short.** One or two sentences. Three at the outside, and only when a decline needs a second line of evidence. Lead with the outcome. Cut any sentence that does not change what the reviewer does next.
 
@@ -167,7 +167,7 @@ For everything this skill posts on a PR: the thread replies, and the round comme
 **Cut what the reviewer can already see.** They have their own comment, the file and the line the thread sits on, the diff, and the sha you linked. So none of this goes in a reply:
 
 - Their point, said back to them.
-- The file or line the thread is already anchored to.
+- The file or line the thread is anchored to, named on its own. A line reference that carries evidence stays.
 - "I agree", "good catch", "as you suggested", "you're right".
 - A description of a change the linked sha already shows.
 - An offer to do more work, or a question about whether they are happy.
@@ -207,7 +207,7 @@ How to fill it in:
 - Use one of six outcomes and nothing else: Fixed, Declined, Out of scope, Asked, Outdated, Acknowledged. Acknowledged is for a thread that came back only to accept the last answer, so it is PR-only.
 - Name the commit sha for every fix.
 - Keep each Change cell to one line.
-- Write the Change cell in the same simple technical English as the replies.
+- Write the Change cell in the same simple technical English as the replies. The same cuts apply.
 - Do not repeat the Outcome word in the Change cell. "Fixed" beside "Fixed the null guard" says it twice.
 - Do not repeat the file or the line from the Comment cell.
 - Give the review bodies and the conversation comments a row each. Mark the Comment cell on any row that is not inline: `review body` or `conversation`.
