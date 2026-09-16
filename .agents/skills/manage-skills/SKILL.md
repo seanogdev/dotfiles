@@ -6,7 +6,7 @@ description: Install, update, back up, and restore Claude Code skills for this d
 Skills are managed with `gh skill` (GitHub CLI, preview). The canonical install location is `~/.agents/skills/` (the agentskills.io convention), and Claude Code reads from `~/.claude/skills/`, where each managed skill is a symlink into `~/.agents/skills/<name>`.
 
 ```fish
-skills-install <owner/repo> <skill-path>  # installs into ~/.agents/skills, then symlinks
+skills-install <owner/repo> <skill-path>
 gh skill search <query>
 ```
 
@@ -26,4 +26,4 @@ skills-update   # gh skill update --all against ~/.agents/skills/ (forwards extr
 - `.Skillfile` lines are `<owner/repo> <skill-path>`, where the path is the exact repo path from `github-path` frontmatter. Do not substitute the namespaced name that `gh skill list` reports: `accessibility-compliance/wcag-audit-patterns` fails to install, while `plugins/accessibility-compliance/skills/wcag-audit-patterns` works. `gh skill list --json` has no field for the exact path, which is why `skills-backup` still reads frontmatter for it.
 - Anything without `github-repo` frontmatter is excluded from `.Skillfile`, which is why the private skills below never appear there.
 - The private skills (`content-writer`, `review-pr`) live in iCloud at `~/Library/Mobile Documents/com~apple~CloudDocs/Code/dotfiles/.claude/skills/`. Their symlinks into `~/.claude/skills/` were made by hand, `sync.sh` only copies fonts. Editing them means editing the iCloud copy, and adding a new reference file to one means symlinking the whole `references` directory rather than each file.
-- Project-scope skills would live in `.claude/skills/` in the repo. There are none right now. Do not commit user-scope skill artifacts there.
+- Project-scope skills would live in `.claude/skills/` in the repo. Do not commit user-scope skill artifacts there.
