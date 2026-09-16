@@ -12,7 +12,7 @@ Take every piece of live feedback to a conclusion: fix it or push back, then acc
 
 **A PR.** The default. If no PR was named, use the open PR for the current branch.
 
-**Local.** A review sitting in this conversation — a `/code-review` report, a pasted set of comments, the user listing what they want changed — or a file they point at. Everything about deciding and fixing is the same. What drops away is the per-comment half: there is nothing to reply into, vote on or resolve. A PR still gets one comment for the round.
+**Local.** A review sitting in this conversation — a `/code-review` report, a pasted set of comments, the user listing what they want changed — or a file they point at. Everything about deciding and fixing is the same.
 
 Which one it is: a path or an `@file` in the invocation means the file. The user pointing at feedback already in the conversation ("address that", "fix those", "work through the review above") with no PR named means the context. Otherwise it is the PR. Where they name both, read both and run each under its own rules, then give one summary covering the lot.
 
@@ -42,9 +42,9 @@ A review body often never becomes an inline thread, and a reviewer often raises 
 
 **Read it at the start of the pass, every time.** A file gets read again even if it was read minutes ago, for the same reason the PR gets queried again: the user edits these files, and the copy from earlier in this conversation is stale. Where the feedback is in the conversation instead, the latest version of it wins — the user narrowing it or adding to it after the fact is part of the feedback, not a footnote to it.
 
-Split it into items, one per distinct point. A paragraph raising three things is three items; a numbered list is already split. Keep the `path:line` each one points at, since that is what the summary labels its rows by when there are no urls.
+Split it into items, one per distinct point. A paragraph raising three things is three items. Keep the `path:line` each one points at, since that is what the summary labels its rows by when there are no urls.
 
-Nothing is filtered out here and every item is live: there is no thread state and there are no reactions, so **Threads that have come back** and **Votes the user left** are both PR-only. What stands in for a vote is the user saying it out loud — "the second one matters", "ignore the lint one". Weigh that exactly as their `THUMBS_UP` or `THUMBS_DOWN` is weighed below, because it is the same signal arriving by a different route.
+Nothing is filtered out here and every item is live: there is no thread state and there are no reactions, so **Threads that have come back** and **Votes the user left** are both PR-only. What stands in for a vote is the user saying it out loud — "the second one matters", "ignore the lint one". Weigh that exactly as their `THUMBS_UP` or `THUMBS_DOWN` is weighed below.
 
 ## Deciding
 
@@ -144,9 +144,9 @@ Vote the review bodies and the conversation comments the same way, with their ow
 
 Make the fixes and commit them in small logical commits the same way. Nothing here has a thread to reply into or a comment to vote on, so the plan above has no per-item rows.
 
-Where the branch has an open PR, push and leave one comment on it saying what changed this round and why. The review happened off the PR, so without that comment the branch grows commits nothing on the PR accounts for, and the next reader has no idea what drove them. Keep it to a line per point, each naming its sha, in the voice below.
+Where the branch has an open PR, push and leave one comment on it saying what changed this round and why. The review happened off the PR, so without that comment the branch grows commits nothing on the PR accounts for. Keep it to a line per point, each naming its sha, in the voice below.
 
-It goes through `apply.ts` as a single item carrying a `prId` and a `bodyFile` and nothing else, which posts it as a conversation comment and skips the vote and the resolve. An identical body already posted in your name comes back as `duplicate`, so a re-run does not double it up.
+It goes through `apply.ts` as a single item carrying a `prId` and a `bodyFile` and nothing else, which posts it as a conversation comment. An identical body already posted in your name comes back as `duplicate`.
 
 ```json
 [{ "ref": "round summary", "prId": "PR_kwDO...", "bodyFile": "/tmp/round.md" }]
