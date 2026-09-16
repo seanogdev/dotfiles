@@ -15,4 +15,4 @@ stow -d $HOME/projects/personal/dotfiles -t $HOME --no-folding --adopt --stow .
 ## Gotchas
 
 - **`--adopt` flag**: Stow moves conflicting files from `$HOME` into the dotfiles repo. Run `git diff` after stowing to review any adopted files before committing.
-- **`.stow-local-ignore`**: Lists files excluded from symlinking (e.g., `CLAUDE.md`, `AGENTS.md`, `.git`). Edit to prevent specific files from being linked.
+- **`.stow-local-ignore`**: Lists files excluded from symlinking (e.g., `CLAUDE.md`, `AGENTS.md`, `.git`).
