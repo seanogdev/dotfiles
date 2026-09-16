@@ -36,10 +36,15 @@ Look for a repository template first: `.github/pull_request_template.md`,
 fill it in. Fit the two sections below into it. Do not replace it.
 
 **Changes.** A top level bullet list that summarises the PR. Say what changed and why it matters.
-Do not restate the diff line by line.
+Three to six bullets, one line each. One bullet is right when one thing changed, so do not pad the
+list out to look thorough.
+
+Write for a reviewer who is about to read the diff. Give them what the diff does not say: the
+reason, the tradeoff, the thing that looks wrong and is not. Do not restate the diff line by line,
+do not repeat the title, and do not explain code the reviewer can read.
 
 **File table.** A collapsible table that covers every changed file, with a very short note on how
-each one changed.
+each one changed. A few words per cell, not a sentence.
 
 ```markdown
 <details>
@@ -52,6 +57,10 @@ each one changed.
 
 </details>
 ```
+
+Add no heading the repo's template does not ask for. `Changes`, the file table and `Screenshots`
+are the whole of it: no `Testing`, `Motivation`, `Risks` or `Notes` section unless the template has
+one.
 
 Leave a `## Screenshots` heading. Leave it empty unless step 7 fills it, and never write placeholder
 text into it.
