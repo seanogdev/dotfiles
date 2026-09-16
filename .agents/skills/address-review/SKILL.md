@@ -20,7 +20,7 @@ Which one it is: a path or an `@file` in the invocation means the file. The user
 
 ### On a PR
 
-**Query first, every time.** Read the feedback from the API as the first action of the pass, before anything else. A read from earlier in this conversation is stale and cannot be reused: reviewers add comments while a pass is running, and a second invocation minutes after the first usually means something landed in between. So an earlier query result, an earlier summary, or a recollection of what the threads said is never the input here. Nothing is up to date until this query says so, and "I just read this" is not evidence that it is.
+**Query first, every time.** Read the feedback from the API as the first action of the pass, before anything else. A read from earlier in this conversation is stale and cannot be reused: reviewers add comments while a pass is running, and a second invocation minutes after the first usually means something landed in between.
 
 ```bash
 ~/.claude/skills/address-review/fetch.sh [PR]
@@ -50,7 +50,7 @@ Nothing is filtered out here and every item is live: there is no thread state an
 
 The goal is the right call on each comment. Agreeing and disagreeing are both fine outcomes, neither one is the target.
 
-So check the claim before acting on it. Read the surrounding file, not only the diff hunk, and where a comment describes a bug, trace the path that would produce it. A reviewer working from a hunk in isolation will sometimes flag something the wider file already handles. Apply the same standard whoever wrote the comment. A senior reviewer and an automated one both get checked, and both are usually right.
+So check the claim before acting on it. Read the surrounding file, not only the diff hunk, and where a comment describes a bug, trace the path that would produce it. A reviewer working from a hunk in isolation will sometimes flag something the wider file already handles. Apply the same standard whoever wrote the comment.
 
 The comment was written against some commit, and the branch has likely moved since. Before acting on it, check the file as it stands now, not the snippet quoted in the comment or the diff hunk it was raised against. A later commit can already fix what the comment describes, move the line it points at, or change the code around it enough that the concern no longer applies. Where the comment's line number or quoted code no longer matches the file, that gap is itself a sign the code moved on, and the current version is what decides the call.
 
@@ -120,7 +120,7 @@ One object per piece of feedback:
 - `vote` is `THUMBS_UP` or `THUMBS_DOWN`, or leave it out for no vote.
 - `resolve` defaults to false, so a thread you mean to close needs `"resolve": true` on it.
 
-Resolve every thread you replied to, the pushed-back ones included. A thread that has come back gets `"resolve": true` again; the mutation is idempotent, so re-closing one costs nothing and keeps the plan uniform. The only thread that stays open is the one case named in **Votes the user left**: the user voted a comment down and the claim holds up anyway. You cannot resolve a conversation comment, so the reply and the vote close it.
+Resolve every thread you replied to, the pushed-back ones included. A thread that has come back gets `"resolve": true` again. The only thread that stays open is the one case named in **Votes the user left**: the user voted a comment down and the claim holds up anyway. You cannot resolve a conversation comment, so the reply and the vote close it.
 
 ### What the vote means
 
@@ -162,7 +162,7 @@ For everything this skill posts on a PR: the thread replies, and the round comme
 
 The same collaborative register as the `review-pr` skill, from the other side of the table.
 
-**Keep every reply short.** One or two sentences. Three at the outside, and only when a decline needs a second line of evidence. The reviewer already knows the context, so do not restate their comment, do not recap the surrounding code, and do not explain your reasoning step by step. Lead with the outcome. Cut any sentence that does not change what the reviewer does next.
+**Keep every reply short.** One or two sentences. Three at the outside, and only when a decline needs a second line of evidence. Lead with the outcome. Cut any sentence that does not change what the reviewer does next.
 
 Do not open with filler ("Great point", "You're absolutely right"), do not close with an offer to do more work, and do not add headings, bullet lists or code blocks unless a diff is the shortest way to say it.
 
