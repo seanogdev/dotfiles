@@ -160,11 +160,18 @@ With no PR on the branch, nothing is pushed unless the user asks and the summary
 
 For everything this skill posts on a PR: the thread replies, and the round comment a local pass leaves.
 
-The same collaborative register as the `review-pr` skill, from the other side of the table.
-
 **Keep every reply short.** One or two sentences. Three at the outside, and only when a decline needs a second line of evidence. Lead with the outcome. Cut any sentence that does not change what the reviewer does next.
 
-Do not open with filler ("Great point", "You're absolutely right"), do not close with an offer to do more work, and do not add headings, bullet lists or code blocks unless a diff is the shortest way to say it.
+**Write it in simple technical English.** One idea per sentence, 20 words or less. Active voice, and name who did what. Simple present or simple past. No `-ing` verb forms, no idiom, no slang, no metaphor. Write "removes" not "bails", "starts" not "kicks off". Use the same word for the same thing each time. Drop the words that add emphasis and no information: "just", "simply", "actually", "really", "basically".
+
+**Cut what the reviewer can already see.** They have their own comment, the file and the line the thread sits on, the diff, and the sha you linked. So none of this goes in a reply:
+
+- Their point, said back to them.
+- The file or line the thread is already anchored to.
+- "I agree", "good catch", "as you suggested", "you're right".
+- A description of a change the linked sha already shows.
+- An offer to do more work, or a question about whether they are happy.
+- A restatement of the outcome in a second sentence.
 
 **Fixed.** Say what changed, in one sentence. "Moved the normalisation into the transformer." A commit sha beats a description of the change, and a sha the reviewer can click beats a bare one. Link every sha you name to its commit:
 
@@ -174,9 +181,9 @@ Moved the normalisation into the transformer ([`a1b2c3d`](https://github.com/OWN
 
 Short sha as the link text, full sha in the href, read back together with `git log -1 --format='%h %H'`. Same for a review body or conversation reply.
 
-**Declined.** Point at the code that answers the comment: "`useFoo` bails when the ref is null on line 24, so the extra check would be dead code." A reviewer can check a line reference, they cannot check an assertion. One line of "happy to change it if you'd rather be explicit" is enough, and mean it.
+**Declined.** Point at the code that answers the comment: "`useFoo` returns early when the ref is null on line 24, so the extra check is dead code." A reviewer can check a line reference, they cannot check an assertion. Stop there. Do not add a closing offer.
 
-Never argue. If a thread is turning into back and forth, say so and take it off the PR.
+Never argue. If a thread turns into back and forth, say so and take it off the PR.
 
 Save the detail for the user-facing summary at the end. That is where length is allowed, not the PR.
 
