@@ -46,16 +46,27 @@ do not repeat the title, and do not explain code the reviewer can read.
 **File table.** A collapsible table that covers every changed file, with a very short note on how
 each one changed. A few words per cell, not a sentence.
 
+A GitHub table never wraps. It scrolls sideways, so a long path in the File column pushes the Change
+column out of view. Strip the prefix every row shares and name it once in the summary line:
+
 ```markdown
 <details>
-<summary>Files changed</summary>
+<summary>Files changed in <code>src/api/</code></summary>
 
 | File | Change |
 | ---- | ------ |
-| `src/api/client.ts` | Added the retry wrapper |
-| `src/api/client.test.ts` | Covers the new backoff path |
+| `client.ts` | Added the retry wrapper |
+| `client.test.ts` | Covers the new backoff path |
 
 </details>
+```
+
+Where the rows share no prefix, strip what each row shares with its neighbours and group the table
+by directory. Where the paths are still wide enough to scroll, drop the table and use a bullet list,
+which wraps at the page width:
+
+```markdown
+- `src/api/client.ts`: added the retry wrapper
 ```
 
 Add no heading the repo's template does not ask for. `Changes`, the file table and `Screenshots`
