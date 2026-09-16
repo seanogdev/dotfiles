@@ -5,14 +5,12 @@ description: Open or update a GitHub pull request in Sean's format — branch, f
 
 # Create a pull request
 
-Work through the steps in order.
-
 ## 1. Check the branch
 
 If the current branch is `main` or `master`, create a branch first. Never push to `main`.
 
 Follow the repo's own branch naming rules. Some repos cap the length, and some take no `fix/`,
-`feature/` or `chore/` prefix. Read the repo's config before you name the branch.
+`feature/` or `chore/` prefix.
 
 ## 2. Run the fast checks
 
@@ -55,8 +53,8 @@ each one changed.
 </details>
 ```
 
-Leave a `## Screenshots` heading. The images under it belong to the author. Leave it empty unless
-step 7 fills it, and never write placeholder text into it.
+Leave a `## Screenshots` heading. Leave it empty unless step 7 fills it, and never write placeholder
+text into it.
 
 Use complete sentences and proper punctuation. Do not use em dashes.
 
@@ -76,7 +74,7 @@ is unfinished.
 ### Carry the author's content across
 
 `gh pr edit` replaces the entire body, and an image attached by hand cannot be restored from the CLI
-once it is gone. Treat the existing body as something to merge into.
+once it is gone.
 
 ```bash
 ~/.claude/skills/create-pr/pr-body.sh save > /tmp/pr-body-before.md
@@ -99,8 +97,7 @@ nothing else, so a caption or a heading you drop around one still gets through.
 
 ## 7. Attach screenshots the session already produced
 
-Only when the session already has screenshots on disk. Capturing them is not part of this step. With
-no images, leave `## Screenshots` to the author and move on.
+Only when the session already has screenshots on disk. Capturing them is not part of this step.
 
 GitHub has no API, CLI or MCP route for uploading an attachment, so the file has to go through a
 browser. Hand that to a sub-agent with the `agent-browser` skill.
