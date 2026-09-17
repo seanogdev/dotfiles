@@ -1,12 +1,12 @@
 ---
 name: address-review
-description: Work through the review feedback on a GitHub PR, across inline threads, review bodies and conversation comments. Fix what should be fixed, reply with the reasoning where it should not, vote each comment up or down, then resolve every thread that has one. Works local feedback the same way — a review sitting in this conversation, or in a file — minus the parts that need a PR. Use when a review lands and the user says "address the review", "fix the review comments", "respond to the review", "handle this review", "work through the feedback in review.md", or points at review feedback to act on.
+description: Work through the review feedback on a GitHub PR, across inline threads, review bodies and conversation comments. Fix what should be fixed, reply with the reasoning where it should not, vote on each comment, then resolve every thread that has one. Works local feedback the same way — a review sitting in this conversation, or in a file — minus the parts that need a PR. Use when a review lands and the user says "address the review", "fix the review comments", "respond to the review", "handle this review", "work through the feedback in review.md", or points at review feedback to act on.
 user-invocable: true
 ---
 
 # Address review
 
-Take every piece of live feedback to a conclusion: fix it or push back, then account for the whole pass to the user. On a PR that also means replying either way, voting the comment up or down, and resolving the thread, where inline threads are only one of three places feedback arrives.
+Take every piece of live feedback to a conclusion: fix it or push back, then account for the whole pass to the user. On a PR that also means replying either way, voting on the comment, and resolving the thread, where inline threads are only one of three places feedback arrives.
 
 ## Where the feedback is
 
@@ -34,7 +34,7 @@ Skip anything `viewer` wrote themselves, and skip the CI and coverage chatter a 
 
 Which id becomes which plan field: `threads[].id` is a `threadId` and `threads[].comments[0].id` is that item's `commentId`; `reviews[].id` and `conversation[].id` are each their own `commentId`, and both take the `prId`, since neither has a thread to reply into. A review body carries a vote, and the user's vote, the same way a comment does.
 
-`userVotes` marks the comments the user voted on, which the next section weighs.
+`userVotes` marks the comments the user voted on, which the next section weighs. `isBot` is true where a GitHub App wrote the comment, which is what **What the vote means** turns on. An automated reviewer running on a machine user account comes back false, so read the author too.
 
 A review body often never becomes an inline thread, and a reviewer often raises their main point in the conversation rather than against a line. Those two are the easiest to miss.
 
@@ -66,7 +66,7 @@ Where a comment is genuinely ambiguous, ask rather than guessing at what the rev
 
 Read the whole thread, your own reply included, and treat the last comment as the live one. Then decide it the way any other comment gets decided. A reviewer who answers a decline with a path you did not trace has earned a second look; one who repeats the original point with nothing new behind it has not, and saying so once more is the whole reply. Where they accept the answer or just say thanks, nothing needs doing: it stays resolved, it needs no plan item, and a row in the summary is the whole of it.
 
-Otherwise reply, re-vote where the call moved, and resolve again. Reactions add rather than replace, so casting the opposite vote leaves both of them on the comment. Clear the old one with `unvote.sh` first.
+Otherwise reply, re-vote where the call moved, and resolve again. Reactions add rather than replace, so clear the old vote with `unvote.sh` before you cast the new one. Where the call moves to a decline on a human comment, `unvote.sh` is the whole of it, since no vote replaces the one you remove.
 
 ### Votes the user left
 
@@ -130,9 +130,11 @@ The vote records one thing: whether the comment should be addressed. It is not a
 
 `THUMBS_UP` and `THUMBS_DOWN` are the only two reactions this skill uses. Never send `LAUGH`, `HOORAY`, `CONFUSED`, `HEART`, `ROCKET` or `EYES`, whatever the comment says.
 
-- **`THUMBS_UP`** — the comment should be addressed. Vote it up when you fixed it, and when you agree with it but the fix is out of scope for this PR.
-- **`THUMBS_DOWN`** — the comment should not be addressed. Vote it down when you declined it: it misreads the code, the concern is already handled, or the change would be wrong.
-- **No vote** — you have not decided. Leave a comment unvoted when you asked the reviewer a question instead of making a call, and when a thread is outdated so the point no longer applies either way.
+- **`THUMBS_UP`** — the comment should be addressed. Vote it up when you fixed it, and when you agree with it but the fix is out of scope for this PR. Any author.
+- **`THUMBS_DOWN`** — the comment should not be addressed. Cast it only on an automated comment, where it feeds the reviewer's own accuracy stats. Vote it down when you declined it: it misreads the code, the concern is already handled, or the change would be wrong.
+- **No vote** — every other case. That covers a declined human comment, a question you asked instead of making a call, and an outdated thread.
+
+Never vote a human's comment down. The reply carries the decline, and it says why.
 
 Vote on the comment that raised the point, which is the first comment in the thread. Do not vote on your own reply. One vote per comment, and any vote you cast must match what the reply says. A reply that declines and a thumbs up next to it read as a contradiction.
 
@@ -221,7 +223,7 @@ Then, under the table, the parts a table cannot hold. Add only what the table ca
 - Every thread that came back from an earlier pass, and whether the reviewer's answer moved your call.
 - Anything you resolved on thin reasoning.
 - Every point you worked around rather than fixed, and what the real fix is.
-- Any comment you left unvoted, and any thread you left open.
+- Any thread you left open, and any automated comment you left unvoted.
 - Anything that needs the user's call.
 
 A resolved thread is easy for the reviewer to scroll past, so the user should know where you closed a door on their behalf.

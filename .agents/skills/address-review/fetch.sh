@@ -36,7 +36,7 @@ query($owner:String!, $repo:String!, $number:Int!) {
       reviewThreads(first:100) {
         nodes { id isResolved isOutdated path line comments(first:50) { nodes { ...c } } }
       }
-      reviews(first:50) { nodes { id url state author { login } body ...r } }
+      reviews(first:50) { nodes { id url state author { login __typename } body ...r } }
       comments(first:100) { nodes { ...c } }
     }
   }
@@ -45,8 +45,8 @@ fragment r on Reactable { reactionGroups { content viewerHasReacted } }
 fragment c on Reactable {
   id
   reactionGroups { content viewerHasReacted }
-  ... on PullRequestReviewComment { url author { login } body }
-  ... on IssueComment { url author { login } body }
+  ... on PullRequestReviewComment { url author { login __typename } body }
+  ... on IssueComment { url author { login __typename } body }
 }' -f owner="$OWNER" -f repo="$REPO" -F number="$NUMBER" \
   --jq '.data.viewer.login as $viewer
         | {viewer: $viewer}
@@ -61,11 +61,11 @@ fragment c on Reactable {
                               or (any(.comments.nodes[1:][]; .author.login == $viewer)
                                   and (.comments.nodes | last | .author.login) != $viewer))
                      | {id, path, line, isOutdated, isResolved,
-                        comments: [.comments.nodes[] | {id, url, author: .author.login, body,
+                        comments: [.comments.nodes[] | {id, url, author: .author.login, isBot: (.author.__typename == "Bot"), body,
                                    userVotes: [.reactionGroups[] | select(.viewerHasReacted) | .content]}]}],
            reviews: [.reviews.nodes[] | select(.body != "")
-                     | {id, url, state, author: .author.login, body,
+                     | {id, url, state, author: .author.login, isBot: (.author.__typename == "Bot"), body,
                         userVotes: [.reactionGroups[] | select(.viewerHasReacted) | .content]}],
-           conversation: [.comments.nodes[] | {id, url, author: .author.login, body,
+           conversation: [.comments.nodes[] | {id, url, author: .author.login, isBot: (.author.__typename == "Bot"), body,
                           userVotes: [.reactionGroups[] | select(.viewerHasReacted) | .content]}]})' \
   | jq --arg pr "$URL" '{pr: $pr} + .'
