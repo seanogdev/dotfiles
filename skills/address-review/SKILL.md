@@ -24,10 +24,10 @@ Route the invocation like this:
 - Otherwise it is the PR.
 - If the user names both, read both. Run each under its own rules. Then give one summary that covers the lot.
 
-Then read the file for that mode before you do anything else:
+Then read the file for that mode before you do anything else. Each path in this skill is relative to the directory that holds this file. Expand it to a full path before you use it.
 
-- A PR: `~/.claude/skills/address-review/references/github.md`.
-- Local: `~/.claude/skills/address-review/references/local.md`.
+- A PR: `references/github.md`.
+- Local: `references/local.md`.
 
 Read it before the first query and before the first fix. The mode file holds the rules this file does not repeat.
 
