@@ -39,8 +39,10 @@ Look for a repository template first: `.github/pull_request_template.md`,
 `.github/PULL_REQUEST_TEMPLATE.md`, or a file in `.github/PULL_REQUEST_TEMPLATE/`. If one exists,
 fill it in. Fit the two sections below into it. Do not replace it.
 
-**Changes.** A top level bullet list that summarises the PR. Four bullets at most, 20 words each at
-most. One bullet is right when one thing changed, so do not pad the list out to look thorough.
+**Changes.** A top level bullet list that summarises the PR. Judge what the reviewer needs. A bullet
+earns its place when the reviewer would miss something without it, and it goes as short as it can go
+without losing that. One bullet is right when one thing changed, so do not pad the list out to look
+thorough.
 
 Write for a reviewer who is about to read the diff. Give each bullet the one thing the diff does not
 say, and stop there. Do not restate the diff, do not repeat the title, and do not explain code the
