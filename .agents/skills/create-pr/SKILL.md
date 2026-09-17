@@ -16,6 +16,9 @@ Follow the repo's own branch naming rules. Some repos cap the length, and some t
 
 Run the repo's format, lint and unit test commands. Fix what they report before you continue.
 
+Never silence a check to make it pass: no `eslint-disable`, no `.skip`, no loosened assertion, no
+lowered threshold. If you cannot fix what a check reports, stop and tell the user.
+
 Do not run the reviewer agents or browser testing here. State plainly that they did not run.
 
 Where the repo has a skill that names those commands, follow it.
@@ -42,6 +45,8 @@ thing changed, so do not pad the list out to look thorough.
 Write for a reviewer who is about to read the diff. Give them what the diff does not say: the
 reason, the tradeoff, the thing that looks wrong and is not. Do not restate the diff line by line,
 do not repeat the title, and do not explain code the reviewer can read.
+
+Call a workaround a workaround. Give it a bullet that names the real fix.
 
 **File table.** A collapsible table that covers every changed file, with a very short note on how
 each one changed. A few words per cell, not a sentence.
