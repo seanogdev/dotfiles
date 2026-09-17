@@ -158,6 +158,8 @@ It goes through `apply.ts` as a single item carrying a `prId` and a `bodyFile` a
 
 `gh pr view --json id --jq .id` is where that `prId` comes from when no `fetch.sh` ran this pass.
 
+That comment is the only place the round goes. Never move it, or any part of it, into the PR description. The description follows the rule in **Finishing**, the same as on any other pass.
+
 With no PR on the branch, nothing is pushed unless the user asks and the summary is the whole of the output. Leave the feedback file itself as it is either way.
 
 ## Reply voice
@@ -194,6 +196,10 @@ Save the detail for the user-facing summary at the end. That is where length is 
 ## Finishing
 
 **Re-read the feedback before the summary.** Run `fetch.sh` again — the pass took time, and a reviewer may have commented during it. On local feedback, read the file again for the same reason, and check whether the user has said anything since the invocation that changes the ask. Anything the first read missed goes through the same decide, reply, vote, resolve loop, and then query once more. A thread you have just answered drops out of the next read, because your reply is the last comment on it. Only write the summary when a fresh query comes back with nothing left to act on.
+
+**Bring the PR description up to date.** Read the PR body once the re-read above comes back with nothing left to act on. This covers a local pass too, wherever the branch has an open PR. With no PR there is nothing to do here. The fixes this pass made can change what the branch does, or make a claim in the body false. Where either happened, write the body again from scratch under `create-pr` step 6, and post it with `pr-body.sh`. Where the fixes changed nothing the body states, leave the body as it is. Do this once, here, not once per comment.
+
+Never patch the body round by round. Do not append a paragraph that answers this review. Do not add a revision history, in a `<details>` block or anywhere else. Do not leave a note beside a claim saying the claim no longer holds: remove the claim. A body that is edited line by line grows on every pass and ends up contradicting itself. The reviewer needs the branch as it stands, not the path it took to get there.
 
 The summary goes to the user, and it is the last thing the pass produces. Write it once the fixes are pushed and every thread is settled, so the shas and the outcomes in it are real.
 
