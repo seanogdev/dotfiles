@@ -1,6 +1,7 @@
 ---
 name: address-review
-description: Work through the review feedback on a GitHub PR, across inline threads, review bodies and conversation comments. Fix what should be fixed, reply with the reasoning where it should not, vote on each comment, then resolve every thread that has one. Works local feedback the same way — a review sitting in this conversation, or in a file — minus the parts that need a PR. Use when a review lands and the user says "address the review", "fix the review comments", "respond to the review", "handle this review", "work through the feedback in review.md", or points at review feedback to act on.
+description: Take every comment in a code review to a conclusion, on a GitHub PR or on a local review. Use when a review lands and the user says "address the review", "fix the review comments", "respond to the review", "handle this review", "work through the feedback in review.md", or points at review feedback to act on.
+argument-hint: "[PR number, url or branch, or a path to a review file]"
 user-invocable: true
 ---
 
@@ -13,6 +14,8 @@ Take every item of live feedback to a conclusion. Fix it, or push back on it. Th
 **A PR.** The default. If no PR was named, use the open PR for the current branch.
 
 **Local.** A review that sits in this conversation: a `/code-review` report, a pasted set of comments, or the user listing what they want changed. A file the user points at is local too. Deciding and fixing are the same.
+
+`$ARGUMENTS` holds what the user typed after the skill name. It is empty when they gave nothing.
 
 Route the invocation like this:
 
@@ -32,6 +35,8 @@ If the feedback is local, read `~/.claude/skills/address-review/references/local
 ```bash
 ~/.claude/skills/address-review/fetch.sh [PR]
 ```
+
+Pass `$ARGUMENTS` as the `[PR]` argument only when it names a PR. A review file path must never reach this command.
 
 Feedback arrives in three places on a PR: inline review threads, review bodies, and conversation comments. This command reads all three at once. It keeps the threads that are still live. It defaults to the open PR for the current branch.
 
@@ -116,30 +121,7 @@ Then build a plan and hand it to `apply.ts`, which lives beside this file:
 
 It sends every reply at once. Then it sends every vote and resolve at once. Two rounds rather than one pass per item, so a vote never lands on a thread ahead of the reply that explains it. Every reply posts publicly the moment it is sent. If a reply fails, that item's vote and resolve are skipped. No thread ends up voted and closed with nothing said in it. Running the same plan twice is safe. A reply already on the thread in your name is reported as `duplicate` and is not sent again.
 
-One object per piece of feedback:
-
-```json
-[
-  { "ref": "useFoo.ts:24",
-    "threadId": "PRRT_kwDO...",
-    "commentId": "PRRC_kwDO...",
-    "bodyFile": "/tmp/reply-usefoo.md",
-    "vote": "THUMBS_UP",
-    "resolve": true },
-  { "ref": "review body (alice)",
-    "prId": "PR_kwDO...",
-    "commentId": "PRR_kwDO...",
-    "bodyFile": "/tmp/reply-alice.md",
-    "vote": "THUMBS_DOWN" }
-]
-```
-
-- `ref` labels the row in the output. Use the name the summary table will use.
-- `threadId` replies into an inline thread. `prId` posts a new conversation comment instead, which is how a review body and a conversation comment get answered. Open those bodies with the author's `@login`. Give exactly one of the two.
-- `commentId` is what the vote lands on: the first comment in the thread, or the review or conversation node itself. Never your own reply.
-- `bodyFile` is a path, never the body itself. A double-quoted body runs every backticked identifier as a command and strips the code references out of the reply. Write the reply to a file whatever it contains. Do not judge that case by case.
-- `vote` is `THUMBS_UP` or `THUMBS_DOWN`. Leave it out for no vote.
-- `resolve` defaults to false. A thread you mean to close needs `"resolve": true` on it.
+Read `~/.claude/skills/address-review/references/plan.md` for the plan format. Read it when you build the plan, not before.
 
 Resolve every thread you replied to, the pushed-back ones included. A thread that has come back gets `"resolve": true` again. Only one thread stays open, the case named in **Votes the user left**: the user voted a comment down and the claim holds up anyway. You cannot resolve a conversation comment, so the reply and the vote close it.
 

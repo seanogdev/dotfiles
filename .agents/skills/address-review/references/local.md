@@ -12,7 +12,7 @@ Nothing is filtered out here. Every item is live. There is no thread state and t
 
 ## Applying and replying
 
-Make the fixes. Commit them in small logical commits, the same way. Nothing here has a thread to reply into or a comment to vote on, so the plan in `SKILL.md` has no per-item rows.
+Make the fixes. Commit them in small logical commits, the same way. Nothing here has a thread to reply into or a comment to vote on, so the plan in `references/plan.md` has no per-item rows.
 
 If the branch has an open PR, push. Then leave one comment on the PR that says what changed this round and why. The review happened off the PR. Without that comment, the branch grows commits that nothing on the PR accounts for. Keep it to a line per point. Each line names its sha. Write it in the **Reply voice** of `SKILL.md`.
 
