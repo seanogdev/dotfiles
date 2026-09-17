@@ -24,44 +24,12 @@ Route the invocation like this:
 - Otherwise it is the PR.
 - If the user names both, read both. Run each under its own rules. Then give one summary that covers the lot.
 
-If the feedback is local, read `~/.claude/skills/address-review/references/local.md`.
+Then read the file for that mode before you do anything else:
 
-## Reading the feedback
+- A PR: `~/.claude/skills/address-review/references/github.md`.
+- Local: `~/.claude/skills/address-review/references/local.md`.
 
-### On a PR
-
-**Query first, every time.** Read the feedback from the API as the first action of the pass. A read from earlier in this conversation is stale. Do not reuse it. Reviewers add comments while a pass runs. A second invocation minutes after the first usually means something landed in between.
-
-```bash
-~/.claude/skills/address-review/fetch.sh [PR]
-```
-
-Pass `$ARGUMENTS` as the `[PR]` argument only when it names a PR. A review file path must never reach this command.
-
-Feedback arrives in three places on a PR: inline review threads, review bodies, and conversation comments. This command reads all three at once. It keeps the threads that are still live. It defaults to the open PR for the current branch.
-
-Still live means unresolved, plus any thread you replied in that someone spoke on since. GitHub leaves a thread resolved when a new comment lands on it. Without this rule, a reviewer who answers the reply you closed a thread with never reaches the next pass. Those threads come back with `isResolved: true`.
-
-Skip anything `viewer` wrote. Skip the CI and coverage chatter a PR collects. Your own replies inside a thread are the exception. They are what the reviewer answers, so read them. Keep every `url`. The summary at the end links its rows by them.
-
-Each id becomes a plan field:
-
-| Source field | Plan field |
-| --- | --- |
-| `threads[].id` | `threadId` |
-| `threads[].comments[0].id` | `commentId` |
-| `reviews[].id` | `commentId`, plus the `prId` |
-| `conversation[].id` | `commentId`, plus the `prId` |
-
-A review body and a conversation comment have no thread to reply into. That is why each one takes the `prId`. A review body carries a vote, and the user's vote, the same way a comment does.
-
-`userVotes` marks the comments the user voted on. The next section weighs them. `isBot` is true where a GitHub App wrote the comment, and **What the vote means** turns on it. An automated reviewer that runs on a machine user account comes back false, so read the author too.
-
-A review body often never becomes an inline thread. A reviewer often raises the main point in the conversation, not against a line. Those two are the easiest to miss.
-
-### Local
-
-Read `~/.claude/skills/address-review/references/local.md`.
+Read it before the first query and before the first fix. The mode file holds the rules this file does not repeat.
 
 ## Deciding
 
@@ -78,76 +46,13 @@ Fix it if the claim holds up. Fix it also if the reviewer points at a real risk,
 - The problem it describes cannot be reproduced.
 - It asks for an abstraction the codebase has not earned yet.
 
-A thread with `isOutdated: true` usually means the code moved on. Check if the concern still applies before you spend effort on it.
-
 If a comment is ambiguous, ask. Do not guess what the reviewer meant. Ask in the reply on a PR. Ask the user directly if the feedback is local.
 
-### Threads that have come back
-
-`isResolved: true` on a thread means you settled it on an earlier pass and someone replied since. The earlier call is not binding. The reviewer read it and answered it. That is the case for deciding again, not for standing behind the first answer.
-
-Read the whole thread, your own reply included. Treat the last comment as the live one. Then decide it as you decide any other comment. A reviewer who answers a decline with a path you did not trace has earned a second look. A reviewer who repeats the original point with nothing new behind it has not. Say so once more, and that is the whole reply.
-
-If they accept the answer or say thanks, do nothing more: the thread stays resolved, it needs no plan item, and a row in the summary is the whole of it.
-
-Otherwise reply, re-vote where the call moved, and resolve again. Reactions add, they do not replace. Clear the old vote with `unvote.sh` before you cast the new one. If the call moves to a decline on a human comment, `unvote.sh` is the whole action. No vote replaces the one you remove.
-
-### Votes the user left
-
-The user votes on review comments too, with the same two reactions. A vote from the user is the one vote that carries weight here. It says they read the comment and formed a view on it before you got to it. A reaction from anyone else is not that signal. The `userVotes` field leaves them out.
-
-Read the votes before you cast any of your own. `gh` runs as the user's account, so once this skill reacts, its reaction is indistinguishable from theirs. Your own reply in the thread is what tells them apart. No reply from you means the vote is theirs. If you replied, the vote is yours from that pass, and the reply says which way it went. If the two disagree, the user changed it, and that disagreement is the signal.
-
-**`THUMBS_UP` from the user.** They value the comment. Treat it with more reverence than the rest. Reverence is a higher bar for declining, not agreement by default. Check the claim as carefully as ever. Then:
-
-- Read the whole file and trace the failure path before you decline it. The decline needs a line reference, not an assertion.
-- Take the fix where the call is close.
-- An out of scope answer needs a follow-up issue or task. The reply names it.
-- If you declined it anyway, tell the user in the summary. They may want to reverse that.
-
-**`THUMBS_DOWN` from the user.** They do not want the comment addressed. Take that as the decision and decline it. One exception: if the check turns up a real defect, do not close the thread on it. Leave that thread open. Put the evidence in the summary, so the user can change their mind.
-
-## Applying, voting and replying
+## Applying the fixes
 
 Fix the cause, not the symptom. Suppressing a warning, skipping a test, loosening an assertion or special-casing the reviewer's input is not a fix. If the real fix is out of scope, decline the comment.
 
 Make the fixes. Commit them in small logical commits. Push to the PR branch **before** you reply. The reply must point at code that is already on the PR. Read every identifier back from its source before it goes in a public reply: the shas from `git log`, a line number from the file as it now stands, an issue number from `gh`. Never quote one from memory. A wrong one has to be corrected in public.
-
-Then build a plan and hand it to `apply.ts`, which lives beside this file:
-
-```bash
-~/.claude/skills/address-review/apply.ts PLAN.json
-```
-
-It sends every reply at once. Then it sends every vote and resolve at once. Two rounds rather than one pass per item, so a vote never lands on a thread ahead of the reply that explains it. Every reply posts publicly the moment it is sent. If a reply fails, that item's vote and resolve are skipped. No thread ends up voted and closed with nothing said in it. Running the same plan twice is safe. A reply already on the thread in your name is reported as `duplicate` and is not sent again.
-
-Read `~/.claude/skills/address-review/references/plan.md` for the plan format. Read it when you build the plan, not before.
-
-Resolve every thread you replied to, the pushed-back ones included. A thread that has come back gets `"resolve": true` again. Only one thread stays open, the case named in **Votes the user left**: the user voted a comment down and the claim holds up anyway. You cannot resolve a conversation comment, so the reply and the vote close it.
-
-### What the vote means
-
-The vote records one thing: whether the comment should be addressed. It is not a verdict on the reviewer. It is not a score for how well the comment was written.
-
-`THUMBS_UP` and `THUMBS_DOWN` are the only two reactions this skill uses. Never send `LAUGH`, `HOORAY`, `CONFUSED`, `HEART`, `ROCKET` or `EYES`, whatever the comment says.
-
-- **`THUMBS_UP`**: the comment should be addressed. Vote it up when you fixed it. Vote it up when you agree with it but the fix is out of scope for this PR. Any author.
-- **`THUMBS_DOWN`**: the comment should not be addressed. Cast it only on an automated comment, where it feeds the reviewer's own accuracy stats. Vote it down when you declined it: it misreads the code, the concern is already handled, or the change would be wrong.
-- **No vote**: every other case. That covers a declined human comment, a question you asked instead of making a call, and an outdated thread.
-
-Never vote a human's comment down. The reply carries the decline, and it says why.
-
-Vote on the comment that raised the point, which is the first comment in the thread. Do not vote on your own reply. Cast one vote per comment. The vote must match what the reply says. A reply that declines and a thumbs up next to it read as a contradiction.
-
-Undo a vote with `~/.claude/skills/address-review/unvote.sh COMMENT_URL`. A vote on a review body cannot be undone at all, so be sure of that one before you cast it.
-
-A comment the user already voted on keeps their vote. It is on the same account as yours. Do not add to it, change it or remove it. Your reply carries your call on those.
-
-Vote the review bodies and the conversation comments the same way, with their own node id as the item's `commentId`. Skip the vote where nothing is raised to act on, an "LGTM" body included.
-
-### Local
-
-Read `~/.claude/skills/address-review/references/local.md`.
 
 ## Reply voice
 

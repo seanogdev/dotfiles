@@ -8,11 +8,11 @@ Read this file when the feedback is local: a review that sits in this conversati
 
 Split it into items, one per distinct point. A paragraph that raises three things is three items. Keep the `path:line` each one points at. The summary labels its rows by that when there are no urls.
 
-Nothing is filtered out here. Every item is live. There is no thread state and there are no reactions, so **Threads that have come back** and **Votes the user left** in `SKILL.md` are both PR-only. What stands in for a vote is the user saying it out loud: "the second one matters", "ignore the lint one". Weigh that exactly as **Votes the user left** weighs a `THUMBS_UP` or a `THUMBS_DOWN`.
+Nothing is filtered out here. Every item is live. There is no thread state and there are no reactions, so nothing in `references/github.md` applies to a local pass. What stands in for a vote is the user saying it out loud: "the second one matters", "ignore the lint one". Weigh that exactly as **Votes the user left** in `references/github.md` weighs a `THUMBS_UP` or a `THUMBS_DOWN`.
 
 ## Applying and replying
 
-Make the fixes. Commit them in small logical commits, the same way. Nothing here has a thread to reply into or a comment to vote on, so the plan in `references/plan.md` has no per-item rows.
+Make the fixes. Commit them in small logical commits, the same way. Nothing here has a thread to reply into or a comment to vote on, so the plan in `references/github.md` has no per-item rows.
 
 If the branch has an open PR, push. Then leave one comment on the PR that says what changed this round and why. The review happened off the PR. Without that comment, the branch grows commits that nothing on the PR accounts for. Keep it to a line per point. Each line names its sha. Write it in the **Reply voice** of `SKILL.md`.
 
