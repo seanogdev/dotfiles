@@ -9,7 +9,7 @@ description: Open or update a GitHub pull request in Sean's format — branch, f
 
 If the current branch is `main` or `master`, create a branch first. Never push to `main`.
 
-Follow the repo's own branch naming rules. Some repos cap the length, and some take no `fix/`,
+Follow the repo's own branch naming rules. Some repos limit the length. Some repos take no `fix/`,
 `feature/` or `chore/` prefix.
 
 ## 2. Run the fast checks
@@ -17,44 +17,47 @@ Follow the repo's own branch naming rules. Some repos cap the length, and some t
 Run the repo's format, lint and unit test commands. Fix what they report before you continue.
 
 Do not silence a check to make it pass. An `eslint-disable`, a `.skip` or a loosened assertion needs
-a comment saying why the rule is wrong here, and it goes in the PR body. If you cannot fix what a
-check reports, stop and tell the user.
+a comment that says why the rule is wrong here. Put that comment in the PR body. If you cannot fix
+what a check reports, stop. Tell the user.
 
-Do not run the reviewer agents or browser testing here. State plainly that they did not run.
+Do not run the reviewer agents here. Do not run browser testing here. State plainly that neither
+ran.
 
 Where the repo has a skill that names those commands, follow it.
 
 ## 3. Check for a changeset
 
-If the repo uses changesets and the diff ships code, confirm a `.changeset/` file covers it. Write
-one if it is missing. Follow the `changeset` skill for the wording.
+If the repo uses changesets and the diff ships code, confirm that a `.changeset/` file covers it.
+Write one if it is absent. Follow the `changeset` skill for the wording.
 
 ## 4. Write the title
 
-One line, sentence case. Add a `docs:`, `fix:`, `refactor:` or `i18n:` prefix only when it helps.
+Write one line in sentence case. Add a `docs:`, `fix:`, `refactor:` or `i18n:` prefix only when it
+helps.
 
 ## 5. Write the body
 
 Look for a repository template first: `.github/pull_request_template.md`,
-`.github/PULL_REQUEST_TEMPLATE.md`, or a file in `.github/PULL_REQUEST_TEMPLATE/`. If one exists,
-fill it in. Fit the two sections below into it. Do not replace it.
+`.github/PULL_REQUEST_TEMPLATE.md`, or a file in `.github/PULL_REQUEST_TEMPLATE/`. If a template
+exists, fill it in. Fit the two sections below into it. Do not replace it.
 
-**Changes.** A top level bullet list that summarises the PR. Judge what the reviewer needs. A bullet
-earns its place when the reviewer would miss something without it, and it goes as short as it can go
-without losing that. One bullet is right when one thing changed, so do not pad the list out to look
-thorough.
+**Changes.** Write a top level bullet list that summarises the PR. Judge what the reviewer needs.
+Write a bullet only when the reviewer would miss something without it. Make each bullet as short as
+it can go without the loss of that thing. One bullet is correct when one thing changed. Do not pad
+the list to look thorough.
 
 Write for a reviewer who is about to read the diff. Give each bullet the one thing the diff does not
-say, and stop there. Do not restate the diff, do not repeat the title, and do not explain code the
-reviewer can read.
+say. Then stop. Do not restate the diff. Do not repeat the title. Do not explain code the reviewer
+can read.
 
 Call a workaround a workaround. Give it a bullet that names the real fix.
 
-**File table.** A collapsible table that covers every changed file, with a very short note on how
-each one changed. A few words per cell, not a sentence.
+**File table.** Write a collapsible table that covers every changed file. Add a very short note on
+how each file changed. Write a few words per cell, not a sentence.
 
 A GitHub table never wraps. It scrolls sideways, so a long path in the File column pushes the Change
-column out of view. Strip the prefix every row shares and name it once in the summary line:
+column out of view. Remove the prefix that every row shares. Name that prefix once in the summary
+line:
 
 ```markdown
 <details>
@@ -68,42 +71,50 @@ column out of view. Strip the prefix every row shares and name it once in the su
 </details>
 ```
 
-Where the rows share no prefix, strip what each row shares with its neighbours and group the table
-by directory. Where the paths are still wide enough to scroll, drop the table and use a bullet list,
-which wraps at the page width:
+If the rows share no prefix, remove what each row shares with its neighbours. Group the table by
+directory. If the paths are still wide enough to scroll, drop the table. Use a bullet list, which
+wraps at the page width:
 
 ```markdown
 - `src/api/client.ts`: added the retry wrapper
 ```
 
 **Describe the state the branch is in.** This rule owns every section of the body, the repo
-template's sections included, not the `Changes` bullets alone. How the session reached the current
-state is not the reviewer's concern: no approach you abandoned, no order you worked in, no problem
-you hit and then solved, no round of review you answered. The reviewer reads the branch as it stands
-now.
+template's sections included. It does not own the `Changes` bullets alone. How the session reached
+the current state is not the reviewer's concern. The reviewer reads the branch as it stands now. So
+the body holds:
+
+- No approach you abandoned.
+- No order you worked in.
+- No problem you hit and then solved.
+- No round of review you answered.
 
 Where the branch stands on another branch, that is current state and it stays: which PR this one
-follows, which issue it closes, what is still open elsewhere. So is the behaviour of the code before
-this PR, where the reviewer needs it to read the change.
+follows, which issue it closes, what is still open elsewhere. The behaviour of the code before this
+PR also stays, where the reviewer needs it to read the change.
 
-So no sentence in the body may refer to an earlier revision of the PR itself. "An earlier revision
-moved the lead to the observer's margin", "the first answer was yes", "two things the previous
-revisions asserted turned out to be false", "no performance number on this revision". Cut all of
-it. Where a superseded claim taught you something the reviewer still needs, state that thing as a
-fact about the current code. Where it did not, it goes.
+No sentence in the body may refer to an earlier revision of the PR itself. Cut all of these:
+
+- "An earlier revision moved the lead to the observer's margin"
+- "the first answer was yes"
+- "two things the previous revisions asserted turned out to be false"
+- "no performance number on this revision"
+
+Where a superseded claim taught you something the reviewer still needs, state that thing as a fact
+about the current code. Where it did not, cut it.
 
 A `Revision history` section is the same mistake inside a `<details>` block. Do not write one.
 
-**Collapse the bulk.** Anything the reviewer needs on hand but not on screen goes in a `<details>`
-block with a summary line that says what is inside. That covers review findings, a log excerpt, a
-benchmark run, a long list. The file table above is the pattern. The open part of the body stays
-short enough to read without scrolling.
+**Collapse the bulk.** Put anything the reviewer needs on hand but not on screen in a `<details>`
+block. Give the block a summary line that says what is inside. That covers review findings, a log
+excerpt, a benchmark run and a long list. The file table above is the pattern. Keep the open part of
+the body short enough to read without a scroll.
 
-Add no heading the repo's template does not ask for. `Changes`, the file table and `Screenshots`
-are the whole of it: no `Testing`, `Motivation`, `Risks` or `Notes` section unless the template has
+Add no heading the repo's template does not ask for. `Changes`, the file table and `Screenshots` are
+the whole of it. Add no `Testing`, `Motivation`, `Risks` or `Notes` section unless the template has
 one.
 
-Leave a `## Screenshots` heading. Leave it empty unless step 7 fills it, and never write placeholder
+Leave a `## Screenshots` heading. Leave it empty unless step 7 fills it. Never write placeholder
 text into it.
 
 Punctuate properly. A bullet or a table cell can be a fragment. Do not use em dashes.
@@ -116,12 +127,12 @@ a non-native English speaker and a non-technical reader can follow.
 Push the branch. Then check for an open PR on it with `gh pr view`.
 
 - If no PR exists, create it with `gh pr create`.
-- If a PR exists, write the body again from scratch under step 5, then write it back with
+- If a PR exists, write the body again from scratch under step 5. Then write it back with
   `pr-body.sh` below.
 
 **Rebuild the body, never append to it.** Read the current body first, for the content the next
-section says to keep and for anything it tells you about the branch. Then write the body the diff
-asks for today. Do not edit the body line by line, and do not add a paragraph that answers the last
+section says to keep. Read it also for what it tells you about the branch. Then write the body the
+diff asks for today. Do not edit the body line by line. Do not add a paragraph that answers the last
 round of review. A body that is patched each round grows, contradicts itself, and keeps claims the
 code has moved past.
 
@@ -138,9 +149,9 @@ once it is gone.
 ~/.claude/skills/create-pr/pr-body.sh edit /tmp/pr-body-new.md
 ```
 
-`edit` refuses to write a body that drops an attachment the author added, and strips the trailing
-newline `gh` adds, which otherwise grows the body by a blank line on every run. `check` runs the
-same guard and edits nothing.
+`edit` refuses to write a body that drops an attachment the author added. It also strips the
+trailing newline `gh` adds, which otherwise grows the body by a blank line on every run. `check`
+runs the same guard and edits nothing.
 
 Keep everything the skill does not own:
 
@@ -157,7 +168,8 @@ nothing else, so a caption or a heading you drop around one still gets through.
 
 ## 7. Attach screenshots the session already produced
 
-Only when the session already has screenshots on disk. Capturing them is not part of this step.
+Do this only when the session already has screenshots on disk. You do not capture screenshots in
+this step.
 
 GitHub has no API, CLI or MCP route for uploading an attachment, so the file has to go through a
 browser. Hand that to a sub-agent with the `agent-browser` skill.
@@ -170,8 +182,8 @@ Go straight ahead only when the user has already asked for them on the PR.
 
 ### Auth
 
-A `gh` token does not work here. The upload runs on a web session cookie with a CSRF check, and
-there is no way to trade one for the other, so the browser has to be signed in already.
+A `gh` token does not work here. The upload runs on a web session cookie with a CSRF check. You
+cannot trade one for the other, so the browser has to be signed in already.
 
 Set that up once:
 
@@ -182,10 +194,10 @@ agent-browser state save ~/.config/agent-browser/github-auth.json
 chmod 600 ~/.config/agent-browser/github-auth.json
 ```
 
-Pass `--state ~/.config/agent-browser/github-auth.json` on every command after that. Confirm it
-took by opening `github.com` and reading the page rather than assuming.
+Pass `--state ~/.config/agent-browser/github-auth.json` on every command after that. Do not assume
+it took. Open `github.com` and read the page.
 
-That file is a live GitHub session. Keep it under `~/.config`, never in a repo, and set
+That file is a live GitHub session. Keep it under `~/.config`. Never keep it in a repo. Set
 `AGENT_BROWSER_ENCRYPTION_KEY` to a 64 character hex key to encrypt it at rest. It expires after 30
 days, and the symptom is a login page where the PR should be.
 
@@ -194,16 +206,17 @@ Two fallbacks when a state file is not an option:
 - **A running browser over CDP.** `agent-browser connect 9222`, or `--auto-connect`. Needs the
   browser started with `--remote-debugging-port=9222`, which a normal launch does not do.
 - **A real profile directory.** `--executable-path <binary> --profile <directory>`. A running
-  browser locks its profile, so it has to be closed first. Do not assume a profile named `Default`,
+  browser locks its profile, so close the browser first. Do not assume a profile named `Default`,
   because some Chromium browsers number theirs.
 
-Never type credentials into a login form. If no route leaves the browser signed in, stop and ask.
+Never type credentials into a login form. If no route leaves the browser signed in, stop. Ask the
+user.
 
 ### The sub-agent
 
 The browser only uploads. GitHub publishes an attachment the moment a file input accepts it, so the
-comment it was dropped into is never submitted, and the description stays with `gh pr edit` under
-the step 6 rules.
+comment it was dropped into is never submitted. The description stays with `gh pr edit` under the
+step 6 rules.
 
 Spawn one sub-agent. Give it the PR URL, the absolute path of every image, and the `--state` flag.
 Tell it to:
@@ -217,8 +230,9 @@ Tell it to:
 5. Clear the textarea and leave the comment unsubmitted.
 6. Report one `https://github.com/user-attachments/assets/...` URL per image.
 
-Put those URLs under `## Screenshots` and write the body per step 6. On a private repo they resolve
-only for a signed-in viewer, so an anonymous `curl` returning 404 does not mean the upload failed.
+Put those URLs under `## Screenshots`. Write the body per step 6. On a private repo they resolve
+only for a signed-in viewer, so an anonymous `curl` that returns 404 does not mean the upload
+failed.
 
 ## 8. Apply labels
 
