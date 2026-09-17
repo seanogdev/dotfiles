@@ -48,6 +48,9 @@ Write for a reviewer who is about to read the diff. Give each bullet the one thi
 say, and stop there. Do not restate the diff, do not repeat the title, and do not explain code the
 reviewer can read.
 
+Describe the state the branch is in. How the session reached it is not the reviewer's concern: no
+approach you abandoned, no order you worked in, no problem you hit and then solved.
+
 Call a workaround a workaround. Give it a bullet that names the real fix.
 
 **File table.** A collapsible table that covers every changed file, with a very short note on how
