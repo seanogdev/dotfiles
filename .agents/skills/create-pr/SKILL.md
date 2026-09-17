@@ -74,6 +74,11 @@ which wraps at the page width:
 - `src/api/client.ts`: added the retry wrapper
 ```
 
+**Collapse the bulk.** Anything the reviewer needs on hand but not on screen goes in a `<details>`
+block with a summary line that says what is inside. That covers review findings, a log excerpt, a
+benchmark run, a long list. The file table above is the pattern. The open part of the body stays
+short enough to read without scrolling.
+
 Add no heading the repo's template does not ask for. `Changes`, the file table and `Screenshots`
 are the whole of it: no `Testing`, `Motivation`, `Risks` or `Notes` section unless the template has
 one.
