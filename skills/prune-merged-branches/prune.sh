@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# git-clean-merged.sh — remove LOCAL branches and their worktrees that are
+# prune.sh — remove LOCAL branches and their worktrees that are
 # fully merged into their head (the PR base branch), plus branches merged into
 # the fallback base.
 #
@@ -13,12 +13,12 @@
 # pass --apply.
 #
 # Usage:
-#   git-clean-merged.sh                 # dry-run: show what would be removed
-#   git-clean-merged.sh --apply         # actually remove merged worktrees/branches
-#   git-clean-merged.sh --base <ref>    # override fallback base (default: origin/<default>)
-#   git-clean-merged.sh --force-dirty   # also remove worktrees with uncommitted changes
-#   git-clean-merged.sh --no-gh         # ignore GitHub; use the git-ancestor check only
-#   git-clean-merged.sh --help
+#   prune.sh                 # dry-run: show what would be removed
+#   prune.sh --apply         # actually remove merged worktrees/branches
+#   prune.sh --base <ref>    # override fallback base (default: origin/<default>)
+#   prune.sh --force-dirty   # also remove worktrees with uncommitted changes
+#   prune.sh --no-gh         # ignore GitHub; use the git-ancestor check only
+#   prune.sh --help
 #
 # A branch counts as MERGED when EITHER:
 #   1. GitHub reports its pull request as MERGED (via gh). This is keyed on the
