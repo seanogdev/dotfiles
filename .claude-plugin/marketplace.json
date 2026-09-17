@@ -1,0 +1,21 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "seanogdev",
+  "description": "Sean O'Grady's Claude Code plugins",
+  "owner": {
+    "name": "Sean O'Grady",
+    "email": "1761115+seanogdev@users.noreply.github.com",
+    "url": "https://github.com/seanogdev"
+  },
+  "plugins": [
+    {
+      "name": "seanog-skills",
+      "source": "./",
+      "description": "Sean's personal Claude Code skills",
+      "category": "productivity",
+      "author": {
+        "name": "Sean O'Grady"
+      }
+    }
+  ]
+}
