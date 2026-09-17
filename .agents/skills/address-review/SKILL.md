@@ -85,6 +85,8 @@ Read the votes before you cast any of your own. `gh` runs as the user's account,
 
 ## Applying, voting and replying
 
+Fix the cause, not the symptom. Suppressing a warning, skipping a test, loosening an assertion or special-casing the input the reviewer found is not a fix. Where the real fix is out of scope, decline the comment and say why, rather than landing a workaround and calling the point addressed.
+
 Make the fixes, commit them in small logical commits, and push to the PR branch **before** replying. The reply should point at code that is already on the PR. Read every identifier back from its source before it goes in a public reply: the shas from `git log`, a line number from the file as it now stands, an issue number from `gh`. Never quote one from memory. You have to correct a wrong one in public.
 
 Then build a plan and hand it to `apply.ts`, which lives beside this file:
@@ -204,7 +206,8 @@ Lead with a table, one row per piece of feedback, in query order:
 How to fill it in:
 
 - Link every row to its `url`, so the user can read the feedback without hunting for it. A local item has no url: label it `path:line` and leave it unlinked.
-- Use one of six outcomes and nothing else: Fixed, Declined, Out of scope, Asked, Outdated, Acknowledged. Acknowledged is for a thread that came back only to accept the last answer, so it is PR-only.
+- Use one of seven outcomes and nothing else: Fixed, Worked around, Declined, Out of scope, Asked, Outdated, Acknowledged. Acknowledged is for a thread that came back only to accept the last answer, so it is PR-only.
+- Fixed means the problem is gone. A change that hides the symptom is Worked around, and that row names the real fix.
 - Name the commit sha for every fix.
 - Keep each Change cell to one line.
 - Write the Change cell in the same simple technical English as the replies. The same cuts apply.
@@ -217,6 +220,7 @@ Then, under the table, the parts a table cannot hold. Add only what the table ca
 - Every comment the user voted up, or said out loud that they wanted, that you declined anyway, with the reason. This one goes first.
 - Every thread that came back from an earlier pass, and whether the reviewer's answer moved your call.
 - Anything you resolved on thin reasoning.
+- Every point you worked around rather than fixed, and what the real fix is.
 - Any comment you left unvoted, and any thread you left open.
 - Anything that needs the user's call.
 
