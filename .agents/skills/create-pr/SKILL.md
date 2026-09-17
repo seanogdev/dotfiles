@@ -48,9 +48,6 @@ Write for a reviewer who is about to read the diff. Give each bullet the one thi
 say, and stop there. Do not restate the diff, do not repeat the title, and do not explain code the
 reviewer can read.
 
-Describe the state the branch is in. How the session reached it is not the reviewer's concern: no
-approach you abandoned, no order you worked in, no problem you hit and then solved.
-
 Call a workaround a workaround. Give it a bullet that names the real fix.
 
 **File table.** A collapsible table that covers every changed file, with a very short note on how
@@ -79,6 +76,20 @@ which wraps at the page width:
 - `src/api/client.ts`: added the retry wrapper
 ```
 
+**Describe the state the branch is in.** This rule owns every section of the body, the repo
+template's sections included, not the `Changes` bullets alone. How the session reached the current
+state is not the reviewer's concern: no approach you abandoned, no order you worked in, no problem
+you hit and then solved, no round of review you answered. The reviewer reads the branch as it stands
+now.
+
+So no sentence in the body may refer to an earlier revision of the PR itself. "An earlier revision
+moved the lead to the observer's margin", "the first answer was yes", "two things the previous
+revisions asserted turned out to be false", "no performance number on this revision". Cut all of
+it. Where a superseded claim taught you something the reviewer still needs, state that thing as a
+fact about the current code. Where it did not, it goes.
+
+A `Revision history` section is the same mistake inside a `<details>` block. Do not write one.
+
 **Collapse the bulk.** Anything the reviewer needs on hand but not on screen goes in a `<details>`
 block with a summary line that says what is inside. That covers review findings, a log excerpt, a
 benchmark run, a long list. The file table above is the pattern. The open part of the body stays
@@ -101,7 +112,14 @@ a non-native English speaker and a non-technical reader can follow.
 Push the branch. Then check for an open PR on it with `gh pr view`.
 
 - If no PR exists, create it with `gh pr create`.
-- If a PR exists, merge into the body it already has, then write it back with `pr-body.sh` below.
+- If a PR exists, write the body again from scratch under step 5, then write it back with
+  `pr-body.sh` below.
+
+**Rebuild the body, never append to it.** Read the current body first, for the content the next
+section says to keep and for anything it tells you about the branch. Then write the body the diff
+asks for today. Do not edit the body line by line, and do not add a paragraph that answers the last
+round of review. A body that is patched each round grows, contradicts itself, and keeps claims the
+code has moved past.
 
 Open the PR ready for review. Pass `--draft` only when the user asks for a draft, or when the work
 is unfinished.
