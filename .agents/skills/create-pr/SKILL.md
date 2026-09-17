@@ -39,13 +39,12 @@ Look for a repository template first: `.github/pull_request_template.md`,
 `.github/PULL_REQUEST_TEMPLATE.md`, or a file in `.github/PULL_REQUEST_TEMPLATE/`. If one exists,
 fill it in. Fit the two sections below into it. Do not replace it.
 
-**Changes.** A top level bullet list that summarises the PR. Say what changed and why it matters.
-Keep the list to the fewest bullets that cover the PR, one line each. One bullet is right when one
-thing changed, so do not pad the list out to look thorough.
+**Changes.** A top level bullet list that summarises the PR. Four bullets at most, 20 words each at
+most. One bullet is right when one thing changed, so do not pad the list out to look thorough.
 
-Write for a reviewer who is about to read the diff. Give them what the diff does not say: the
-reason, the tradeoff, the thing that looks wrong and is not. Do not restate the diff line by line,
-do not repeat the title, and do not explain code the reviewer can read.
+Write for a reviewer who is about to read the diff. Give each bullet the one thing the diff does not
+say, and stop there. Do not restate the diff, do not repeat the title, and do not explain code the
+reviewer can read.
 
 Call a workaround a workaround. Give it a bullet that names the real fix.
 
