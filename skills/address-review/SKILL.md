@@ -2,7 +2,6 @@
 name: address-review
 description: Take every comment in a code review to a conclusion, on a GitHub PR or on a local review. Use when a review lands and the user says "address the review", "fix the review comments", "respond to the review", "handle this review", "work through the feedback in review.md", or points at review feedback to act on.
 argument-hint: "[PR number, url or branch, or a path to a review file]"
-user-invocable: true
 ---
 
 # Address review
@@ -24,10 +23,10 @@ Route the invocation like this:
 - Otherwise it is the PR.
 - If the user names both, read both. Run each under its own rules. Then give one summary that covers the lot.
 
-Then read the file for that mode before you do anything else:
+Then read the file for that mode before you do anything else. Each path in this skill is relative to the directory that holds this file. Expand it to a full path before you use it.
 
-- A PR: `~/.claude/skills/address-review/references/github.md`.
-- Local: `~/.claude/skills/address-review/references/local.md`.
+- A PR: `references/github.md`.
+- Local: `references/local.md`.
 
 Read it before the first query and before the first fix. The mode file holds the rules this file does not repeat.
 

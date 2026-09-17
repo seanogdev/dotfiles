@@ -5,6 +5,9 @@ description: Open or update a GitHub pull request in Sean's format — branch, f
 
 # Create a pull request
 
+Each path in this skill is relative to the directory that holds this file. Expand it to a full path
+before you run a command.
+
 ## 1. Check the branch
 
 If the current branch is `main` or `master`, create a branch first. Never push to `main`.
@@ -145,8 +148,8 @@ is unfinished.
 once it is gone.
 
 ```bash
-~/.claude/skills/create-pr/pr-body.sh save > /tmp/pr-body-before.md
-~/.claude/skills/create-pr/pr-body.sh edit /tmp/pr-body-new.md
+./pr-body.sh save > /tmp/pr-body-before.md
+./pr-body.sh edit /tmp/pr-body-new.md
 ```
 
 `edit` refuses to write a body that drops an attachment the author added. It also strips the
@@ -169,7 +172,7 @@ nothing else, so a caption or a heading you drop around one still gets through.
 ## 7. Attach screenshots the session already produced
 
 Do this only when the session already has screenshots on disk. You do not capture screenshots in
-this step. Read `~/.claude/skills/create-pr/references/screenshots.md`.
+this step. Read `./references/screenshots.md`.
 
 ## 8. Apply labels
 
