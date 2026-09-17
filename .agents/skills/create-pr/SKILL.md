@@ -82,6 +82,10 @@ state is not the reviewer's concern: no approach you abandoned, no order you wor
 you hit and then solved, no round of review you answered. The reviewer reads the branch as it stands
 now.
 
+Where the branch stands on another branch, that is current state and it stays: which PR this one
+follows, which issue it closes, what is still open elsewhere. So is the behaviour of the code before
+this PR, where the reviewer needs it to read the change.
+
 So no sentence in the body may refer to an earlier revision of the PR itself. "An earlier revision
 moved the lead to the observer's margin", "the first answer was yes", "two things the previous
 revisions asserted turned out to be false", "no performance number on this revision". Cut all of
@@ -144,6 +148,9 @@ Keep everything the skill does not own:
   `https://github.com/user-attachments/...` links.
 - The whole `## Screenshots` section, verbatim.
 - Any heading the author added that is not `Changes`, the file table, or part of the repo template.
+- Every reference the diff cannot regenerate: the task or issue link a template section holds, a
+  linked issue number, a `Follow-up to #NNNNN` line. A rebuilt body loses these unless you carry
+  them across by hand. Read them out of the saved body before you write the new one.
 
 Every image keeps its heading, its caption and its position. The guard compares attachment urls and
 nothing else, so a caption or a heading you drop around one still gets through.
