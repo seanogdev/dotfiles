@@ -16,8 +16,9 @@ Follow the repo's own branch naming rules. Some repos cap the length, and some t
 
 Run the repo's format, lint and unit test commands. Fix what they report before you continue.
 
-Never silence a check to make it pass: no `eslint-disable`, no `.skip`, no loosened assertion, no
-lowered threshold. If you cannot fix what a check reports, stop and tell the user.
+Do not silence a check to make it pass. An `eslint-disable`, a `.skip` or a loosened assertion needs
+a comment saying why the rule is wrong here, and it goes in the PR body. If you cannot fix what a
+check reports, stop and tell the user.
 
 Do not run the reviewer agents or browser testing here. State plainly that they did not run.
 
