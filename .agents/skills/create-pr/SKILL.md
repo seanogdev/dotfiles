@@ -86,7 +86,7 @@ one.
 Leave a `## Screenshots` heading. Leave it empty unless step 7 fills it, and never write placeholder
 text into it.
 
-Use complete sentences and proper punctuation. Do not use em dashes.
+Punctuate properly. A bullet or a table cell can be a fragment. Do not use em dashes.
 
 Obey any PR description rule the repo's own config sets. A repo may ask for plain language that both
 a non-native English speaker and a non-technical reader can follow.
