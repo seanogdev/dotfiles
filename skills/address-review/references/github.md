@@ -72,8 +72,6 @@ Then build a plan and hand it to `apply.ts`, which lives in the skill directory:
 
 It sends every reply at once. Then it sends every vote and resolve at once. Two rounds rather than one pass per item, so a vote never lands on a thread ahead of the reply that explains it. Every reply posts publicly the moment it is sent. If a reply fails, that item's vote and resolve are skipped. No thread ends up voted and closed with nothing said in it. Running the same plan twice is safe. A reply already on the thread in your name is reported as `duplicate` and is not sent again.
 
-Read `./references/plan.md` for the plan format. Read it when you build the plan, not before.
-
 Resolve every thread you replied to, the pushed-back ones included. A thread that has come back gets `"resolve": true` again. Only one thread stays open, the case named in **Votes the user left**: the user voted a comment down and the claim holds up anyway. You cannot resolve a conversation comment, so the reply and the vote close it.
 
 One object per piece of feedback:
