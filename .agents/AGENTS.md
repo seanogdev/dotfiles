@@ -2,4 +2,4 @@
 - Break work into small, logical commits rather than one large batch.
 - `fish` is the default shell. Use `bash` for scripts and commands that need it.
 - When you remove something, remove it. Do not leave a note in its place that says it is gone, or that tells the reader not to do it. This applies everywhere. The reader never saw the old version, so the note is noise.
-- A workaround is never a fix. If you suppress a symptom, silence a check, or route around a problem instead of solving it, say so in those words and name the real fix. Do not report it as done.
+- A workaround is never a fix. If you suppress a symptom, silence a check, or route around a problem, label it a workaround and name the real fix.

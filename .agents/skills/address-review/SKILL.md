@@ -85,7 +85,7 @@ Read the votes before you cast any of your own. `gh` runs as the user's account,
 
 ## Applying, voting and replying
 
-Fix the cause, not the symptom. Suppressing a warning, skipping a test, loosening an assertion or special-casing the input the reviewer found is not a fix. Where the real fix is out of scope, decline the comment and say why, rather than landing a workaround and calling the point addressed.
+Fix the cause, not the symptom. Suppressing a warning, skipping a test, loosening an assertion or special-casing the reviewer's input is not a fix. Where the real fix is out of scope, decline the comment.
 
 Make the fixes, commit them in small logical commits, and push to the PR branch **before** replying. The reply should point at code that is already on the PR. Read every identifier back from its source before it goes in a public reply: the shas from `git log`, a line number from the file as it now stands, an issue number from `gh`. Never quote one from memory. You have to correct a wrong one in public.
 
