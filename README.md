@@ -82,7 +82,12 @@ later.
 ```sh
 gh skill preview seanogdev/dotfiles skills/create-pr
 gh skill install seanogdev/dotfiles skills/create-pr
+gh skill install seanogdev/dotfiles                             # all six
+gh skill install seanogdev/dotfiles create-pr --pin v1.0.0      # pinned to a release
 ```
+
+The repo is published to the registry under the `agent-skills` topic, so `gh skill search create-pr`
+finds it too.
 
 On this machine use the `skills-install` wrapper instead. It installs into `~/.agents/skills/` and
 symlinks into `~/.claude/skills/`:
