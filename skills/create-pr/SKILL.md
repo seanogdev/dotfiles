@@ -1,6 +1,7 @@
 ---
 name: create-pr
 description: Open or update a GitHub pull request in Sean's format — branch, fast checks, changeset, title, description and labels. Use when opening a PR, running `gh pr create`, or when the user asks to create, open, draft, write or update a PR or a PR description.
+license: MIT
 ---
 
 # Create a pull request

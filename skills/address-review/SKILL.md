@@ -1,6 +1,7 @@
 ---
 name: address-review
 description: Take every comment in a code review to a conclusion, on a GitHub PR or on a local review. Use when a review lands and the user says "address the review", "fix the review comments", "respond to the review", "handle this review", "work through the feedback in review.md", or points at review feedback to act on.
+license: MIT
 argument-hint: "[PR number, url or branch, or a path to a review file]"
 ---
 
