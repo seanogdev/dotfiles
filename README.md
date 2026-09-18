@@ -40,6 +40,57 @@ Two things are not in the repo and need doing by hand afterwards:
   `~/Library/Mobile Documents/com~apple~CloudDocs/Code/dotfiles/.claude/skills/`. Symlink them.
 - The managed skills from `.Skillfile`. Run `skills-restore`.
 
+## Skills
+
+The personal skills live at `skills/<name>/SKILL.md` in this repo:
+`address-review`, `create-pr`, `manage-skills`, `manage-stow`, `prune-merged-branches`,
+`quote-clip`.
+
+Pick whichever installer suits the machine. All three read the same `skills/` directory.
+
+### Claude Code plugin
+
+The repo root is a plugin root and its own marketplace:
+
+```
+/plugin marketplace add seanogdev/dotfiles
+/plugin install seanog-skills@seanogdev
+```
+
+Not on this machine. Here the skills already arrive through stow and the symlinks, so the plugin
+would load every skill twice.
+
+### npx skills
+
+The [agent-skills CLI](https://github.com/vercel-labs/skills) works with any agent, not just Claude
+Code:
+
+```sh
+npx skills add seanogdev/dotfiles                 # pick from the six interactively
+npx skills add seanogdev/dotfiles -s create-pr    # just one
+npx skills add seanogdev/dotfiles --all -g        # all six, user-level
+npx skills add seanogdev/dotfiles -l              # list them without installing
+```
+
+`-g` installs user-level, the default is the current project. `npx skills update` upgrades them
+later.
+
+### gh skill
+
+`gh skill` (GitHub CLI, preview) takes the repo path, so each skill is `skills/<name>`:
+
+```sh
+gh skill preview seanogdev/dotfiles skills/create-pr
+gh skill install seanogdev/dotfiles skills/create-pr
+```
+
+On this machine use the `skills-install` wrapper instead. It installs into `~/.agents/skills/` and
+symlinks into `~/.claude/skills/`:
+
+```fish
+skills-install seanogdev/dotfiles skills/create-pr
+```
+
 ## Pulling changes onto a machine that already has the repo
 
 ```fish
