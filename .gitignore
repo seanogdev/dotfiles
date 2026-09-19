@@ -1,3 +1,4 @@
 *.env
 fish_variables
 .DS_Store
+evals/.runs/
