@@ -15,14 +15,33 @@
 #   _scripts/optimize-skill-descriptions.sh <skill-name>       # one skill
 #   _scripts/optimize-skill-descriptions.sh --eval-only <skill-name>  # score, do not revise
 #
-# Requires: claude, jq, python3.
+# Requires: claude, jq, python3, bc.
 #
-# COST AND SAFETY NOTE: each query is a real, billed `claude -p` call. A run
-# stops the moment the agent picks a tool, so it never lets the skill's own
-# Bash/Edit steps execute for real -- but it still runs the full routing
-# turn, at RUNS x query-count calls per set, x up to MAX_ITERATIONS x 2 sets
-# (train, validation) per skill. Start small: RUNS=1 on one skill, look at
-# the cost, then scale up.
+# COST AND SAFETY NOTE: each query is a real, billed `claude -p` call.
+#
+# Safety: do not trust --restricted, --disallowedTools, or
+# --permission-prompts none for this. --restricted and --disallowedTools
+# remove Bash from the tool list the model sees, which changes its own
+# routing decision (it gives up before ever considering the skill,
+# instead of reaching for it) -- that is a different test, not a safer
+# one. --permission-prompts none was tested live in this repo and did NOT
+# block Bash: it ran real commands (read-only, as it happened) against
+# the real $HOME and the real dotfiles repo. The only mechanism that
+# actually worked: stream the run and kill the subprocess the instant it
+# announces a tool call that could have a real side effect (Bash, Edit,
+# Write, NotebookEdit, WebFetch, Task) -- before Claude Code executes it,
+# not after. Read-only tools (Read, Grep, Glob, ToolSearch, WebSearch)
+# are let through so a skill that only triggers after some legitimate
+# exploration is not miscounted as a miss. This is still a race (the kill
+# signal and the tool's own execution both take real time), not a
+# guarantee -- treat every run as capable of doing something real if a
+# query happens to provoke a very fast Bash/Edit/Write call.
+#
+# Cost: RUNS x query-count calls per set, x up to MAX_ITERATIONS x 2 sets
+# (train, validation) per skill. Start small: RUNS=1 on one skill, look
+# at the cost, then scale up. MAX_TOTAL_COST_USD is a hard stop, but it
+# only counts calls that finished naturally -- a call killed early for
+# using a risky tool is not reflected in the running total.
 
 set -euo pipefail
 cd "$(dirname "$0")/.."
@@ -32,6 +51,10 @@ RUNS_DIR="evals/.runs"
 RUNS="${RUNS:-3}"
 MAX_ITERATIONS="${MAX_ITERATIONS:-5}"
 THRESHOLD="${THRESHOLD:-0.5}"
+MAX_COST_PER_QUERY_USD="${MAX_COST_PER_QUERY_USD:-0.50}"
+MAX_TOTAL_COST_USD="${MAX_TOTAL_COST_USD:-5.00}"
+TOTAL_COST_USD=0
+SAFE_EVAL_TOOLS=" Read Grep Glob ToolSearch WebSearch "
 EVAL_ONLY=0
 
 log() { printf '  [%s] %s\n' "$1" "$2"; }
@@ -65,30 +88,57 @@ open(path, "w").write(head + sep + front + sep2 + body)
 PY
 }
 
-# Runs one query against the live skill set, stops the process the instant
-# the agent either calls the Skill tool or calls any other tool first --
-# that is the routing decision, and nothing after it needs to run.
+# Runs one query in a disposable cwd, streaming the response. Read-only
+# tools (SAFE_EVAL_TOOLS) are let through so exploration before a Skill
+# call is not miscounted as a miss. The instant any other tool is
+# announced (Bash, Edit, Write, NotebookEdit, WebFetch, Task, or Skill
+# itself), the subprocess is killed -- before that tool actually runs.
+# Adds this query's cost (only for calls that finished naturally; a
+# killed call reports no cost) to the running total and hard-stops the
+# whole script if MAX_TOTAL_COST_USD is exceeded.
 query_triggers_skill() {
   local skill="$1" query="$2"
-  local fifo triggered=1 pid line type tool matched_skill
+  local sandbox fifo pid line type tool matched_skill triggered=1 cost=0
+
+  sandbox=$(mktemp -d "${TMPDIR:-/tmp}/skill-eval-sandbox.XXXXXX")
   fifo=$(mktemp -u "${TMPDIR:-/tmp}/skill-eval-fifo.XXXXXX")
   mkfifo "$fifo"
-  claude -p "$query" --output-format stream-json --verbose >"$fifo" 2>/dev/null &
+  (cd "$sandbox" && claude -p "$query" \
+    --output-format stream-json --verbose \
+    --max-budget-usd "$MAX_COST_PER_QUERY_USD" \
+    >"$fifo" 2>/dev/null) &
   pid=$!
+
   while IFS= read -r line; do
     type=$(jq -r '.type // empty' <<<"$line" 2>/dev/null) || continue
+    if [[ "$type" == "result" ]]; then
+      cost=$(jq -r '.total_cost_usd // 0' <<<"$line" 2>/dev/null)
+      break
+    fi
     [[ "$type" == "assistant" ]] || continue
     tool=$(jq -r '.message.content[]? | select(.type=="tool_use") | .name' <<<"$line" 2>/dev/null | head -1)
     [[ -n "$tool" ]] || continue
     if [[ "$tool" == "Skill" ]]; then
       matched_skill=$(jq -r '.message.content[]? | select(.type=="tool_use") | .input.skill // empty' <<<"$line" 2>/dev/null)
       [[ "$matched_skill" == "$skill" ]] && triggered=0
+      break
     fi
-    break
+    if [[ "$SAFE_EVAL_TOOLS" != *" $tool "* ]]; then
+      break
+    fi
   done < "$fifo"
+
   kill "$pid" >/dev/null 2>&1 || true
   wait "$pid" 2>/dev/null || true
   rm -f "$fifo"
+  rm -rf "$sandbox"
+
+  TOTAL_COST_USD=$(echo "${TOTAL_COST_USD:-0} + ${cost:-0}" | bc -l)
+  if (( $(echo "$TOTAL_COST_USD > $MAX_TOTAL_COST_USD" | bc -l) )); then
+    log "FAIL" "cost cap reached: spent \$$TOTAL_COST_USD of \$$MAX_TOTAL_COST_USD, stopping"
+    exit 1
+  fi
+
   return "$triggered"
 }
 
@@ -223,7 +273,10 @@ https://agentskills.io/skill-creation/optimizing-descriptions :
   with something else.
 - Do not add specific keywords lifted from the failing queries below --
   that overfits. Find the general pattern they represent instead.
-- Stay under 1024 characters. One paragraph.
+- 1024 characters is a hard limit the spec enforces, not a target. Keep it
+  as short as covers the scope. Prefer one or two sentences over a
+  paragraph; only go longer if the boundary against a neighboring skill
+  genuinely needs the extra words.
 - Output ONLY the new description text. No quotes, no preamble, no markdown.
 
 Full skill file for context:
