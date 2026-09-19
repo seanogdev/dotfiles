@@ -1,6 +1,6 @@
 ---
 name: manage-stow
-description: Re-symlink this dotfiles repo into $HOME with GNU Stow after adding or modifying files, and handle stow gotchas (--adopt, .stow-local-ignore). Use when the user adds or edits a dotfile and needs it linked into $HOME, or asks why a file was moved/adopted into the repo, or wants to exclude a file from symlinking.
+description: Symlink new or changed dotfiles into $HOME with GNU Stow, and resolve stow gotchas (--adopt, .stow-local-ignore). Use when the user adds or edits a file in this repo and needs it linked into $HOME, asks why a file got moved or adopted into the repo, wants a file excluded from symlinking, or says a dotfile change "isn't showing up" — even without naming stow.
 license: MIT
 ---
 
