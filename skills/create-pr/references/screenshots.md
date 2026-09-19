@@ -1,7 +1,7 @@
 # Attach screenshots
 
-Read this file when the session already has screenshots on disk and they go on the PR. You do not
-capture screenshots in this step. The step numbers below point at `SKILL.md`.
+Read this file when the session already has screenshots on disk and they go on the PR. The step
+numbers below point at `SKILL.md`.
 
 GitHub has no API, CLI or MCP route for uploading an attachment, so the file has to go through a
 browser. Hand that to a sub-agent with the `agent-browser` skill.
