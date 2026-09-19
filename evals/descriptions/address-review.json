@@ -1,0 +1,14 @@
+[
+  { "query": "can you go through the review comments on this PR and fix them", "should_trigger": true },
+  { "query": "theres feedback on PR 482, work through it", "should_trigger": true },
+  { "query": "my reviewer left a bunch of comments on review.md, handle them", "should_trigger": true },
+  { "query": "someone flagged issues in code review, get them all sorted please", "should_trigger": true },
+  { "query": "respond to the open comments on this pull request", "should_trigger": true },
+  { "query": "the reviewer keeps going back and forth, just take every comment to a conclusion", "should_trigger": true },
+  { "query": "open a PR for this branch with a good description", "should_trigger": false },
+  { "query": "write me a description for this pull request", "should_trigger": false },
+  { "query": "review my code and tell me what's wrong before I commit", "should_trigger": false },
+  { "query": "check this diff against our coding standards", "should_trigger": false },
+  { "query": "can you leave a review on this PR for a teammate", "should_trigger": false },
+  { "query": "merge this pull request once CI is green", "should_trigger": false }
+]

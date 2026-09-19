@@ -1,0 +1,14 @@
+[
+  { "query": "install that skill from this GitHub repo", "should_trigger": true },
+  { "query": "check if there's an update for the skills I've got installed", "should_trigger": true },
+  { "query": "back up my skill list before I wipe this machine", "should_trigger": true },
+  { "query": "set this laptop up with my usual skills", "should_trigger": true },
+  { "query": "is there a newer version of that thing I installed last month", "should_trigger": true },
+  { "query": "restore my skills on this new machine from the backup", "should_trigger": true },
+  { "query": "edit the create-pr skill to add a new step", "should_trigger": false },
+  { "query": "write a new skill for syncing podcasts", "should_trigger": false },
+  { "query": "update my Homebrew packages", "should_trigger": false },
+  { "query": "install this npm package globally", "should_trigger": false },
+  { "query": "what does gh pr create do", "should_trigger": false },
+  { "query": "improve the description on the quote-clip skill in this repo", "should_trigger": false }
+]

@@ -1,0 +1,14 @@
+[
+  { "query": "open a PR for this branch", "should_trigger": true },
+  { "query": "can you create a pull request with a good description", "should_trigger": true },
+  { "query": "run gh pr create for me", "should_trigger": true },
+  { "query": "draft a PR description for these changes", "should_trigger": true },
+  { "query": "I finished this feature, get a PR up", "should_trigger": true },
+  { "query": "update the PR title and description now that I added the tests", "should_trigger": true },
+  { "query": "address the comments left on PR 12", "should_trigger": false },
+  { "query": "reply to this review thread on GitHub", "should_trigger": false },
+  { "query": "write a blog post announcing this feature", "should_trigger": false },
+  { "query": "merge this PR once CI passes", "should_trigger": false },
+  { "query": "leave a comment on this GitHub issue explaining the fix", "should_trigger": false },
+  { "query": "resolve the review comments the reviewer left yesterday", "should_trigger": false }
+]
