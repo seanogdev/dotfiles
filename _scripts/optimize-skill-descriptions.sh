@@ -134,11 +134,20 @@ split_queries() {
   ' "$queries_file" > "$val_out"
 }
 
-pass_rate() { jq '[.[] | select(.pass)] | length / (length + ([.[] | select(.pass|not)] | length))' <(cat) 2>/dev/null; }
+pass_rate() {
+  jq '
+    (length) as $total
+    | ([.[] | select(.pass)] | length) as $passed
+    | if $total == 0 then 0 else $passed / $total end
+  ' 2>/dev/null
+}
 
 optimize_skill() {
-  local name="$1" skill_md="skills/$name/SKILL.md" queries_file="$EVAL_DIR/$name.json"
-  local run_dir="$RUNS_DIR/$name" train_file val_file
+  local name="$1"
+  local skill_md="skills/$name/SKILL.md"
+  local queries_file="$EVAL_DIR/$name.json"
+  local run_dir="$RUNS_DIR/$name"
+  local train_file val_file
 
   if [[ ! -f "$skill_md" ]]; then
     log "FAIL" "$name: no skills/$name/SKILL.md"
