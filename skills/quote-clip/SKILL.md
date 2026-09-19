@@ -8,9 +8,8 @@ compatibility: Requires macOS (pbcopy)
 1. Use your last chat message in this conversation.
 2. Use only the prose of that message. Copy it word for word.
 3. Do not use tool output. Do not use system reminders.
-4. Change every markdown heading (`#` through `######`) to bold (`**text**`).
-5. Put `> ` in front of every line.
-6. Put a bare `>` on each blank line.
-7. Copy the result to the clipboard with `pbcopy`. Use a heredoc. Do not retype the text by hand.
-8. Do not print the result in the chat.
-9. After you copy the text, tell the user.
+4. Pipe that text into `scripts/quote.sh`. Use a heredoc. Do not retype the text by hand.
+5. The script flattens headings to bold, prefixes each line with `> `, and copies the result to the
+   clipboard.
+6. Do not print the result in the chat.
+7. After you copy the text, tell the user.
