@@ -42,59 +42,15 @@ Two things are not in the repo and need doing by hand afterwards:
 
 ## Skills
 
-The personal skills live at `skills/<name>/SKILL.md` in this repo:
-`address-review`, `create-pr`, `manage-skills`, `manage-stow`, `prune-merged-branches`,
-`quote-clip`.
+Two personal skills live at `skills/<name>/SKILL.md` in this repo: `manage-skills` and
+`manage-stow`. Both are dotfiles-specific tooling — they reference this repo's own fish functions
+and layout — so they stay here rather than in a general-purpose skills repo. `.agents/skills/<name>`
+and `.claude/skills/<name>` are symlinks to `../../skills/<name>`, stowed into `$HOME`.
 
-Pick whichever installer suits the machine. All three read the same `skills/` directory.
-
-### Claude Code plugin
-
-The repo root is a plugin root and its own marketplace:
-
-```
-/plugin marketplace add seanogdev/dotfiles
-/plugin install seanog-skills@seanogdev
-```
-
-Not on this machine. Here the skills already arrive through stow and the symlinks, so the plugin
-would load every skill twice.
-
-### npx skills
-
-The [agent-skills CLI](https://github.com/vercel-labs/skills) works with any agent, not just Claude
-Code:
-
-```sh
-npx skills add seanogdev/dotfiles                 # pick from the six interactively
-npx skills add seanogdev/dotfiles -s create-pr    # just one
-npx skills add seanogdev/dotfiles --all -g        # all six, user-level
-npx skills add seanogdev/dotfiles -l              # list them without installing
-```
-
-`-g` installs user-level, the default is the current project. `npx skills update` upgrades them
-later.
-
-### gh skill
-
-`gh skill` (GitHub CLI, preview) takes the repo path, so each skill is `skills/<name>`:
-
-```sh
-gh skill preview seanogdev/dotfiles skills/create-pr
-gh skill install seanogdev/dotfiles skills/create-pr
-gh skill install seanogdev/dotfiles                             # all six
-gh skill install seanogdev/dotfiles create-pr --pin v1.0.0      # pinned to a release
-```
-
-The repo is published to the registry under the `agent-skills` topic, so `gh skill search create-pr`
-finds it too.
-
-On this machine use the `skills-install` wrapper instead. It installs into `~/.agents/skills/` and
-symlinks into `~/.claude/skills/`:
-
-```fish
-skills-install seanogdev/dotfiles skills/create-pr
-```
+The rest of the personal skills (`address-review`, `create-pr`, `prune-merged-branches`,
+`quote-clip`) live in [seanogdev/skills](https://github.com/seanogdev/skills). On this machine
+they're tracked in `.Skillfile` and installed via `gh skill`, the same as any other third-party
+skill — see the `manage-skills` skill.
 
 ## Pulling changes onto a machine that already has the repo
 

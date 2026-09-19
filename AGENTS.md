@@ -35,18 +35,14 @@ brew bundle install --global  # Install from .Brewfile
 - Fonts synced from `$HOME/Library/Mobile Documents/com~apple~CloudDocs/Code/dotfiles/sync/fonts/`
 - Sensitive Fish functions are mirrored from iCloud to `$ICLOUD_MIRROR_DIR` (`~/.local/share/dotfiles-icloud-mirror`, outside the iCloud container), then stowed from there. `stow-icloud` pulls iCloud into the mirror; `icloud-push` pushes local mirror edits back to iCloud for other machines. This keeps `~/.config/fish/conf.d/keys.fish` and friends symlinked to a stable local path, not a live path inside `Mobile Documents`, so macOS stops re-prompting for permission on every iCloud sync event.
 
-### Skills and the plugin
+### Skills
 
-The personal skills live at `skills/<name>/SKILL.md` in the repo root. This is the layout that Claude Code plugins, `gh skill` and the Vercel skills packages all read.
-
-The repo root is also the plugin root. `.claude-plugin/plugin.json` declares the plugin `seanog-skills`. `.claude-plugin/marketplace.json` makes the repo its own marketplace. Install the set on another machine:
-
-```
-/plugin marketplace add seanogdev/dotfiles
-/plugin install seanog-skills@seanogdev
-```
-
-On this machine the skills load through stow and the symlinks, not through the plugin. Do not install the plugin here. It would give every skill twice.
+Two personal skills live at `skills/<name>/SKILL.md` in the repo root: `manage-skills` and
+`manage-stow`. Both are dotfiles-specific — they reference this repo's own fish functions, stow
+setup, and layout — so they stay here rather than in [seanogdev/skills](https://github.com/seanogdev/skills),
+which holds the general-purpose ones (`address-review`, `create-pr`, `prune-merged-branches`,
+`quote-clip`). Those install on this machine via `gh skill` and `.Skillfile`, like any other
+third-party skill — see `manage-skills`.
 
 ## Setup: Claude Code Status Line
 
@@ -63,5 +59,5 @@ update-mac
 ## Gotchas
 
 - **`.agents`/`AGENTS.md` is canonical for instructions, `.claude`/`CLAUDE.md` are symlinks to it**: root `CLAUDE.md -> AGENTS.md`, `.claude/CLAUDE.md -> ../.agents/AGENTS.md`. Stow projects both trees to `~/.agents/` and `~/.claude/`. Add new content under `.agents/`, then symlink it from `.claude/`.
-- **Skills are canonical at the repo root**: `skills/<name>/SKILL.md`. Both `.agents/skills/<name>` and `.claude/skills/<name>` are symlinks to `../../skills/<name>`, one hop each. Add a new skill under `skills/`, then symlink it from both trees.
-- **Stow does not project `skills/` or `.claude-plugin/`**. Both are repo layout for the plugin. Neither belongs in `$HOME`. `.stow-local-ignore` excludes them. The skills still reach `~/.claude/skills/` through the symlinks in `.claude/skills/`.
+- **The two personal skills are canonical at the repo root**: `skills/<name>/SKILL.md`. Both `.agents/skills/<name>` and `.claude/skills/<name>` are symlinks to `../../skills/<name>`, one hop each. Add a new dotfiles-specific skill under `skills/`, then symlink it from both trees. A general-purpose skill belongs in [seanogdev/skills](https://github.com/seanogdev/skills) instead.
+- **Stow does not project `skills/`**. It is repo layout, not something that belongs in `$HOME` as a whole directory. `.stow-local-ignore` excludes it. The two skills still reach `~/.claude/skills/` through the symlinks in `.claude/skills/`.
