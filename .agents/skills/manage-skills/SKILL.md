@@ -1,12 +1,12 @@
 ---
 name: manage-skills
-description: Install, update, back up, and restore GitHub-hosted Claude Code skills for this dotfiles setup — third-party skills and Sean's own seanogdev/skills alike. Use when the user wants to add a skill from a GitHub repo, keep installed skills current, back up or restore the skill inventory across machines, or asks about `gh skill`, `.Skillfile`, or the skills-install/backup/restore/update fish functions — even when they don't say "skill," e.g. "set this laptop up with my usual skills" or "is there an update for that thing I installed." Does not cover editing the two dotfiles-specific skills under `skills/<name>` in this repo (`manage-skills`, `manage-stow`).
+description: Install, update, back up, and restore GitHub-hosted Claude Code skills for this dotfiles setup — third-party skills and Sean's own seanogdev/skills alike. Use when the user wants to add a skill from a GitHub repo, keep installed skills current, back up or restore the skill inventory across machines, or asks about `gh skill`, `.Skillfile`, or the skills-install/backup/restore/update fish functions — even when they don't say "skill," e.g. "set this laptop up with my usual skills" or "is there an update for that thing I installed." Does not cover editing the two dotfiles-specific skills under `.agents/skills/<name>` in this repo (`manage-skills`, `manage-stow`).
 license: MIT
 ---
 
 Manage GitHub-hosted skills with `gh skill` (GitHub CLI, preview). Install each one to the canonical location `~/.agents/skills/`, the agentskills.io convention. Claude Code reads from `~/.claude/skills/`. Each managed skill there is a symlink into `~/.agents/skills/<name>`. This covers both third-party skills and Sean's own general-purpose skills in [seanogdev/skills](https://github.com/seanogdev/skills) (`address-review`, `create-pr`, `prune-merged-branches`, `quote-clip`) — they install the same way.
 
-Two skills are different: `manage-skills` and `manage-stow` are dotfiles-specific, so they live in this repo at `skills/<name>/SKILL.md` instead. `.agents/skills/<name>` and `.claude/skills/<name>` are symlinks to `../../skills/<name>`. Stow projects those symlinks into `$HOME`. `gh skill` does not manage them.
+Two skills are different: `manage-skills` and `manage-stow` are dotfiles-specific, so they live in this repo as real files at `.agents/skills/<name>/SKILL.md` instead of being installed by `gh skill`. `.claude/skills/<name>` is a symlink to `../../.agents/skills/<name>`. Stow projects both into `$HOME`.
 
 ```fish
 skills-install <owner/repo> <skill-path>

@@ -37,7 +37,7 @@ brew bundle install --global  # Install from .Brewfile
 
 ### Skills
 
-Two dotfiles-specific skills live at `skills/<name>/SKILL.md` in the repo root: `manage-skills` and
+Two dotfiles-specific skills live at `.agents/skills/<name>/SKILL.md`: `manage-skills` and
 `manage-stow`. General-purpose skills live in [seanogdev/skills](https://github.com/seanogdev/skills)
 instead.
 
@@ -56,5 +56,4 @@ update-mac
 ## Gotchas
 
 - **`.agents`/`AGENTS.md` is canonical for instructions, `.claude`/`CLAUDE.md` are symlinks to it**: root `CLAUDE.md -> AGENTS.md`, `.claude/CLAUDE.md -> ../.agents/AGENTS.md`. Stow projects both trees to `~/.agents/` and `~/.claude/`. Add new content under `.agents/`, then symlink it from `.claude/`.
-- **The two personal skills are canonical at the repo root**: `skills/<name>/SKILL.md`. Both `.agents/skills/<name>` and `.claude/skills/<name>` are symlinks to `../../skills/<name>`, one hop each.
-- **Stow does not project `skills/`**. `.stow-local-ignore` excludes it; the symlinks in `.agents/skills/` and `.claude/skills/` carry it instead.
+- **The two personal skills are canonical at `.agents/skills/<name>/SKILL.md`**, the agentskills.io convention. `.claude/skills/<name>` is a symlink to `../../.agents/skills/<name>`, matching how `gh skill`-managed skills are laid out.

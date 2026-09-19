@@ -42,10 +42,10 @@ Two things are not in the repo and need doing by hand afterwards:
 
 ## Skills
 
-Two personal skills live at `skills/<name>/SKILL.md` in this repo: `manage-skills` and
+Two personal skills live at `.agents/skills/<name>/SKILL.md` in this repo: `manage-skills` and
 `manage-stow`. Both are dotfiles-specific tooling — they reference this repo's own fish functions
-and layout — so they stay here rather than in a general-purpose skills repo. `.agents/skills/<name>`
-and `.claude/skills/<name>` are symlinks to `../../skills/<name>`, stowed into `$HOME`.
+and layout — so they stay here rather than in a general-purpose skills repo. `.claude/skills/<name>`
+is a symlink to `../../.agents/skills/<name>`, stowed into `$HOME`.
 
 The rest of the personal skills (`address-review`, `create-pr`, `prune-merged-branches`,
 `quote-clip`) live in [seanogdev/skills](https://github.com/seanogdev/skills). On this machine
