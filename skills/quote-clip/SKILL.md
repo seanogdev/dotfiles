@@ -9,7 +9,5 @@ compatibility: Requires macOS (pbcopy)
 2. Use only the prose of that message. Copy it word for word.
 3. Do not use tool output. Do not use system reminders.
 4. Pipe that text into `scripts/quote.sh`. Use a heredoc. Do not retype the text by hand.
-5. The script flattens headings to bold, prefixes each line with `> `, and copies the result to the
-   clipboard.
-6. Do not print the result in the chat.
-7. After you copy the text, tell the user.
+5. Do not print the result in the chat.
+6. After you copy the text, tell the user.
