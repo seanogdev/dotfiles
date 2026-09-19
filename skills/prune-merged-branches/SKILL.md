@@ -4,7 +4,7 @@ description: Delete the local git branches that are merged, and remove their wor
 license: MIT
 argument-hint: "[--apply] [--base <ref>] [--force-dirty] [--no-gh]"
 disable-model-invocation: true
-allowed-tools: Bash(bash *prune-merged-branches/prune.sh*), Bash(git worktree list*), Bash(git branch*), Bash(git log*), Bash(gh pr view*)
+allowed-tools: Bash(bash *prune-merged-branches/scripts/prune.sh*), Bash(git worktree list*), Bash(git branch*), Bash(git log*), Bash(gh pr view*)
 ---
 
 # Prune merged branches
@@ -25,7 +25,7 @@ Arguments from the user: `$ARGUMENTS`
 1. Run the dry run:
 
    ```bash
-   bash prune.sh $ARGUMENTS
+   bash scripts/prune.sh $ARGUMENTS
    ```
 
    Without `--apply` the script changes nothing. It prints a plan only. It queries GitHub once per
@@ -44,7 +44,7 @@ Arguments from the user: `$ARGUMENTS`
 4. If the plan is not empty, and the user passed no `--apply`, ask the user to confirm. Then run:
 
    ```bash
-   bash prune.sh --apply $ARGUMENTS
+   bash scripts/prune.sh --apply $ARGUMENTS
    ```
 
    Worktree removal deletes `node_modules`. It takes a minute or more for each worktree. Run this
