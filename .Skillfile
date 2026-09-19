@@ -1,20 +1,11 @@
-antfu/skills skills/nuxt
 antfu/skills skills/pnpm
 antfu/skills skills/vue
-anthropics/claude-plugins-official plugins/claude-md-management/skills/claude-md-improver
 anthropics/skills skills/frontend-design
-anthropics/skills skills/skill-creator
-cloudflare/skills skills/cloudflare
 cloudflare/skills skills/wrangler
-joshuadavidthomas/agent-skills rust
-kingsidharth/skills tauri
 mattpocock/skills skills/engineering/code-review
 mattpocock/skills skills/engineering/domain-modeling
-mattpocock/skills skills/engineering/grill-with-docs
 mattpocock/skills skills/engineering/implement
-mattpocock/skills skills/engineering/improve-codebase-architecture
 mattpocock/skills skills/engineering/setup-matt-pocock-skills
-mattpocock/skills skills/engineering/tdd
 mattpocock/skills skills/engineering/to-spec
 mattpocock/skills skills/engineering/to-tickets
 mattpocock/skills skills/engineering/wayfinder
@@ -26,5 +17,3 @@ seanogdev/skills skills/create-pr
 seanogdev/skills skills/prune-merged-branches
 seanogdev/skills skills/quote-clip
 vercel-labs/agent-browser skills/agent-browser
-vercel/turborepo skills/turborepo
-wshobson/agents plugins/accessibility-compliance/skills/wcag-audit-patterns
