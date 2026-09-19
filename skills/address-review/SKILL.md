@@ -29,7 +29,7 @@ Then read the file for that mode before you do anything else. Each path in this 
 - A PR: `references/github.md`.
 - Local: `references/local.md`.
 
-Read it before the first query and before the first fix. The mode file holds the rules this file does not repeat.
+The mode file holds the rules this file does not repeat.
 
 ## Deciding
 
@@ -91,7 +91,7 @@ Save the detail for the user-facing summary at the end. That is where length is 
 
 **Bring the PR description up to date.** Read the PR body once the re-read above comes back with nothing left to act on. This covers a local pass too, wherever the branch has an open PR. With no PR there is nothing to do here. The fixes this pass made can change what the branch does, or make a claim in the body false. If either happened, write the body again from scratch under `create-pr` step 6, and post it with `pr-body.ts`. If the fixes changed nothing the body states, leave the body as it is. Do this once, here, not once per comment.
 
-Never patch the body round by round. Do not append a paragraph that answers this review. Do not add a revision history, in a `<details>` block or anywhere else. Do not leave a note beside a claim that says the claim no longer holds: remove the claim. A body that is edited line by line grows on every pass and ends up contradicting itself. The reviewer needs the branch as it stands, not the path it took to get there.
+Do not add a revision history, in a `<details>` block or anywhere else. Do not leave a note beside a claim that says the claim no longer holds: remove the claim. The reviewer needs the branch as it stands, not the path it took to get there.
 
 The summary goes to the user. It is the last thing the pass produces. Write it once the fixes are pushed and every thread is settled, so the shas and the outcomes in it are real.
 
