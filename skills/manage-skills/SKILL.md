@@ -1,6 +1,6 @@
 ---
 name: manage-skills
-description: Install, update, back up, and restore Claude Code skills for this dotfiles setup via `gh skill` and the skills-install/backup/restore/update fish functions. Use when the user wants to install a new skill, update skills, back up or restore the skill inventory, or asks about .Skillfile.
+description: Install, update, back up, and restore third-party Claude Code skills for this dotfiles setup. Use when the user wants to add a skill from a GitHub repo, keep installed skills current, back up or restore the skill inventory across machines, or asks about `gh skill`, `.Skillfile`, or the skills-install/backup/restore/update fish functions — even when they don't say "skill," e.g. "set this laptop up with my usual skills" or "is there an update for that thing I installed." Does not cover editing the personal skills under `skills/<name>` in this repo.
 license: MIT
 ---
 
