@@ -1,6 +1,5 @@
 README.md
 LICENSE
-_scripts
 .git
 .gitignore
 .DS_Store
@@ -9,5 +8,3 @@ sync.sh
 /AGENTS.md
 /CLAUDE.md
 /skills
-/.claude-plugin
-/evals
