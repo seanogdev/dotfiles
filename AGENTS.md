@@ -37,12 +37,9 @@ brew bundle install --global  # Install from .Brewfile
 
 ### Skills
 
-Two personal skills live at `skills/<name>/SKILL.md` in the repo root: `manage-skills` and
-`manage-stow`. Both are dotfiles-specific — they reference this repo's own fish functions, stow
-setup, and layout — so they stay here rather than in [seanogdev/skills](https://github.com/seanogdev/skills),
-which holds the general-purpose ones (`address-review`, `create-pr`, `prune-merged-branches`,
-`quote-clip`). Those install on this machine via `gh skill` and `.Skillfile`, like any other
-third-party skill — see `manage-skills`.
+Two dotfiles-specific skills live at `skills/<name>/SKILL.md` in the repo root: `manage-skills` and
+`manage-stow`. General-purpose skills live in [seanogdev/skills](https://github.com/seanogdev/skills)
+instead.
 
 ## Setup: Claude Code Status Line
 
@@ -59,5 +56,5 @@ update-mac
 ## Gotchas
 
 - **`.agents`/`AGENTS.md` is canonical for instructions, `.claude`/`CLAUDE.md` are symlinks to it**: root `CLAUDE.md -> AGENTS.md`, `.claude/CLAUDE.md -> ../.agents/AGENTS.md`. Stow projects both trees to `~/.agents/` and `~/.claude/`. Add new content under `.agents/`, then symlink it from `.claude/`.
-- **The two personal skills are canonical at the repo root**: `skills/<name>/SKILL.md`. Both `.agents/skills/<name>` and `.claude/skills/<name>` are symlinks to `../../skills/<name>`, one hop each. Add a new dotfiles-specific skill under `skills/`, then symlink it from both trees. A general-purpose skill belongs in [seanogdev/skills](https://github.com/seanogdev/skills) instead.
-- **Stow does not project `skills/`**. It is repo layout, not something that belongs in `$HOME` as a whole directory. `.stow-local-ignore` excludes it. The two skills still reach `~/.claude/skills/` through the symlinks in `.claude/skills/`.
+- **The two personal skills are canonical at the repo root**: `skills/<name>/SKILL.md`. Both `.agents/skills/<name>` and `.claude/skills/<name>` are symlinks to `../../skills/<name>`, one hop each.
+- **Stow does not project `skills/`**. `.stow-local-ignore` excludes it; the symlinks in `.agents/skills/` and `.claude/skills/` carry it instead.
