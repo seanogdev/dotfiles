@@ -1,6 +1,6 @@
 ---
 name: create-pr
-description: Open or update a GitHub pull request in Sean's format — branch, fast checks, changeset, title, description and labels. Use when opening a PR, running `gh pr create`, or when the user asks to create, open, draft, write or update a PR or a PR description. Not for responding to review comments on an existing PR — see address-review for that.
+description: Open or update a GitHub pull request in Sean's format — branch, fast checks, changeset, title, description and labels. Use when opening a PR, running `gh pr create`, or when the user asks to create, open, draft, write or update a PR or a PR description. Not for replying to or resolving comments left on an existing review.
 license: MIT
 ---
 
