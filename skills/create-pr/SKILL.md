@@ -132,7 +132,7 @@ Push the branch. Then check for an open PR on it with `gh pr view`.
 
 - If no PR exists, create it with `gh pr create`.
 - If a PR exists, write the body again from scratch under step 5. Then write it back with
-  `scripts/pr-body.sh` below.
+  `scripts/pr-body.ts` below.
 
 **Rebuild the body, never append to it.** Read the current body first, for the content the next
 section says to keep. Read it also for what it tells you about the branch. Then write the body the
@@ -149,8 +149,8 @@ is unfinished.
 once it is gone.
 
 ```bash
-./scripts/pr-body.sh save > /tmp/pr-body-before.md
-./scripts/pr-body.sh edit /tmp/pr-body-new.md
+./scripts/pr-body.ts save > /tmp/pr-body-before.md
+./scripts/pr-body.ts edit /tmp/pr-body-new.md
 ```
 
 `edit` refuses to write a body that drops an attachment the author added. It also strips the
