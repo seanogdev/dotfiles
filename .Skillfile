@@ -21,6 +21,10 @@ mattpocock/skills skills/engineering/wayfinder
 mattpocock/skills skills/productivity/grill-me
 mattpocock/skills skills/productivity/grilling
 mattpocock/skills skills/productivity/handoff
+seanogdev/skills skills/address-review
+seanogdev/skills skills/create-pr
+seanogdev/skills skills/prune-merged-branches
+seanogdev/skills skills/quote-clip
 vercel-labs/agent-browser skills/agent-browser
 vercel/turborepo skills/turborepo
 wshobson/agents plugins/accessibility-compliance/skills/wcag-audit-patterns
