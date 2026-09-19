@@ -1,4 +1,9 @@
 function stow-local --description "Stow dotfiles in the local directory"
+    if contains -- -h $argv; or contains -- --help $argv
+        echo "usage: stow-local"
+        echo "Stows \$DOTFILES_DIR into \$HOME and removes orphaned symlinks."
+        return 0
+    end
     if test -d $DOTFILES_DIR
         stow -d $DOTFILES_DIR -t $HOME --no-folding --adopt --stow .
         set broken (find $HOME -xtype l 2>/dev/null)

@@ -1,4 +1,9 @@
 function stow-icloud --description "Mirror iCloud dotfiles locally, then stow the mirror"
+    if contains -- -h $argv; or contains -- --help $argv
+        echo "usage: stow-icloud"
+        echo "Mirrors \$ICLOUD_DOTFILES_DIR into \$ICLOUD_MIRROR_DIR, then stows the mirror into \$HOME."
+        return 0
+    end
     if not test -d $ICLOUD_DOTFILES_DIR
         echo "iCloud dotfiles directory does not exist."
         return 1

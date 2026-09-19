@@ -1,4 +1,9 @@
 function skills-restore --description "Reinstall skills from \$HOME/.Skillfile into ~/.agents/skills/ and symlink into ~/.claude/skills/"
+    if contains -- -h $argv; or contains -- --help $argv
+        echo "usage: skills-restore"
+        echo "Reinstalls every skill listed in \$HOME/.Skillfile."
+        return 0
+    end
     set -l infile $HOME/.Skillfile
     set -l agents_dir $HOME/.agents/skills
     set -l claude_dir $HOME/.claude/skills

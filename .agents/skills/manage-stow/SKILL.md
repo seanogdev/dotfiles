@@ -4,14 +4,7 @@ description: Symlink new or changed dotfiles into $HOME with GNU Stow, and resol
 license: MIT
 ---
 
-**After you add or modify a file, symlink the dotfiles:**
-
-```fish
-stow-local
-
-# Or directly with stow
-stow -d $HOME/projects/personal/dotfiles -t $HOME --no-folding --adopt --stow .
-```
+After you add or modify a file, symlink the dotfiles with `stow-local` (or `stow-icloud`, `stow-all`). Each takes `--help`.
 
 ## Gotchas
 

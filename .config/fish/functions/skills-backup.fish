@@ -1,4 +1,9 @@
 function skills-backup --description "Back up installed user-scope skills to \$HOME/.Skillfile"
+    if contains -- -h $argv; or contains -- --help $argv
+        echo "usage: skills-backup"
+        echo "Writes every gh-skill-installed, user-scope skill to \$HOME/.Skillfile."
+        return 0
+    end
     set -l outfile $HOME/.Skillfile
     set -l jqexpr '.[] | select(.sourceURL != "") | .path + "\t" + (.sourceURL | ltrimstr("https://github.com/") | rtrimstr(".git"))'
     set -l rows (gh skill list --agent universal --scope user --json path,sourceURL --jq $jqexpr)

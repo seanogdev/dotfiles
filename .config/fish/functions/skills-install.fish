@@ -1,6 +1,11 @@
 function skills-install --description "Install one skill into ~/.agents/skills/ and symlink it into ~/.claude/skills/"
     set -l agents_dir $HOME/.agents/skills
     set -l claude_dir $HOME/.claude/skills
+    if contains -- -h $argv; or contains -- --help $argv
+        echo "usage: skills-install <owner/repo> <skill-path>"
+        echo "skill-path is the exact repo path, as in .Skillfile"
+        return 0
+    end
     if test (count $argv) -lt 2
         echo "usage: skills-install <owner/repo> <skill-path>" >&2
         echo "skill-path is the exact repo path, as in .Skillfile" >&2
