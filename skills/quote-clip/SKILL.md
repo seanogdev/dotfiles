@@ -1,6 +1,6 @@
 ---
 name: quote-clip
-description: Copy Claude's last chat message to the clipboard as a block quote, with markdown headings flattened to bold, for pasting into chat apps with limited markdown support. Use when the user says things like "copy that as a quote", "block quote that", "quote that for Slack", or "put > before each line".
+description: Copy Claude's last chat reply to the clipboard as a block quote, for pasting into apps with limited markdown support. Covers any phrasing that describes the visual result — a quote marker, a ">" symbol, or similar mark before each line — even when the word "quote" is not used.
 license: MIT
 compatibility: Requires macOS (pbcopy)
 ---
