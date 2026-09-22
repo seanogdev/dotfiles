@@ -9,16 +9,13 @@ $git_state\
 $git_status\
 $git_metrics\
 $fill\
-$nodejs\
+${custom.node}\
 ${custom.pnpm}\
 $cmd_duration\
 $jobs\
 $time\
 $line_break\
 $character"""
-
-[nodejs]
-format = "[$symbol($version )]($style)"
 
 [fill]
 symbol = " "
@@ -76,6 +73,22 @@ command = "npm --version"
 symbol = "🐸 v"
 style = "bold green"
 ignore_timeout = true
+format = "[$symbol($output )]($style)"
+
+[custom.node]
+description = "Node.js version pnpm is set to use, falling back to fnm's current version"
+detect_files = ["package.json", ".node-version", ".nvmrc"]
+detect_folders = ["node_modules"]
+detect_extensions = ["js", "mjs", "cjs", "ts"]
+shell = ["bash", "--noprofile", "--norc"]
+command = '''
+version=$(COREPACK_ENABLE_DOWNLOAD_PROMPT=0 COREPACK_ENABLE_NETWORK_DOWNLOADS=0 pnpm node -v 2>/dev/null)
+[ -z "$version" ] && version=$(fnm current 2>/dev/null)
+[ -n "$version" ] && echo "$version"
+'''
+ignore_timeout = true
+symbol = " "
+style = "bold green"
 format = "[$symbol($output )]($style)"
 
 [custom.pnpm]
