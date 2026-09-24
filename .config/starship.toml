@@ -82,9 +82,19 @@ detect_folders = ["node_modules"]
 detect_extensions = ["js", "mjs", "cjs", "ts"]
 shell = ["bash", "--noprofile", "--norc"]
 command = '''
-version=$(COREPACK_ENABLE_DOWNLOAD_PROMPT=0 COREPACK_ENABLE_NETWORK_DOWNLOADS=0 pnpm node -v 2>/dev/null)
-[ -z "$version" ] && version=$(fnm current 2>/dev/null)
-[ -n "$version" ] && echo "$version"
+dir=$PWD
+while [ -n "$dir" ]; do
+  if [ -L "$dir/node_modules/.bin/node" ]; then
+    target=$(readlink "$dir/node_modules/.bin/node")
+    case $target in *node@runtime+*)
+      version=${target#*node@runtime+}
+      echo "v${version%%/*}"
+      exit
+    esac
+  fi
+  dir=${dir%/*}
+done
+fnm current 2>/dev/null
 '''
 ignore_timeout = true
 symbol = " "
