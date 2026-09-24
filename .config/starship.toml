@@ -72,7 +72,6 @@ description = "Version for npm in the working directory"
 command = "npm --version"
 symbol = "🐸 v"
 style = "bold green"
-ignore_timeout = true
 format = "[$symbol($output )]($style)"
 
 [custom.node]
@@ -102,10 +101,23 @@ style = "bold green"
 format = "[$symbol($output )]($style)"
 
 [custom.pnpm]
-command = "pnpm -v"
-ignore_timeout = true
+shell = ["bash", "--noprofile", "--norc"]
+command = '''
+dir=$PWD
+while [ -n "$dir" ]; do
+  if [ -f "$dir/package.json" ]; then
+    version=$(sed -n 's/.*"packageManager": *"pnpm@\([^"+]*\).*/\1/p' "$dir/package.json")
+    if [ -n "$version" ]; then
+      echo "$version"
+      exit
+    fi
+  fi
+  dir=${dir%/*}
+done
+pnpm -v
+'''
 format = '[$symbol(v$output )]($style)'
-description = "The currently installed version of PNPM"
+description = "PNPM version pinned in packageManager, falling back to the installed version"
 style = "bold yellow"
 detect_files = ['pnpm-lock.yaml']
 symbol = 'pnpm '
