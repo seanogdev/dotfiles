@@ -81,8 +81,6 @@ cask "ghostty"
 cask "kap"
 # VPN client
 cask "mullvad-vpn"
-# App to write, plan, collaborate, and get organised
-cask "notion"
 # Knowledge base that works on top of a local folder of plain text Markdown files
 cask "obsidian"
 # Team communication and collaboration software
