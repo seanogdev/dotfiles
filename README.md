@@ -20,7 +20,7 @@ Install Homebrew first:
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
-Clone over HTTPS, not SSH. The `insteadOf` rule in `.gitconfig` rewrites HTTPS to SSH, but that
+Clone over HTTPS, not SSH. The `insteadOf` rule in `.config/git/config` rewrites HTTPS to SSH, but that
 config is not linked into `$HOME` until stow has run:
 
 ```sh
