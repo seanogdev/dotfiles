@@ -77,7 +77,7 @@ style = "bold green"
 format = "[$symbol($output )]($style)"
 
 [custom.node]
-description = "Node.js version pnpm is set to use, falling back to fnm's current version"
+description = "Node.js version pnpm is set to use, falling back to the node shim"
 detect_files = ["package.json", ".node-version", ".nvmrc"]
 detect_folders = ["node_modules"]
 detect_extensions = ["js", "mjs", "cjs", "ts"]
@@ -95,7 +95,7 @@ while [ -n "$dir" ]; do
   fi
   dir=${dir%/*}
 done
-fnm current 2>/dev/null
+node -v 2>/dev/null
 '''
 ignore_timeout = true
 symbol = " "

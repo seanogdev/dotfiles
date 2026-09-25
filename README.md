@@ -7,7 +7,6 @@ Main tools used:
 - Brew
 - Git
 - Fish / Fisher
-- FNM
 - Starship
 
 ## Setting up a new machine
