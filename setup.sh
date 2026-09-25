@@ -61,6 +61,10 @@ info "Installing Brewfile packages..."
 
 sudo brew bundle install --global
 
+info "Installing a global Node with pnpm"
+
+PNPM_HOME="$HOME/Library/pnpm" PATH="$HOME/Library/pnpm/bin:$PATH" pnpm runtime set node lts -g
+
 info "Syncing iCloud data..."
 
 sh ./sync.sh
