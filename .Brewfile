@@ -35,6 +35,8 @@ brew "mole"
 brew "periphery"
 # Package compiler and linker metadata toolkit
 brew "pkgconf"
+# Fast, disk space efficient package manager
+brew "pnpm"
 # Search tool like grep and The Silver Searcher
 brew "ripgrep"
 # Safe, concurrent, practical language
