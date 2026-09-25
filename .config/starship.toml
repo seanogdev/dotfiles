@@ -77,26 +77,12 @@ style = "bold green"
 format = "[$symbol($output )]($style)"
 
 [custom.node]
-description = "Node.js version pnpm is set to use, falling back to the node shim"
+description = "Node.js version the pnpm node shim resolves for the working directory"
 detect_files = ["package.json", ".node-version", ".nvmrc"]
 detect_folders = ["node_modules"]
 detect_extensions = ["js", "mjs", "cjs", "ts"]
 shell = ["bash", "--noprofile", "--norc"]
-command = '''
-dir=$PWD
-while [ -n "$dir" ]; do
-  if [ -L "$dir/node_modules/.bin/node" ]; then
-    target=$(readlink "$dir/node_modules/.bin/node")
-    case $target in *node@runtime+*)
-      version=${target#*node@runtime+}
-      echo "v${version%%/*}"
-      exit
-    esac
-  fi
-  dir=${dir%/*}
-done
-node -v 2>/dev/null
-'''
+command = "node -v"
 ignore_timeout = true
 symbol = " "
 style = "bold green"
