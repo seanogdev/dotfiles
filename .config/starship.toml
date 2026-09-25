@@ -11,7 +11,7 @@ $git_state\
 $git_status\
 $git_metrics\
 $fill\
-${custom.node}\
+$nodejs\
 ${custom.pnpm}\
 $cmd_duration\
 $jobs\
@@ -76,17 +76,9 @@ symbol = "🐸 v"
 style = "bold green"
 format = "[$symbol($output )]($style)"
 
-[custom.node]
-description = "Node.js version the pnpm node shim resolves for the working directory"
-detect_files = ["package.json", ".node-version", ".nvmrc"]
-detect_folders = ["node_modules"]
-detect_extensions = ["js", "mjs", "cjs", "ts"]
-shell = ["bash", "--noprofile", "--norc"]
-command = "node -v"
-ignore_timeout = true
+[nodejs]
 symbol = " "
-style = "bold green"
-format = "[$symbol($output )]($style)"
+format = "[$symbol($version )]($style)"
 
 [custom.pnpm]
 shell = ["bash", "--noprofile", "--norc"]
