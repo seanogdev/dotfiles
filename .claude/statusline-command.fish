@@ -50,6 +50,63 @@ function rate_limit_segment -a label pct reset_at time_fmt
     end
 end
 
+# Undocumented endpoints, so a failed fetch only hides the segment.
+function refresh_credits_cache -a cache
+    set -l token (security find-generic-password -s 'Claude Code-credentials' -w 2>/dev/null | jq -r '.claudeAiOauth.accessToken // empty')
+    set -l org (jq -r '.oauthAccount.organizationUuid // empty' ~/.claude.json 2>/dev/null)
+    test -n "$token" -a -n "$org"; or return
+
+    set -l base https://api.anthropic.com/api/oauth
+    set -l headers -H "Authorization: Bearer $token" -H 'anthropic-beta: oauth-2025-04-20'
+    set -l usage (curl -sf --max-time 5 $base/usage $headers | string collect); or return
+    set -l credits (curl -sf --max-time 5 $base/organizations/$org/prepaid/credits $headers | string collect); or return
+
+    jq -n --argjson usage "$usage" --argjson credits "$credits" \
+        '{enabled: $usage.extra_usage.is_enabled, credits: $credits}' >"$cache.tmp"
+    and jq -e .credits.balance.money "$cache.tmp" >/dev/null
+    and mv "$cache.tmp" "$cache"
+    rm -f "$cache.tmp"
+end
+
+function credits_segment
+    set -l cache ~/.cache/claude-statusline/credits.json
+    set -l stamp "$cache.refresh"
+    mkdir -p (path dirname $cache)
+
+    set -l age (path mtime -R $cache 2>/dev/null; or echo 999999)
+    set -l stamp_age (path mtime -R $stamp 2>/dev/null; or echo 999999)
+    if test $age -gt 120 -a $stamp_age -gt 60
+        touch $stamp
+        fish -c (functions refresh_credits_cache | string collect)"
+refresh_credits_cache '$cache'" </dev/null &>/dev/null &
+        disown
+    end
+
+    test -f $cache; or return
+    set -l credit (jq -r 'select(.enabled == true) | .credits
+        | .balance.money as $m
+        | ([.tranches[]?.granted_amount_minor_units // 0] | add // 0) as $granted
+        | [($m.amount_minor / pow(10; $m.exponent)), $m.exponent, $m.currency,
+           (if $granted > 0 then 100 - ($m.amount_minor * 100 / $granted) else 0 end)]
+        | @tsv' $cache 2>/dev/null | string split \t)
+    test (count $credit) -eq 4; or return
+
+    set -l symbol
+    switch $credit[3]
+        case EUR
+            set symbol €
+        case USD
+            set symbol \$
+        case GBP
+            set symbol £
+        case '*'
+            set symbol "$credit[3] "
+    end
+    set -l left (printf "%.*f" $credit[2] $credit[1])
+    set -l color (usage_color (printf "%.0f" $credit[4]))
+    printf '%bcredits %b%s%s%b' $dim $color $symbol $left $reset
+end
+
 # The ST terminator lives in a variable: inline before a conversion, fish's
 # printf emits a literal %s and restarts the format.
 function osc8 -a url label
@@ -185,10 +242,11 @@ set -l segment4 (printf '%b󰆼 %s/%s [%s%%]%b' \
     (math --scale=0 "$used_pct") \
     $reset)
 
-# Segment 5: rate limits (5-hour and 7-day windows)
+# Segment 5: rate limits (5-hour and 7-day windows) and extra usage credits
 set -l rate_limits
 set -a rate_limits (rate_limit_segment 5h "$fields[6]" "$fields[7]" "+%H:%M")
 set -a rate_limits (rate_limit_segment 7d "$fields[8]" "$fields[9]" "+%d/%m")
+set -a rate_limits (credits_segment)
 
 # Build the complete status line
 set -l line1 $segment1 $segment2
