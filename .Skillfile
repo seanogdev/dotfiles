@@ -3,8 +3,10 @@ antfu/skills skills/vue
 anthropics/skills skills/frontend-design
 cloudflare/skills skills/wrangler
 mattpocock/skills skills/engineering/code-review
+mattpocock/skills skills/engineering/codebase-design
 mattpocock/skills skills/engineering/domain-modeling
 mattpocock/skills skills/engineering/implement
+mattpocock/skills skills/engineering/improve-codebase-architecture
 mattpocock/skills skills/engineering/pr
 mattpocock/skills skills/engineering/setup-matt-pocock-skills
 mattpocock/skills skills/engineering/to-spec
