@@ -5,7 +5,7 @@ Personal macOS configuration. Some files are public in this repo. Other files ar
 ## Language
 
 **iCloud Store**:
-The folder in iCloud Drive that holds the private dotfiles. It is the source of truth for them.
+The folder in iCloud Drive that holds the private dotfiles and the fonts. It is the source of truth for them.
 _Avoid_: iCloud data, iCloud dotfiles
 
 **Mirror**:
