@@ -5,6 +5,7 @@ cloudflare/skills skills/wrangler
 mattpocock/skills skills/engineering/code-review
 mattpocock/skills skills/engineering/domain-modeling
 mattpocock/skills skills/engineering/implement
+mattpocock/skills skills/engineering/pr
 mattpocock/skills skills/engineering/setup-matt-pocock-skills
 mattpocock/skills skills/engineering/to-spec
 mattpocock/skills skills/engineering/to-tickets
@@ -13,7 +14,6 @@ mattpocock/skills skills/productivity/grill-me
 mattpocock/skills skills/productivity/grilling
 mattpocock/skills skills/productivity/handoff
 seanogdev/skills skills/address-review
-seanogdev/skills skills/create-pr
 seanogdev/skills skills/prune-merged-branches
 seanogdev/skills skills/quote-clip
 vercel-labs/agent-browser skills/agent-browser
