@@ -32,7 +32,7 @@ brew bundle install --global  # Install from .Brewfile
 
 ### iCloud Integration
 
-- Fonts copied from `$HOME/Library/Mobile Documents/com~apple~CloudDocs/Code/dotfiles/sync/fonts/`
+- Fonts copied from `$HOME/Library/Mobile Documents/com~apple~CloudDocs/Code/dotfiles/fonts/`
 - Sensitive Fish functions are mirrored from iCloud to `$ICLOUD_MIRROR_DIR` (`~/.local/share/dotfiles-icloud-mirror`, outside the iCloud container), then stowed from there. This keeps `~/.config/fish/conf.d/keys.fish` and friends symlinked to a stable local path, not a live path inside `Mobile Documents`, so macOS stops re-prompting for permission on every iCloud sync event. Edit these files in iCloud Drive, then run `stow-icloud` to pull them into the mirror.
 
 ### Skills

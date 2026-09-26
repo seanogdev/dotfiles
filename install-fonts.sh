@@ -30,9 +30,9 @@ fail () {
 
 copy_icloud_data() {
   ## fonts
-  if [ -d "$ICLOUD_PATH/Code/dotfiles/sync/fonts" ]
+  if [ -d "$ICLOUD_PATH/Code/dotfiles/fonts" ]
   then
-      cp -Rf "$ICLOUD_PATH/Code/dotfiles/sync/fonts/"* "$HOME/Library/Fonts/"
+      cp -Rf "$ICLOUD_PATH/Code/dotfiles/fonts/"* "$HOME/Library/Fonts/"
       success "Copied fonts"
   else
       fail "No fonts found in iCloud"
