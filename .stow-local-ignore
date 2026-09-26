@@ -4,6 +4,6 @@ LICENSE
 .gitignore
 .DS_Store
 setup.sh
-sync.sh
+install-fonts.sh
 /AGENTS.md
 /CLAUDE.md

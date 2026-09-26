@@ -65,9 +65,9 @@ info "Installing a global Node with pnpm"
 
 PNPM_HOME="$HOME/Library/pnpm" PATH="$HOME/Library/pnpm/bin:$PATH" pnpm runtime set node lts -g
 
-info "Syncing iCloud data..."
+info "Installing fonts from iCloud..."
 
-sh ./sync.sh
+sh ./install-fonts.sh
 
 info "Changing default shell"
 

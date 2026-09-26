@@ -12,14 +12,14 @@ This is a personal dotfiles repository that uses GNU Stow for symlink management
 # Install Homebrew first (if not already installed)
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-# Run setup script (installs stow, links dotfiles, installs packages, syncs iCloud data)
+# Run setup script (installs stow, links dotfiles, installs packages, installs fonts)
 ./setup.sh
 ```
 
-**Sync iCloud data (fonts and sensitive functions):**
+**Install fonts from iCloud:**
 
 ```fish
-./sync.sh
+./install-fonts.sh
 ```
 
 **Update Homebrew packages:**
@@ -32,7 +32,7 @@ brew bundle install --global  # Install from .Brewfile
 
 ### iCloud Integration
 
-- Fonts synced from `$HOME/Library/Mobile Documents/com~apple~CloudDocs/Code/dotfiles/sync/fonts/`
+- Fonts copied from `$HOME/Library/Mobile Documents/com~apple~CloudDocs/Code/dotfiles/sync/fonts/`
 - Sensitive Fish functions are mirrored from iCloud to `$ICLOUD_MIRROR_DIR` (`~/.local/share/dotfiles-icloud-mirror`, outside the iCloud container), then stowed from there. This keeps `~/.config/fish/conf.d/keys.fish` and friends symlinked to a stable local path, not a live path inside `Mobile Documents`, so macOS stops re-prompting for permission on every iCloud sync event. Edit these files in iCloud Drive, then run `stow-icloud` to pull them into the mirror.
 
 ### Skills
