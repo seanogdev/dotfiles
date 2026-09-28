@@ -1,19 +1,19 @@
 antfu/skills skills/vue
 anthropics/skills skills/frontend-design
 cloudflare/skills skills/wrangler
-mattpocock/skills skills/engineering/code-review
-mattpocock/skills skills/engineering/codebase-design
-mattpocock/skills skills/engineering/domain-modeling
-mattpocock/skills skills/engineering/implement
-mattpocock/skills skills/engineering/improve-codebase-architecture
-mattpocock/skills skills/engineering/pr
-mattpocock/skills skills/engineering/setup-matt-pocock-skills
-mattpocock/skills skills/engineering/to-spec
-mattpocock/skills skills/engineering/to-tickets
-mattpocock/skills skills/engineering/wayfinder
-mattpocock/skills skills/productivity/grill-me
-mattpocock/skills skills/productivity/grilling
-mattpocock/skills skills/productivity/handoff
+mattpocock/skills skills/engineering/code-review 2aecca12ea9ff047f76c8178cb64dfeafd192abe
+mattpocock/skills skills/engineering/codebase-design 2aecca12ea9ff047f76c8178cb64dfeafd192abe
+mattpocock/skills skills/engineering/domain-modeling 2aecca12ea9ff047f76c8178cb64dfeafd192abe
+mattpocock/skills skills/engineering/implement 2aecca12ea9ff047f76c8178cb64dfeafd192abe
+mattpocock/skills skills/engineering/improve-codebase-architecture 2aecca12ea9ff047f76c8178cb64dfeafd192abe
+mattpocock/skills skills/engineering/pr 2aecca12ea9ff047f76c8178cb64dfeafd192abe
+mattpocock/skills skills/engineering/setup-matt-pocock-skills 2aecca12ea9ff047f76c8178cb64dfeafd192abe
+mattpocock/skills skills/engineering/to-spec 2aecca12ea9ff047f76c8178cb64dfeafd192abe
+mattpocock/skills skills/engineering/to-tickets 2aecca12ea9ff047f76c8178cb64dfeafd192abe
+mattpocock/skills skills/engineering/wayfinder 2aecca12ea9ff047f76c8178cb64dfeafd192abe
+mattpocock/skills skills/productivity/grill-me 2aecca12ea9ff047f76c8178cb64dfeafd192abe
+mattpocock/skills skills/productivity/grilling 2aecca12ea9ff047f76c8178cb64dfeafd192abe
+mattpocock/skills skills/productivity/handoff 2aecca12ea9ff047f76c8178cb64dfeafd192abe
 seanogdev/skills skills/address-review
 seanogdev/skills skills/prune-merged-branches
 seanogdev/skills skills/quote-clip
