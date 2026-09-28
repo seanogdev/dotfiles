@@ -71,7 +71,9 @@ sh ./install-fonts.sh
 
 info "Changing default shell"
 
-echo "/opt/homebrew/bin/fish" | sudo tee -a /etc/shells
+if ! grep -qx "/opt/homebrew/bin/fish" /etc/shells; then
+  echo "/opt/homebrew/bin/fish" | sudo tee -a /etc/shells
+fi
 
 chsh -s "$(which fish)"
 
