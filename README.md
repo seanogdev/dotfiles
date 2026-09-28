@@ -46,7 +46,7 @@ Two personal skills live at `.agents/skills/<name>/SKILL.md` in this repo: `mana
 and layout — so they stay here rather than in a general-purpose skills repo. `.claude/skills/<name>`
 is a symlink to `../../.agents/skills/<name>`, stowed into `$HOME`.
 
-The rest of the personal skills (`address-review`, `create-pr`, `prune-merged-branches`,
+The rest of the personal skills (`address-review`, `prune-merged-branches`,
 `quote-clip`) live in [seanogdev/skills](https://github.com/seanogdev/skills). On this machine
 they're tracked in `.Skillfile` and installed via `gh skill`, the same as any other third-party
 skill — see the `manage-skills` skill.
