@@ -59,7 +59,7 @@ rm -f "$HOME/.claude/agents/bulk-reader.md" "$HOME/.claude/agents/code-writer.md
 
 info "Installing Brewfile packages..."
 
-sudo brew bundle install --global
+brew bundle install --global
 
 info "Installing a global Node with pnpm"
 
