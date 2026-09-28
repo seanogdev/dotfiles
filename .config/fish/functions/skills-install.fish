@@ -2,17 +2,19 @@ function skills-install --description "Install one skill into ~/.agents/skills/ 
     set -l agents_dir $HOME/.agents/skills
     set -l claude_dir $HOME/.claude/skills
     if contains -- -h $argv; or contains -- --help $argv
-        echo "usage: skills-install <owner/repo> <skill-path>"
-        echo "skill-path is the exact repo path, as in .Skillfile"
+        echo "usage: skills-install <owner/repo> <skill-path> [pin]"
+        echo "skill-path is the exact repo path, as in .Skillfile. pin is a tag or commit SHA."
         return 0
     end
     if test (count $argv) -lt 2
-        echo "usage: skills-install <owner/repo> <skill-path>" >&2
-        echo "skill-path is the exact repo path, as in .Skillfile" >&2
+        echo "usage: skills-install <owner/repo> <skill-path> [pin]" >&2
+        echo "skill-path is the exact repo path, as in .Skillfile. pin is a tag or commit SHA." >&2
         return 1
     end
     mkdir -p $agents_dir $claude_dir
-    gh skill install $argv[1] $argv[2] --dir $agents_dir --force </dev/null; or return 1
+    set -l pin
+    set -q argv[3]; and set pin --pin $argv[3]
+    gh skill install $argv[1] $argv[2] $pin --dir $agents_dir --force </dev/null; or return 1
     set -l name (basename $argv[2])
     set -l src $agents_dir/$name
     set -l dst $claude_dir/$name

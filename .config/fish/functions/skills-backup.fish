@@ -18,7 +18,8 @@ function skills-backup --description "Back up installed user-scope skills to \$H
         # install, so take the exact repo path from frontmatter instead.
         set -l path (string match -rg '^\s*github-path:\s*(\S+)' < $parts[1]/SKILL.md | head -1)
         test -n "$path"; or continue
-        set -a lines "$parts[2] $path"
+        set -l pin (string match -rg '^\s*github-pinned:\s*(\S+)' < $parts[1]/SKILL.md | head -1)
+        set -a lines (string trim -- "$parts[2] $path $pin")
     end
     set -l sorted (printf '%s\n' $lines | sort -u)
     # Write through the symlink: `sort -o` renames over the file, which would
