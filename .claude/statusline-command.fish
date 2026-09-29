@@ -219,8 +219,8 @@ end
 set -l segment3b ""
 set -l ports (dev_server_ports "$cwd")
 if test -n "$ports"
-    set -l link (osc8 "http://localhost:$ports[1]" ":$ports[1]")
-    set segment3b (printf '%b󰖟 %s%b' $lime $link $reset)
+    set -l link (osc8 "http://localhost:$ports[1]" "󰖟 :$ports[1]")
+    set segment3b (printf '%b%s%b' $lime $link $reset)
     if test (count $ports) -gt 1
         set segment3b "$segment3b"(printf '%b +%d%b' $dim (math (count $ports) - 1) $reset)
     end
@@ -230,7 +230,7 @@ end
 set -l segment3c ""
 if test -n "$cwd"
     set -l target (string replace -a ' ' %20 -- $cwd)
-    set segment3c (printf '%b󰨞 %s%b' $blue (osc8 "vscode://file$target" code) $reset)
+    set segment3c (printf '%b%s%b' $blue (osc8 "vscode://file$target" "󰨞 code") $reset)
 end
 
 # Segment 4: token count, colored by usage relative to the 200K optimal limit
