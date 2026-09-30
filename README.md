@@ -35,7 +35,7 @@ the iCloud fonts, and sets fish as the default shell.
 
 Two things are not in the repo and need doing by hand afterwards:
 
-- The private skills in `~/.claude/skills/` (`content-writer`, `review-pr`) live in iCloud at
+- The private skills in `~/.claude/skills/` (`content-writer`, `review-pr`, `self-review`) live in iCloud at
   `~/Library/Mobile Documents/com~apple~CloudDocs/Code/dotfiles/.claude/skills/`. Symlink them.
 - The managed skills from `.Skillfile`. Run `skills-restore`.
 
