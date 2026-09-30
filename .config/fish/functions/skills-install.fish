@@ -14,9 +14,17 @@ function skills-install --description "Install one skill into ~/.agents/skills/ 
     mkdir -p $agents_dir $claude_dir
     set -l pin
     set -q argv[3]; and set pin --pin $argv[3]
-    gh skill install $argv[1] $argv[2] $pin --dir $agents_dir --force </dev/null; or return 1
     set -l name (basename $argv[2])
     set -l src $agents_dir/$name
+    # Install fresh, then swap it in: --force keeps files the new version no longer has.
+    set -l tmp (mktemp -d)
+    if not gh skill install $argv[1] $argv[2] $pin --dir $tmp </dev/null; or not test -d $tmp/$name
+        rm -rf $tmp
+        return 1
+    end
+    rm -rf $src
+    mv $tmp/$name $src
+    rm -rf $tmp
     set -l dst $claude_dir/$name
     if test -L $dst
         set -l current (readlink $dst)
