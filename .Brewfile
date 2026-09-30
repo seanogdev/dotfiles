@@ -31,8 +31,6 @@ brew "lazygit"
 brew "mas"
 # Deep clean and optimize your Mac
 brew "mole"
-# Identify unused code in Swift projects
-brew "periphery"
 # Package compiler and linker metadata toolkit
 brew "pkgconf"
 # Fast, disk space efficient package manager
