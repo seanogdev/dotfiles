@@ -71,8 +71,6 @@ cask "figma"
 cask "firefox"
 cask "font-metropolis"
 cask "font-monaspace"
-# Speech-to-text and meeting transcription tool
-cask "ghostpepper"
 # Terminal emulator that uses platform-native UI and GPU acceleration
 cask "ghostty"
 # VPN client
