@@ -75,8 +75,6 @@ cask "font-monaspace"
 cask "ghostpepper"
 # Terminal emulator that uses platform-native UI and GPU acceleration
 cask "ghostty"
-# Open-source screen recorder built with web technology
-cask "kap"
 # VPN client
 cask "mullvad-vpn"
 # Knowledge base that works on top of a local folder of plain text Markdown files
