@@ -101,8 +101,6 @@ cask "visual-studio-code"
 cask "vivaldi"
 # Multimedia player
 cask "vlc"
-# Native desktop client for WhatsApp
-cask "whatsapp"
 # Multiplayer code editor
 cask "zed"
 mas "1Password for Safari", id: 1569813296
