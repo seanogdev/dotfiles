@@ -20,8 +20,16 @@ function skills-restore --description "Sync ~/.agents/skills/ with \$HOME/.Skill
         set -a names $name
         set -l pin
         set -q parts[3]; and set pin --pin $parts[3]
-        gh skill install $parts[1] $parts[2] $pin --dir $agents_dir --force </dev/null; or continue
         set -l src $agents_dir/$name
+        # Install fresh, then swap it in: --force keeps files the new version no longer has.
+        set -l tmp (mktemp -d)
+        if not gh skill install $parts[1] $parts[2] $pin --dir $tmp </dev/null; or not test -d $tmp/$name
+            rm -rf $tmp
+            continue
+        end
+        rm -rf $src
+        mv $tmp/$name $src
+        rm -rf $tmp
         set -l dst $claude_dir/$name
         if test -L $dst
             set -l current (readlink $dst)
