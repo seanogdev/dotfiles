@@ -77,8 +77,6 @@ cask "ghostpepper"
 cask "ghostty"
 # VPN client
 cask "mullvad-vpn"
-# Knowledge base that works on top of a local folder of plain text Markdown files
-cask "obsidian"
 # Team communication and collaboration software
 cask "slack"
 # Video game digital distribution service
