@@ -34,6 +34,8 @@ brew bundle install --global  # Install from .Brewfile
 
 - Fonts copied from `$HOME/Library/Mobile Documents/com~apple~CloudDocs/Code/dotfiles/fonts/`
 - Sensitive Fish functions are mirrored from iCloud to `$ICLOUD_MIRROR_DIR` (`~/.local/share/dotfiles-icloud-mirror`, outside the iCloud container), then stowed from there. This keeps `~/.config/fish/conf.d/keys.fish` and friends symlinked to a stable local path, not a live path inside `Mobile Documents`, so macOS stops re-prompting for permission on every iCloud sync event. Edit these files in iCloud Drive, then run `stow-icloud` to pull them into the mirror.
+- Private skills live in the iCloud Store at `.agents/skills/<name>/`. `stow-icloud` stows them into `~/.agents/skills/`, so every agent sees them, and links `~/.claude/skills/<name>` to `../../.agents/skills/<name>`. Edit a private skill in the iCloud Store, never through `~/.agents/skills/` or `~/.claude/skills/`: the mirror is read-only between pulls.
+- `stow-icloud` waits up to 60 seconds for iCloud to download every file before it pulls, so the mirror never copies a placeholder.
 
 ### Skills
 
