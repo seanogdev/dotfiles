@@ -101,8 +101,6 @@ cask "visual-studio-code"
 cask "vivaldi"
 # Multimedia player
 cask "vlc"
-# Multiplayer code editor
-cask "zed"
 mas "1Password for Safari", id: 1569813296
 mas "Apple Configurator", id: 1037126344
 mas "Deliveries", id: 290986013
