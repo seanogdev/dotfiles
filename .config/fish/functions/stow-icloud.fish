@@ -2,6 +2,7 @@ function stow-icloud --description "Mirror iCloud dotfiles locally, then stow th
     if contains -- -h $argv; or contains -- --help $argv
         echo "usage: stow-icloud"
         echo "Downloads \$ICLOUD_DOTFILES_DIR, mirrors it into \$ICLOUD_MIRROR_DIR, then stows the mirror into \$HOME."
+        echo "Links each private skill from ~/.claude/skills to ~/.agents/skills, and removes broken skill links."
         echo "The mirror is left read-only. Edit files in \$ICLOUD_DOTFILES_DIR, then run stow-icloud again."
         return 0
     end
@@ -26,6 +27,20 @@ function stow-icloud --description "Mirror iCloud dotfiles locally, then stow th
 
     stow -d $ICLOUD_MIRROR_DIR/fish/conf.d -t $HOME/.config/fish/conf.d --no-folding --adopt --stow .
     stow -d $ICLOUD_MIRROR_DIR -t $HOME --no-folding --adopt --stow .
+
+    mkdir -p $HOME/.claude/skills
+    for skill in $ICLOUD_MIRROR_DIR/.agents/skills/*/
+        set -l name (basename $skill)
+        set -l link $HOME/.claude/skills/$name
+        if test -d $link; and not test -L $link
+            echo "Skipping $link: it is a real directory. Remove it, then run stow-icloud again."
+            continue
+        end
+        ln -sfn ../../.agents/skills/$name $link
+    end
+
+    find $HOME/.agents/skills $HOME/.claude/skills -type l ! -exec test -e {} \; -print -delete
+    find $HOME/.agents/skills -mindepth 1 -type d -empty -delete
 
     chmod -R a-w $ICLOUD_MIRROR_DIR
     echo "✓ stow-icloud: mirrored $ICLOUD_DOTFILES_DIR → $ICLOUD_MIRROR_DIR, linked → $HOME"
