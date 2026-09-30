@@ -2,6 +2,7 @@ function stow-icloud --description "Mirror iCloud dotfiles locally, then stow th
     if contains -- -h $argv; or contains -- --help $argv
         echo "usage: stow-icloud"
         echo "Downloads \$ICLOUD_DOTFILES_DIR, mirrors it into \$ICLOUD_MIRROR_DIR, then stows the mirror into \$HOME."
+        echo "The mirror is left read-only. Edit files in \$ICLOUD_DOTFILES_DIR, then run stow-icloud again."
         return 0
     end
     if not test -d $ICLOUD_DOTFILES_DIR
@@ -20,10 +21,13 @@ function stow-icloud --description "Mirror iCloud dotfiles locally, then stow th
     end
 
     mkdir -p $ICLOUD_MIRROR_DIR
+    chmod -R u+w $ICLOUD_MIRROR_DIR
     rsync -a --delete "$ICLOUD_DOTFILES_DIR/" "$ICLOUD_MIRROR_DIR/"
 
     stow -d $ICLOUD_MIRROR_DIR/fish/conf.d -t $HOME/.config/fish/conf.d --no-folding --adopt --stow .
     stow -d $ICLOUD_MIRROR_DIR -t $HOME --no-folding --adopt --stow .
+
+    chmod -R a-w $ICLOUD_MIRROR_DIR
     echo "✓ stow-icloud: mirrored $ICLOUD_DOTFILES_DIR → $ICLOUD_MIRROR_DIR, linked → $HOME"
 end
 
