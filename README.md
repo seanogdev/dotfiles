@@ -35,7 +35,7 @@ the iCloud fonts, and sets fish as the default shell.
 
 Two things are not in the repo and need doing by hand afterwards:
 
-- The private files and skills (`content-writer`, `self-review`) live in the iCloud Store at
+- The private files and skills live in the iCloud Store at
   `~/Library/Mobile Documents/com~apple~CloudDocs/Code/dotfiles/`. Run `stow-icloud`.
 - The managed skills from `.Skillfile`. Run `skills-restore`.
 
