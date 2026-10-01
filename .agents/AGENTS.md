@@ -2,3 +2,4 @@
 - Break work into small, logical commits rather than one large batch.
 - `fish` is the default shell. Use `bash` for scripts and commands that need it.
 - When you remove something, remove it fully. Do not leave a note that says it is gone.
+- To add images or videos to a pull request, use `gh pr create --attach '<file>#<alt text>'`. Do not upload them a different way.
