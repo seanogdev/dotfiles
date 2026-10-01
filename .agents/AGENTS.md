@@ -1,7 +1,4 @@
-- Write all text in ASD-STE100, except for the text that the user sees in the app.
-- If you write a code comment, I want you to:
-  - Think about if it's even necessary or can be inferred already. If so think about how to shorten it.
-  - If it's not necessary, remove it.
+- Do not write code comments by default. Write one only when the reader cannot infer it from the code, and keep it as short as possible.
 - Break work into small, logical commits rather than one large batch.
 - `fish` is the default shell. Use `bash` for scripts and commands that need it.
 - When you remove something, remove it fully. Do not leave a note that says it is gone.
