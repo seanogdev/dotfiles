@@ -43,9 +43,12 @@ Two dotfiles-specific skills live at `.agents/skills/<name>/SKILL.md`: `manage-s
 `manage-stow`. General-purpose skills live in [seanogdev/skills](https://github.com/seanogdev/skills)
 instead.
 
-## Setup: Claude Code Status Line
+## Setup: Status Line
 
-The statusline script lives at `~/.claude/statusline-command.fish` (symlinked from dotfiles via stow).
+The `agent-statusline` fish function (`.config/fish/functions/agent-statusline.fish`) makes the status line for Claude Code and Pi. It takes the harness name (`claude` or `pi`) as its argument.
+
+- **Claude Code**: `~/.claude/settings.json` is not in this repo. Set `statusLine.command` to `/opt/homebrew/bin/fish -c 'agent-statusline claude'`.
+- **Pi**: the extension at `.pi/agent/extensions/statusline.ts` calls the function. Stow links it into `~/.pi/agent/extensions/`.
 
 ## Maintenance
 
