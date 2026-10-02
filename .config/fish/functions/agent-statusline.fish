@@ -1,6 +1,6 @@
 #!/opt/homebrew/bin/fish
 
-function agent-statusline -a harness
+function agent-statusline -a harness label
     test -z "$harness"; and set harness claude
 
 set -g reset '\033[0m'
@@ -180,7 +180,13 @@ if test "$harness" = claude
     set -a rate_limits (__agent_statusline_credits_segment)
 end
 
-set -l line1 $segment1 $segment2
+set -l line1
+if test -n "$label"
+    set -l label_color $amber
+    test "$label" = personal; and set label_color $lime
+    set -a line1 (printf '%b%s%b' $label_color $label $reset)
+end
+set -a line1 $segment1 $segment2
 test -n "$segment3"; and set -a line1 $segment3
 test -n "$segment3b"; and set -a line1 $segment3b
 test -n "$segment3c"; and set -a line1 $segment3c

@@ -65,7 +65,7 @@ function statusInput(ctx: ExtensionContext): string {
 }
 
 function renderStatus(ctx: ExtensionContext): string | undefined {
-	const result = spawnSync("/opt/homebrew/bin/fish", ["-lc", "agent-statusline pi"], {
+	const result = spawnSync("/opt/homebrew/bin/fish", ["-lc", "agent-statusline pi personal"], {
 		input: statusInput(ctx),
 		encoding: "utf8",
 		stdio: ["pipe", "pipe", "ignore"],
