@@ -19,6 +19,8 @@ brew "fzf"
 brew "gh"
 # Distributed revision control system
 brew "git"
+# Quickly rewrite git repository history
+brew "git-filter-repo"
 # Git extension for versioning large files
 brew "git-lfs"
 # Open source programming language to build simple/reliable/efficient software
@@ -41,6 +43,8 @@ brew "ripgrep"
 brew "rust"
 # Rust toolchain installer
 brew "rustup"
+# Static analysis and lint tool, for (ba)sh scripts
+brew "shellcheck"
 # Cross-shell prompt for astronauts
 brew "starship"
 # Organize software neatly under a single directory tree (e.g. /usr/local)
