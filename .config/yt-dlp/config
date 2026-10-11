@@ -1,0 +1,10 @@
+-P ~/Downloads
+-o "%(title)s [%(id)s].%(ext)s"
+--merge-output-format mp4
+--embed-metadata
+--embed-thumbnail
+--embed-chapters
+--no-mtime
+--no-playlist
+--concurrent-fragments 4
+--windows-filenames
