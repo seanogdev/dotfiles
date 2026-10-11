@@ -13,13 +13,13 @@ This is a personal dotfiles repository that uses GNU Stow for symlink management
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 # Run setup script (installs stow, links dotfiles, installs packages, installs fonts)
-./setup.sh
+./scripts/setup.sh
 ```
 
 **Install fonts from iCloud:**
 
 ```fish
-./install-fonts.sh
+./scripts/install-fonts.sh
 ```
 
 **Update Homebrew packages:**
@@ -30,6 +30,10 @@ brew bundle install --global  # Install from .Brewfile
 
 ## Architecture
 
+### Layout
+
+Only `home/` is stowed. Its contents mirror `$HOME`: `home/.config/git/config` becomes `~/.config/git/config`. Everything outside `home/` stays in the repo: `scripts/` (setup and font install), `README.md`, `AGENTS.md`, `GLOSSARY.md`, `LICENSE`, `.editorconfig`. To link a new file, put it under `home/` at its `$HOME` path, then run `stow-local`.
+
 ### iCloud Integration
 
 - Fonts copied from `$HOME/Library/Mobile Documents/com~apple~CloudDocs/Code/dotfiles/fonts/`
@@ -39,13 +43,13 @@ brew bundle install --global  # Install from .Brewfile
 
 ### Skills
 
-Two dotfiles-specific skills live at `.agents/skills/<name>/SKILL.md`: `manage-skills` and
+Two dotfiles-specific skills live at `home/.agents/skills/<name>/SKILL.md`: `manage-skills` and
 `manage-stow`. General-purpose skills live in [seanogdev/skills](https://github.com/seanogdev/skills)
 instead.
 
 ## Setup: Status Line
 
-The `agent-statusline` fish function (`.config/fish/functions/agent-statusline.fish`) makes the status line for Claude Code. It takes the harness name (`claude`) as its argument.
+The `agent-statusline` fish function (`home/.config/fish/functions/agent-statusline.fish`) makes the status line for Claude Code. It takes the harness name (`claude`) as its argument.
 
 - **Claude Code**: `~/.claude/settings.json` is not in this repo. Set `statusLine.command` to `/opt/homebrew/bin/fish -c 'agent-statusline claude'`.
 
@@ -59,5 +63,5 @@ update-mac
 
 ## Gotchas
 
-- **`.agents`/`AGENTS.md` is canonical for instructions, `.claude`/`CLAUDE.md` are symlinks to it**: root `CLAUDE.md -> AGENTS.md`, `.claude/CLAUDE.md -> ../.agents/AGENTS.md`. Stow projects both trees to `~/.agents/` and `~/.claude/`. Add new content under `.agents/`, then symlink it from `.claude/`.
-- **The two personal skills are canonical at `.agents/skills/<name>/SKILL.md`**, the agentskills.io convention. `.claude/skills/<name>` is a symlink to `../../.agents/skills/<name>`, matching how `gh skill`-managed skills are laid out.
+- **`.agents`/`AGENTS.md` is canonical for instructions, `.claude`/`CLAUDE.md` are symlinks to it**: `home/.claude/AGENTS.md -> ../.agents/AGENTS.md`. Stow projects both trees to `~/.agents/` and `~/.claude/`. Add new content under `home/.agents/`, then symlink it from `home/.claude/`.
+- **The two personal skills are canonical at `home/.agents/skills/<name>/SKILL.md`**, the agentskills.io convention. `home/.claude/skills/<name>` is a symlink to `../../.agents/skills/<name>`, matching how `gh skill`-managed skills are laid out.

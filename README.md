@@ -9,10 +9,14 @@ Main tools used:
 - Fish / Fisher
 - Starship
 
+## Layout
+
+Only `home/` is stowed, and it mirrors `$HOME`. Everything else (`scripts/`, docs, license) stays in the repo.
+
 ## Setting up a new machine
 
-The repo has to live at `~/projects/personal/dotfiles`. Both `setup.sh` and
-`.config/fish/conf.d/stow.fish` hardcode that path.
+The repo has to live at `~/projects/personal/dotfiles`. Both `scripts/setup.sh` and
+`home/.config/fish/conf.d/stow.fish` hardcode that path.
 
 Install Homebrew first:
 
@@ -20,17 +24,17 @@ Install Homebrew first:
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
-Clone over HTTPS, not SSH. The `insteadOf` rule in `.config/git/config` rewrites HTTPS to SSH, but that
+Clone over HTTPS, not SSH. The `insteadOf` rule in `home/.config/git/config` rewrites HTTPS to SSH, but that
 config is not linked into `$HOME` until stow has run:
 
 ```sh
 mkdir -p ~/projects/personal
 git clone https://github.com/seanogdev/dotfiles.git ~/projects/personal/dotfiles
 cd ~/projects/personal/dotfiles
-./setup.sh
+./scripts/setup.sh
 ```
 
-`setup.sh` installs stow, symlinks the repo into `$HOME`, installs the `.Brewfile` packages, copies
+`scripts/setup.sh` installs stow, symlinks `home/` into `$HOME`, installs the `.Brewfile` packages, copies
 the iCloud fonts, and sets fish as the default shell.
 
 Two things are not in the repo and need doing by hand afterwards:
@@ -41,9 +45,9 @@ Two things are not in the repo and need doing by hand afterwards:
 
 ## Skills
 
-Two personal skills live at `.agents/skills/<name>/SKILL.md` in this repo: `manage-skills` and
+Two personal skills live at `home/.agents/skills/<name>/SKILL.md` in this repo: `manage-skills` and
 `manage-stow`. Both are dotfiles-specific tooling — they reference this repo's own fish functions
-and layout — so they stay here rather than in a general-purpose skills repo. `.claude/skills/<name>`
+and layout — so they stay here rather than in a general-purpose skills repo. `home/.claude/skills/<name>`
 is a symlink to `../../.agents/skills/<name>`, stowed into `$HOME`.
 
 The rest of the personal skills (`address-review`, `prune-merged-branches`,
