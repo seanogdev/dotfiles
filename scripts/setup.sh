@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-cd "$(dirname "$0")"
+cd "$(dirname "$0")/.."
 
 set -e
 
@@ -38,7 +38,7 @@ brew install stow
 
 info "Linking dotfiles with stow"
 
-stow -d "$HOME/projects/personal/dotfiles" -t "$HOME" --no-folding --adopt .
+stow -d "$HOME/projects/personal/dotfiles" -t "$HOME" --no-folding --adopt home
 
 # TEMPORARY (2026-09-16): the delegate-context skill and its PreToolUse hooks are
 # gone from the repo. A machine that has not run this yet still has hooks in
@@ -67,7 +67,7 @@ PNPM_HOME="$HOME/Library/pnpm" PATH="$HOME/Library/pnpm/bin:$PATH" pnpm runtime 
 
 info "Installing fonts from iCloud..."
 
-sh ./install-fonts.sh
+sh ./scripts/install-fonts.sh
 
 info "Changing default shell"
 
