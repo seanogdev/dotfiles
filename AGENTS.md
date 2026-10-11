@@ -45,10 +45,9 @@ instead.
 
 ## Setup: Status Line
 
-The `agent-statusline` fish function (`.config/fish/functions/agent-statusline.fish`) makes the status line for Claude Code and Pi. It takes the harness name (`claude` or `pi`) as its argument.
+The `agent-statusline` fish function (`.config/fish/functions/agent-statusline.fish`) makes the status line for Claude Code. It takes the harness name (`claude`) as its argument.
 
 - **Claude Code**: `~/.claude/settings.json` is not in this repo. Set `statusLine.command` to `/opt/homebrew/bin/fish -c 'agent-statusline claude'`.
-- **Pi**: the extension at `.pi/agent/extensions/statusline.ts` calls the function. Stow links it into `~/.pi/agent/extensions/`.
 
 ## Maintenance
 

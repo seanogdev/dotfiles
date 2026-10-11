@@ -46,26 +46,6 @@ switch $harness
                 text(window("seven_day"; "7d").used_percentage),
                 text(window("seven_day"; "7d").resets_at)
             ] | @tsv' | string split \t)
-    case pi
-        set fields (printf '%s' $input | jq -r '
-            def text($value): (($value // "") | tostring) as $s | if $s == "" then "__AGENT_STATUSLINE_EMPTY__" else $s end;
-            [
-                text(.model.display_name // .model.name // .model),
-                text(.workspace.current_dir // .cwd),
-                (.context_window.current_usage.input_tokens // .tokens_used // 0),
-                (.context_window.context_window_size // .context_size // 200000),
-                text(.effort.level // .effort),
-                text(.rate_limits.five_hour.used_percentage),
-                text(.rate_limits.five_hour.resets_at),
-                text(.rate_limits.seven_day.used_percentage),
-                text(.rate_limits.seven_day.resets_at),
-                (.usage.input // 0),
-                (.usage.output // 0),
-                (.usage.cacheRead // 0),
-                (.usage.cacheWrite // 0),
-                (.usage.reasoning // 0),
-                (.usage.cost // 0)
-            ] | @tsv' | string split \t)
     case '*'
         echo "agent-statusline: unknown harness '$harness'" >&2
         return 2
@@ -78,12 +58,6 @@ set -l cwd $fields[2]
 set -l tokens_used $fields[3]
 set -l context_size $fields[4]
 set -l effort $fields[5]
-set -l total_input $fields[10]
-set -l total_output $fields[11]
-set -l cache_read $fields[12]
-set -l cache_write $fields[13]
-set -l reasoning_tokens $fields[14]
-set -l total_cost $fields[15]
 
 set -l dir_name (basename "$cwd")
 set -l git_branch
@@ -97,11 +71,7 @@ set -l model_icon ✻
 set -l model_icon_color $orange
 set -l model_color $orange
 
-if test "$harness" = pi
-    set model_icon π
-    set model_icon_color $lime
-    set model_color $lime
-else if string match -qi "*haiku*" "$model"
+if string match -qi "*haiku*" "$model"
     set model_color $periwinkle
 else if string match -qi "*sonnet*" "$model"
     set model_color $blue
@@ -152,27 +122,6 @@ set -l segment4 (printf '%b󰆼 %s/%s [%s%%]%b' \
     (math --scale=0 "$used_pct") \
     $reset)
 
-set -l pi_usage_segments
-if test "$harness" = pi
-    test -z "$total_input"; and set total_input 0
-    test -z "$total_output"; and set total_output 0
-    test -z "$cache_read"; and set cache_read 0
-    test -z "$cache_write"; and set cache_write 0
-    test -z "$reasoning_tokens"; and set reasoning_tokens 0
-    test -z "$total_cost"; and set total_cost 0
-
-    set -a pi_usage_segments (printf '%b↑%s ↓%s%b' $dim (__agent_statusline_format_count $total_input 1) (__agent_statusline_format_count $total_output 1) $reset)
-    if test $cache_read -gt 0 -o $cache_write -gt 0
-        set -a pi_usage_segments (printf '%bcache r%s/w%s%b' $dim (__agent_statusline_format_count $cache_read 1) (__agent_statusline_format_count $cache_write 1) $reset)
-    end
-    if test $reasoning_tokens -gt 0
-        set -a pi_usage_segments (printf '%bthink %s%b' $gold (__agent_statusline_format_count $reasoning_tokens 1) $reset)
-    end
-    if test (math --scale=0 "$total_cost * 1000000") -gt 0
-        set -a pi_usage_segments (printf '%b$%.3f%b' $green $total_cost $reset)
-    end
-end
-
 set -l rate_limits
 set -a rate_limits (__agent_statusline_rate_limit_segment 5h "$fields[6]" "$fields[7]" "+%H:%M")
 set -a rate_limits (__agent_statusline_rate_limit_segment 7d "$fields[8]" "$fields[9]" "+%d/%m")
@@ -190,7 +139,7 @@ set -a line1 $segment1 $segment2
 test -n "$segment3"; and set -a line1 $segment3
 test -n "$segment3b"; and set -a line1 $segment3b
 test -n "$segment3c"; and set -a line1 $segment3c
-set -l line2 $segment4 $pi_usage_segments $rate_limits
+set -l line2 $segment4 $rate_limits
 
 set line1 (string join "$separator" $line1)
 set line2 (string join "$separator" $line2)
@@ -205,7 +154,6 @@ set -l cols $COLUMNS
 test -z "$cols"; and set cols (stty size </dev/tty 2>/dev/null | awk '{print $2}')
 test -z "$cols"; and set cols (tput cols 2>/dev/null)
 string match -qr '^[0-9]+$' -- "$cols"; or set cols 0
-test "$harness" = pi; and set cols 9999
 
 if test $vis_len -gt $cols
     printf '%s\n%s' "$line1" "$line2"
