@@ -108,7 +108,9 @@ end
 
 set -l segment3c ""
 if test -n "$cwd"
-    set -l target (string replace -a ' ' %20 -- $cwd)
+    set -l root (git -C "$cwd" --no-optional-locks rev-parse --show-toplevel 2>/dev/null)
+    test -z "$root"; and set root $cwd
+    set -l target (string replace -a ' ' %20 -- $root)
     set segment3c (printf '%b%s%b' $blue (__agent_statusline_osc8 "vscode://file$target" "󰨞 code") $reset)
 end
 
