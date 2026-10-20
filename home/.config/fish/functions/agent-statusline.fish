@@ -260,9 +260,10 @@ end
 function __agent_statusline_dev_server_ports -a root
     test -n "$root"; or return
 
-    set -l listeners (lsof -nP -iTCP -sTCP:LISTEN -F pn 2>/dev/null | awk '
+    set -l listeners (lsof +c 0 -nP -iTCP -sTCP:LISTEN -F pcn 2>/dev/null | awk '
         /^p/ { pid = substr($0, 2) }
-        /^n/ {
+        /^c/ { skip = substr($0, 2) ~ /^(agent-browser|Google Chrome for Testing)/ }
+        /^n/ && !skip {
             n = split(substr($0, 2), parts, ":")
             port = parts[n]
             if (port ~ /^[0-9]+$/ && !seen[pid " " port]++) print pid, port
