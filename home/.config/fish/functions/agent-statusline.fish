@@ -101,9 +101,6 @@ set -l ports (__agent_statusline_dev_server_ports "$cwd")
 if test -n "$ports"
     set -l link (__agent_statusline_osc8 "http://localhost:$ports[1]" "󰖟 :$ports[1]")
     set segment3b (printf '%b%s%b' $lime $link $reset)
-    if test (count $ports) -gt 1
-        set segment3b "$segment3b"(printf '%b +%d%b' $dim (math (count $ports) - 1) $reset)
-    end
 end
 
 set -l segment3c ""
@@ -287,6 +284,9 @@ function __agent_statusline_dev_server_ports -a root
     end
     test -n "$ports"; or return
 
-    printf '%s\n' $ports | sort -un
+    printf '%s\n' $ports | sort -un | awk '
+        $1 >= 3000 && $1 <= 9999 { dev[++d] = $1; next }
+        { rest[++r] = $1 }
+        END { for (i = 1; i <= d; i++) print dev[i]; for (i = 1; i <= r; i++) print rest[i] }'
 end
 
