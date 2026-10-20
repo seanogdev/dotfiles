@@ -99,8 +99,11 @@ end
 set -l segment3b ""
 set -l ports (__agent_statusline_dev_server_ports "$cwd")
 if test -n "$ports"
-    set -l link (__agent_statusline_osc8 "http://localhost:$ports[1]" "󰖟 :$ports[1]")
-    set segment3b (printf '%b%s%b' $lime $link $reset)
+    set -l links
+    for port in $ports[1..3]
+        set -a links (__agent_statusline_osc8 "http://localhost:$port" ":$port")
+    end
+    set segment3b (printf '%b󰖟 %s%b' $lime (string join ' ' $links) $reset)
 end
 
 set -l segment3c ""
