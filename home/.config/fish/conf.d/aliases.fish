@@ -5,3 +5,5 @@ alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 
+alias ssh='ghostty +ssh --'
+
