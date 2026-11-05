@@ -24,8 +24,7 @@ Install Homebrew first:
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
-Clone over HTTPS, not SSH. The `insteadOf` rule in `home/.config/git/config` rewrites HTTPS to SSH, but that
-config is not linked into `$HOME` until stow has run:
+Clone over HTTPS:
 
 ```sh
 mkdir -p ~/projects/personal
