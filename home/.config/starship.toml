@@ -15,7 +15,6 @@ $nodejs\
 ${custom.pnpm}\
 $cmd_duration\
 $jobs\
-${custom.vpn}\
 $time\
 $line_break\
 $character"""
@@ -103,10 +102,3 @@ style = "bold yellow"
 detect_files = ['pnpm-lock.yaml']
 symbol = 'pnpm '
 
-[custom.vpn]
-description = "Shows when the Pritunl VPN is connected"
-shell = ["bash", "--noprofile", "--norc"]
-when = "/Applications/Pritunl.app/Contents/Resources/pritunl-client list -j 2>/dev/null | grep -q '\"connected\":true'"
-format = "[$symbol]($style) "
-symbol = "VPN"
-style = "bold green"
