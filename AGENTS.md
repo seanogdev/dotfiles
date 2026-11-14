@@ -1,6 +1,6 @@
 # seanogdev/dotfiles
 
-This is a personal dotfiles repository that uses GNU Stow for symlink management and Homebrew for package installation. The setup follows a structured approach to manage configuration files across macOS systems.
+This is a personal dotfiles repository that uses GNU Stow for symlink management and Homebrew for package installation, targeting macOS.
 
 **Shell: Fish (`/opt/homebrew/bin/fish`) is the default shell. Use Fish for all commands unless noted otherwise.**
 
