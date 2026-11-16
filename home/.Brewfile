@@ -79,7 +79,6 @@ cask "ghostty"
 # VPN client
 cask "mullvad-vpn"
 # Team communication and collaboration software
-cask "slack"
 # Mesh VPN based on WireGuard
 cask "tailscale-app"
 # Messaging app with a focus on speed and security
