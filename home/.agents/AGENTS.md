@@ -3,3 +3,4 @@
 - `fish` is the default shell. Use `bash` for scripts and commands that need it.
 - When you remove something, remove it fully. Do not leave a note that says it is gone.
 - To add images or videos to a pull request, use `gh pr create --attach '<file>#<alt text>'`. Do not upload them a different way.
+- Write a project `AGENTS.md` with only what the repo cannot show: unwritten conventions, the reasons behind choices, gotchas. Leave out anything a config, script or linter already states or enforces.
