@@ -18,7 +18,7 @@ seanogdev/skills .claude/skills/update-address-pr
 seanogdev/skills skills/address-pr
 seanogdev/skills skills/approve-prs
 seanogdev/skills skills/code-deep
-seanogdev/skills skills/prune-merged-branches
+seanogdev/skills skills/git-cleanup
 seanogdev/skills skills/resolve-conflicts
 seanogdev/skills skills/to-markdown
 seanogdev/skills skills/ultra-implement
