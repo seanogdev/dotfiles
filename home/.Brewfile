@@ -6,8 +6,16 @@ brew "xz"
 brew "agent-browser"
 # Cross-platform make
 brew "cmake"
+# Container runtimes on MacOS (and Linux) with minimal setup
+brew "colima"
 # CLI helps develop/deploy/debug apps with Docker and k8s
 brew "devspace"
+# Pack, ship and run any application as a lightweight container
+brew "docker"
+# Isolated development environments using Docker
+brew "docker-compose"
+# Platform keystore credential helper for Docker
+brew "docker-credential-helper"
 # Play, record, convert, and stream select audio and video codecs
 brew "ffmpeg"
 # User-friendly command-line shell for UNIX-like operating systems
@@ -93,7 +101,6 @@ cask "visual-studio-code"
 cask "vivaldi"
 # Multimedia player
 cask "vlc"
-mas "1Password for Safari", id: 1569813296
 mas "Apple Configurator", id: 1037126344
 mas "Deliveries", id: 290986013
 mas "Hand Mirror", id: 1502839586
