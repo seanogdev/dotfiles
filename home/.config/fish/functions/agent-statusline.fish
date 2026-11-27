@@ -112,6 +112,11 @@ if test -n "$cwd"
     test -z "$root"; and set root $cwd
     set -l target (string replace -a ' ' %20 -- $root)
     set segment3c (printf '%b%s%b' $blue (__agent_statusline_osc8 "vscode://file$target" "󰨞 code") $reset)
+    set -l remote (git -C "$cwd" --no-optional-locks remote get-url origin 2>/dev/null)
+    set -l slug (string match -r --groups-only 'github\.com[:/](.+?)(?:\.git)?/?$' -- "$remote")
+    if test -n "$slug"
+        set segment3c "$segment3c "(printf '%b%s%b' $periwinkle (__agent_statusline_osc8 "https://github.com/$slug" "󰊤") $reset)
+    end
 end
 
 test -z "$tokens_used"; and set tokens_used 0
@@ -149,7 +154,7 @@ set -l single "$line1$separator$line2"
 
 set -l stripped (string replace -ra '\e\][^\a\e]*(\e\\\\|\a)' '' -- "$single")
 set stripped (string replace -ra '\e\[[0-9;]*m' '' -- "$stripped")
-set -l wide_glyphs (string match -ar '[󰘬✻󰆼󰓅󰖟󰨞]' -- "$stripped" | count)
+set -l wide_glyphs (string match -ar '[󰘬✻󰆼󰓅󰖟󰨞󰊤]' -- "$stripped" | count)
 set -l vis_len (math (string length -- "$stripped") + $wide_glyphs)
 
 set -l cols $COLUMNS
