@@ -107,6 +107,7 @@ if test -n "$ports"
 end
 
 set -l segment3c ""
+set -l segment3d ""
 if test -n "$cwd"
     set -l root (git -C "$cwd" --no-optional-locks rev-parse --show-toplevel 2>/dev/null)
     test -z "$root"; and set root $cwd
@@ -115,7 +116,7 @@ if test -n "$cwd"
     set -l remote (git -C "$cwd" --no-optional-locks remote get-url origin 2>/dev/null)
     set -l slug (string match -r --groups-only 'github\.com[:/](.+?)(?:\.git)?/?$' -- "$remote")
     if test -n "$slug"
-        set segment3c "$segment3c "(printf '%b%s%b' $periwinkle (__agent_statusline_osc8 "https://github.com/$slug" "󰊤") $reset)
+        set segment3d (printf '%b%s%b' $periwinkle (__agent_statusline_osc8 "https://github.com/$slug" "󰊤") $reset)
     end
 end
 
@@ -146,6 +147,7 @@ set -a line1 $segment1 $segment2
 test -n "$segment3"; and set -a line1 $segment3
 test -n "$segment3b"; and set -a line1 $segment3b
 test -n "$segment3c"; and set -a line1 $segment3c
+test -n "$segment3d"; and set -a line1 $segment3d
 set -l line2 $segment4 $rate_limits
 
 set line1 (string join "$separator" $line1)
