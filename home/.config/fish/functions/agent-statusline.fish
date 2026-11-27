@@ -116,7 +116,7 @@ if test -n "$cwd"
     set -l remote (git -C "$cwd" --no-optional-locks remote get-url origin 2>/dev/null)
     set -l slug (string match -r --groups-only 'github\.com[:/](.+?)(?:\.git)?/?$' -- "$remote")
     if test -n "$slug"
-        set segment3d (printf '%b%s%b' $periwinkle (__agent_statusline_osc8 "https://github.com/$slug" "󰊤") $reset)
+        set segment3d (printf '%b%s%b' '\033[97m' (__agent_statusline_osc8 "https://github.com/$slug" "󰊤") $reset)
     end
 end
 
